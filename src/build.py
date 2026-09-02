@@ -523,7 +523,11 @@ def sections():
             a += ' data-no-back'
         html = (hero_screen(s) if n == 1
                 else render_question(s) if s['q'] else marketing(n))
-        out.append('<section class="step"%s>%s</section>' % (a, html))
+        # The opening screen carries the tallest stack in the flow — hero,
+        # two-line h1, claim strip, question and sub — so it gets its own
+        # class and a tighter rhythm; see `.step.s1` in theme.py.
+        cls = 'step s1' if n == 1 else 'step'
+        out.append('<section class="%s"%s>%s</section>' % (cls, a, html))
     return out
 
 
@@ -912,7 +916,7 @@ def emit_frames():
     for s, html in zip(Q, sections()):
         n, q = s['step'], s['q']
         lbl = 'Screen %02d %s' % (n, ('— Question %d' % q) if q else '— interstitial')
-        inner = html.replace('<section class="step"', '<section class="step on"', 1)
+        inner = html.replace('<section class="step', '<section class="step on', 1)
         # ids are unique per document; 35 frames in one file cannot each carry
         # the interactive build's element ids
         chrome = (MASTHEAD + (static_progress(q) if q else nav(''))).replace(' id="backBtn"', '')

@@ -55,7 +55,8 @@ CSS = r"""
   --surface:#FFFFFF;
   --track:#E7EAED;         /* progress segment, unfilled                 */
   --hairline:#EDEFF3;      /* the resting outline on an option row       */
-  --glow:rgba(230,67,13,.16);   /* the selected row's halo               */
+  --glow:rgba(230,67,13,.30);   /* the selected row's halo — the resting
+                                   shadow, tinted; no second stroke        */
   --col:480px;             /* the column, at every width                 */
   --pad:24px;              /* its side padding                           */
   --radius:10px;           /* Braevon's one radius — buttons, inputs     */
@@ -203,10 +204,15 @@ img{max-width:100%;display:block}
 .opt.checkbox .ring{border-radius:3px}
 /* Selected is an outline and a glow, never a fill. A tinted row at this size
    reads as heavy next to four white ones, and the tint fights the icon
-   bubbles, which carry colour of their own. */
+   bubbles, which carry colour of their own.
+   The reference does this with no extra weight at all: the resting 1px hairline
+   just turns accent, and the resting 0 4px 20px shadow just turns accent-tinted
+   (measured: `1px solid #31ABE8` + `0 4px 20px rgba(49,171,232,.3)`). A spread
+   ring on top of that is what read as a hard second stroke, so there isn't one
+   — the selected row is the same row, in colour. */
 .opt.selected{
   border-color:var(--accent);
-  box-shadow:0 0 0 3px var(--glow), 0 6px 22px rgba(230,67,13,.20);
+  box-shadow:0 4px 20px var(--glow);
 }
 .opt.selected .ring{border-color:var(--accent);background:var(--accent)}
 .opt.selected .ring::after{
@@ -306,13 +312,24 @@ img{max-width:100%;display:block}
 .bp-lead{margin:var(--gap-title) 0 0;font-size:13px;color:var(--muted);text-align:center}
 
 /* ----------------------------------------------------- the opening screen */
+/* Screen 1 carries the tallest stack in the flow — hero, two-line h1, claim
+   strip, question and sub, all above six 67px option rows. At the reference's
+   32px block rhythm that pushes the fourth goal below the fold on a phone and
+   the third below it on a 800px laptop, so this one screen runs a tighter
+   rhythm than the rest. Nothing else in the flow is compressed. */
+.step.s1{padding-top:24px}
 /* Video, with the product render breaking out of its bottom-right corner —
    the reference's opening layout. The render is a transparent PNG, so its lift
    is a drop-shadow filter and never a box-shadow: a box-shadow follows the
    element box and would paint a rectangle behind the cut-out. */
-.hero{position:relative;margin-bottom:21px}
+.hero{position:relative;margin-bottom:16px}
+/* 432x196. The reference's own hero box measures 342x180 in a 390 viewport —
+   a 1.9 ratio, not the 1.79 this used to run — and the crop goes a little
+   past that to buy the fourth option row its place above the fold. Anchored
+   to the top, 196 keeps the top 68% of the photograph, which is both faces
+   down to his collar; centring it here would cut the foreheads. */
 .hero-media{
-  width:100%;aspect-ratio:432/241;object-fit:cover;display:block;
+  width:100%;aspect-ratio:432/196;object-fit:cover;display:block;
   border-radius:var(--radius-media);background:var(--neutral-tint);
   /* The photograph is taller than 16:9 and its faces sit in the top half, so
      the crop comes off the bottom. Never centre it — that cuts the foreheads. */
@@ -325,24 +342,26 @@ img{max-width:100%;display:block}
 }
 
 .hero-h1{
-  margin:0;font-size:44px;line-height:1.1;font-weight:600;
+  margin:0;font-size:40px;line-height:1.05;font-weight:600;
   letter-spacing:-.02em;color:var(--title-ink);
 }
 .hero-h1 .hi{font-weight:600}
 
 /* The claim strip. The reference fades a blue through a violet; this is the one
    accent, faded out to the right, so it stays inside house rule 2. */
+/* Padding runs light on the right, as the reference's does, so the line has
+   the room it needs to stay a single line down to the narrow breakpoint. */
 .strip{
-  margin:15px 0 0;padding:9px 14px;border-radius:var(--radius-card);
+  margin:12px 0 0;padding:8px 10px 8px 12px;border-radius:var(--radius-card);
   font-size:14px;line-height:1.35;color:var(--ink);white-space:nowrap;
   background:linear-gradient(90deg,rgba(230,67,13,.16) 0%,rgba(230,67,13,.06) 55%,rgba(230,67,13,0) 100%);
 }
 .strip strong{font-weight:700;font-style:italic}
 
-.ask{margin:24px 0 0;font-size:20px;line-height:1.3;font-weight:400;color:var(--ink)}
+.ask{margin:20px 0 0;font-size:20px;line-height:1.3;font-weight:400;color:var(--ink)}
 .ask strong{font-weight:700}
-.ask-sub{margin:5px 0 0;font-size:16px;color:var(--muted)}
-.ask-sub + .opts{margin-top:24px}
+.ask-sub{margin:4px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ask-sub + .opts{margin-top:20px}
 
 /* Goal rows are taller than an ordinary option and carry a bubble instead of a
    ring — there is nothing to compare them against yet, so the icon does the
@@ -448,12 +467,12 @@ img{max-width:100%;display:block}
   font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
 
 /* ------------------------------------------------------------- narrow */
-@media (max-width:420px){ .hero-h1{font-size:38px} .strip{white-space:normal} }
+@media (max-width:420px){ .hero-h1{font-size:36px} .strip{font-size:13px} }
 @media (max-width:379px){
   :root{--pad:18px;--gap-block:26px}
   .qhead{font-size:23px}
-  .hero-h1{font-size:34px}
-  .hero{margin-bottom:36px}
+  .hero-h1{font-size:32px}
+  .strip{white-space:normal}
 }
 
 /* ------------------------------------------------- all-screens document */
