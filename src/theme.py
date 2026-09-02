@@ -93,7 +93,6 @@ img{max-width:100%;display:block}
    than taking a slot here, so the wordmark, the progress bar and every screen's
    content share one left edge at --pad. Giving it a column indented all three. */
 .masthead{
-  position:relative;
   display:grid;grid-template-columns:1fr auto;align-items:center;
   gap:12px;padding:16px var(--pad);min-height:46px;
 }
@@ -118,13 +117,11 @@ img{max-width:100%;display:block}
    with the back button beside it rather than eating into it. 24px either side
    leaves the middle cell at 384px on a 432 column, which is the reference's
    386 to within two pixels. */
-/* One measure for the whole page: the bar starts and ends where the wordmark,
-   the rating and every screen's content do. */
-.navrow{position:relative;padding:16px var(--pad) 0;height:28px}
-/* In the gutter left of the wordmark: 24px wide, ending exactly where the
-   content edge begins, so it indents nothing. */
+/* Arrow, then bar — the reference's arrangement. The arrow lines up with the
+   wordmark above it and the bar runs from there to the rating's right edge. */
+.navrow{display:flex;align-items:center;gap:12px;padding:16px var(--pad) 0;height:28px}
 .back-btn{
-  position:absolute;left:0;top:50%;transform:translateY(-50%);
+  position:relative;flex:none;
   width:24px;height:24px;display:grid;place-items:center;
   background:none;border:none;padding:0;cursor:pointer;color:var(--muted);
   border-radius:var(--radius);

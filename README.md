@@ -135,9 +135,12 @@ Full teardown with measured numbers in `docs/medvi-reference.md`. In short:
   whole when you enter its section, so question 1 already shows one full segment
   — a fifth-of-a-fifth sliver on the opening screen reads as broken rather than
   as progress. No "Question N of 24" counter.
-- **Masthead: wordmark left, rating right.** v1's inline SVG mark (`src/logo.py`)
-  and a Trustpilot-style rating. With the mark on the left the back control moved
-  down beside the progress bar, where v1 also kept it.
+- **Masthead: wordmark left, rating right.** v1's inline SVG mark
+  (`src/logo.py`) and a Trustpilot-style rating.
+- **The back arrow heads the progress row**, aligned with the wordmark above it,
+  with the bar running from there to the rating's right edge — the reference's
+  arrangement. It keeps its slot when hidden, so the bar does not shift between
+  a screen with an arrow and one without.
 - **Braevon keeps:** Plus Jakarta Sans, the orange `#E6430D` (still restricted to
   the CTA, progress fill, selection, the section eyebrow and one emphasis per
   marketing screen), and the v1 button — 10px radius, weight 800, 56px, arrow

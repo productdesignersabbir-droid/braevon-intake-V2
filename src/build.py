@@ -54,7 +54,7 @@ def _ic(paths):
 ICON = {
     'arrow': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
              'stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
-    'back': _ic('<path d="M15 18l-6-6 6-6"/>'),
+    'back': _ic('<path d="M19 12H5M11 18l-6-6 6-6"/>'),
     'warn': _ic('<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>'
                 '<path d="M12 9v4M12 17h.01"/>'),
     'shield': _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
@@ -449,14 +449,19 @@ STARS = ('<span class="stars">%s</span>'
 
 MASTHEAD = (
     '<header class="masthead">'
-    '<button class="back-btn" id="backBtn" aria-label="Go back">%s</button>'
     '<div class="logo">%s</div>'
     '<div class="rating"><span class="txt">Excellent 4.6</span>%s</div>'
-    '</header><div class="rule"></div>' % (ICON['back'], LOGO, STARS))
+    '</header><div class="rule"></div>' % (LOGO, STARS))
 
 
+# The back arrow sits at the left of the progress row, where the reference puts
+# it - aligned with the wordmark above, with the bar starting after it. It keeps
+# its slot when hidden, so the bar does not shift between a screen with an arrow
+# and one without.
 def nav(progress):
-    return '<div class="navrow">%s</div>' % progress
+    return ('<div class="navrow">'
+            '<button class="back-btn" id="backBtn" aria-label="Go back">%s</button>'
+            '%s</div>' % (ICON['back'], progress))
 
 
 PROGRESS = nav('<div class="progress" id="prog" role="progressbar" '
