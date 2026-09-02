@@ -81,17 +81,13 @@ def attr(s):
 
 
 # --------------------------------------------------------------- primitives
-def cta(label='Continue', blocked=True):
+def cta(label='Next', blocked=True):
     """`blocked` means "this step is not answered yet". It is a data attribute
     and not the native `disabled`, because the client asked that the button stay
     orange rather than grey out — so it has to receive the click in order to
     point at what is missing. See `advance()` in the script."""
     return ('<button class="cta cta-next"%s>%s%s</button>'
             % (' data-blocked="1"' if blocked else '', esc(label), ICON['arrow']))
-
-
-def privacy(text='We protect your privacy. Your answers are protected by HIPAA.'):
-    return '<p class="privacy">%s%s</p>' % (ICON['lock'], esc(text))
 
 
 def head(eyebrow=None, title=None, sub=None, big=False):
@@ -273,7 +269,7 @@ def render_question(s):
         elif t == 'field':
             run.append(b)
     flush()
-    return ''.join(out) + cta() + privacy() + '</div>' 
+    return ''.join(out) + cta() + '</div>' 
 
 
 # ----------------------------------------------------------- marketing steps
@@ -389,7 +385,7 @@ def marketing(n):
                 + option({'value': 'agree',
                           'label': 'I have read and agree to the consent document and the '
                                    'telehealth informed consent.'}, True)
-                + '</div>' + cta() + privacy() + '</div>')
+                + '</div>' + cta() + '</div>')
 
     if n == 30:
         return loader('Processing your information&hellip;',
@@ -447,7 +443,7 @@ def marketing(n):
                 '<div class="reviewcard"><h3>Recommended &mdash; Precision Strength</h3>%s</div>'
                 '<div class="note" style="margin-top:16px">%s<p>Trusted by over <b>175,000</b> '
                 'customers. Performance guaranteed.</p></div>' % (mols, ICON['shield'])
-                + cta('Continue to your plan', blocked=False) + privacy() + '</div>')
+                + cta('Continue to your plan', blocked=False) + '</div>')
 
     return '<div class="col">%s%s</div>' % (head(None, 'Screen %d' % n), cta(blocked=False))
 
@@ -465,11 +461,21 @@ def hero_screen(s):
     strength, more arousal / sex drive, faster rebound / quicker recovery,
     more confidence / confidence), so the layout takes them unchanged."""
     goals = next(b for b in s['blocks'] if b['t'] == 'options')
+
+    # v1 asked this as "select all that apply". The reference asks for one
+    # primary goal and pre-picks the second, and the client asked for both —
+    # so it is single-select here, and the copy above it already reads
+    # "Select your primary goal:". This is the one place v2 changes a v1
+    # question's shape rather than its dress; flagged in the README.
+    goals = dict(goals, mode='single')
+    for i, o in enumerate(goals['options']):
+        o['preselected'] = (i == 1)
+
     rows = ''.join(
-        '<button class="opt goal" data-value="%s">'
+        '<button class="opt goal%s" data-value="%s">'
         '<span class="bubble" style="--bub:%s;--gly:%s">%s</span>'
         '<span class="lbl">%s</span></button>'
-        % ((attr(o['value']),)
+        % ((' selected' if o.get('preselected') else '', attr(o['value']))
            + GOAL_COLORS.get(o['value'], ('#FDECE6', '#E6430D'))
            + (GOAL_ICONS.get(o['value'], ICON['shield']), esc(o['label'])))
         for o in goals['options'])
@@ -496,7 +502,7 @@ def hero_screen(s):
         '<p class="ask-sub">Select your primary goal:</p>'
         '<div class="opts" data-group="%s" data-mode="%s">%s</div>'
         % (attr(goals['group']), goals['mode'], rows)
-        + cta() + privacy() + '</div>')
+        + cta() + '</div>')
 
 
 # ------------------------------------------------------------------ assemble
@@ -601,7 +607,34 @@ SCRIPT = r"""
                                 function(o){ return o.dataset.value; });
     }
     syncReveals(); clearError(opt.closest('.step'));
+    maybeAutoAdvance(opt, multi);
   });
+
+  /* Answering advances the screen; Continue stays and still works, so this is
+     a shortcut past it rather than a replacement. Four things hold it back:
+
+     - a multi-select waits, unless the answer is the exclusive "None of these"
+       — on "select all that apply" the patient may well want two or three, and
+       leaving on the first tick collects exactly one;
+     - unticking never advances;
+     - an open follow-up still has to be typed into;
+     - the blood-pressure screen never jumps: picking a band fills both numbers
+       and so satisfies the step, but that screen exists precisely so someone
+       who knows their real reading can type it.
+
+     Everything else is `stepValid`, which the Continue button already uses — so
+     screens 4 and 28 hold on their own, their inputs being unfilled. It routes
+     through `advance()`, the same function Continue calls, so a disqualifying
+     answer still opens the stop screen rather than being walked past. */
+  function maybeAutoAdvance(opt, multi){
+    var el=steps[idx];
+    if(el.querySelector('.bp')) return;
+    if(multi && !opt.dataset.exclusive) return;
+    if(!opt.classList.contains('selected')) return;
+    if(el.querySelector('.reveal.on')) return;
+    if(!stepValid(el)) return;
+    setTimeout(function(){ if(steps[idx]===el) advance(); }, 140);
+  }
 
   /* ------------------------------------------------------------ reveals */
   function syncReveals(){

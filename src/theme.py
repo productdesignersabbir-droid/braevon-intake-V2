@@ -54,6 +54,8 @@ CSS = r"""
   --page:#FFFFFF;          /* the reference page is white, not v1's grey */
   --surface:#FFFFFF;
   --track:#E7EAED;         /* progress segment, unfilled                 */
+  --hairline:#EDEFF3;      /* the resting outline on an option row       */
+  --glow:rgba(230,67,13,.16);   /* the selected row's halo               */
   --col:480px;             /* the column, at every width                 */
   --pad:24px;              /* its side padding                           */
   --radius:10px;           /* Braevon's one radius — buttons, inputs     */
@@ -180,10 +182,10 @@ img{max-width:100%;display:block}
 .opts{display:flex;flex-direction:column;gap:var(--gap-opt)}
 .opt{
   display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-  background:var(--surface); border:1.5px solid transparent;
+  background:var(--surface); border:1px solid var(--hairline);
   border-radius:var(--radius-card); box-shadow:var(--shadow);
   padding:16px; cursor:pointer; color:var(--ink);
-  transition:border-color .12s ease,background-color .12s ease;
+  transition:border-color .12s ease,box-shadow .16s ease;
 }
 .opt:hover{border-color:#C9CFDA}
 .opt .lbl{flex:1;font-size:16px;font-weight:500;line-height:1.2}
@@ -199,7 +201,13 @@ img{max-width:100%;display:block}
   border:1.5px solid #C9CFDA; background:#fff; position:relative;
 }
 .opt.checkbox .ring{border-radius:3px}
-.opt.selected{border-color:var(--accent);background:var(--accent-soft)}
+/* Selected is an outline and a glow, never a fill. A tinted row at this size
+   reads as heavy next to four white ones, and the tint fights the icon
+   bubbles, which carry colour of their own. */
+.opt.selected{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--glow), 0 6px 22px rgba(230,67,13,.20);
+}
 .opt.selected .ring{border-color:var(--accent);background:var(--accent)}
 .opt.selected .ring::after{
   content:"";position:absolute;inset:0;margin:auto;
@@ -283,11 +291,6 @@ img{max-width:100%;display:block}
    as available before it is. Carried over from v1 deliberately. */
 .cta[data-blocked]{cursor:pointer}
 
-.privacy{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  margin:14px 0 0;font-size:12px;color:var(--faint);text-align:center;
-}
-.privacy svg{width:13px;height:13px;stroke:var(--faint);fill:none;flex:none}
 
 /* ------------------------------------------------------- blood pressure */
 .bp{display:flex;align-items:flex-start;justify-content:center;gap:14px;margin-top:var(--gap-opt)}
@@ -351,9 +354,7 @@ img{max-width:100%;display:block}
   display:grid;place-items:center;
 }
 .opt.goal .bubble svg{width:19px;height:19px}
-/* The row's own selected tint would muddy the bubble, so it goes white and
-   the glyph keeps its hue. */
-.opt.goal.selected .bubble{background:#fff}
+
 
 /* ------------------------------------------------------------- markety */
 .media{border-radius:var(--radius-card);overflow:hidden;box-shadow:var(--shadow-img)}

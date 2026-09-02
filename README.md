@@ -116,8 +116,16 @@ accent, the tinted claim strip, then the goal list with an icon per row.
   layered `drop-shadow()` filter and never a `box-shadow` — a box-shadow follows
   the element box and paints a rectangle behind the cut-out.
 - **The goal wording is v1's, not the reference's.** The five map one to one onto
-  the reference's, so the layout takes them unchanged. Icon bubbles are all
-  `--accent` on `--accent-soft` rather than the reference's five pastel hues.
+  the reference's, so the layout takes them unchanged.
+- **The goal question is single-select here, where v1 asked it as "select all
+  that apply".** The reference asks for one primary goal and pre-picks the
+  second; the client asked for both. This is the one place v2 changes a v1
+  question's *shape* rather than its dress — the second option arrives already
+  chosen, so the screen is answered on arrival. Revert by dropping the
+  `dict(goals, mode='single')` line in `hero_screen()`.
+- **Icon bubbles carry the reference's five hues**, read out of its own design
+  tokens. A deliberate exception to the orange-carries-emphasis rule, at the
+  client's request; nothing else in the flow takes them.
 
 ## The 34 screens
 
@@ -157,6 +165,26 @@ reveal a follow-up; conditional screens are skipped in both directions; the
 blood-pressure screen estimates a reading from the chosen band, takes a typed
 reading instead, and warns at both extremes; the state chosen on screen 4 is
 echoed into screen 5; the first name from screen 28 titles the result.
+
+**Answering advances the screen.** Continue — labelled *Next*, as the reference
+labels it — stays on screen and still works, so this is a shortcut past it
+rather than a replacement. Four things hold it back: a multi-select waits unless
+the answer is the exclusive "None of these" (on "select all that apply" the
+patient may want two or three, and leaving on the first tick collects exactly
+one); unticking never advances; an open follow-up still has to be typed into;
+and the blood-pressure screen never jumps, because it exists precisely so
+someone who knows their real reading can type it. Everything else falls out of
+`stepValid`, so the eligibility and patient-info screens hold on their own while
+their inputs are empty. It routes through `advance()`, the same function the
+button calls, so a disqualifying answer still opens the stop screen.
+
+**Selection is an outline and a glow, never a fill** — a 1px `--accent` stroke
+with a soft orange halo, over the resting `--hairline` grey. A tinted row reads
+heavy next to four white ones and fights the icon bubbles, which carry colour of
+their own.
+
+**There is no HIPAA line under the button.** v1 ran one on every screen; the
+reference has none and the client asked for it out.
 
 New in v2, from the reference: the two processing screens carry no button and
 hand off on their own. **The hand-off is on a timer, not on the animation
