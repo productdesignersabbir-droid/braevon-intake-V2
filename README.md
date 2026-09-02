@@ -127,6 +127,22 @@ accent, the tinted claim strip, then the goal list with an icon per row.
   tokens. A deliberate exception to the orange-carries-emphasis rule, at the
   client's request; nothing else in the flow takes them.
 
+## Type scale
+
+Every font size is **15% smaller than the reference's**, at the client's
+request on 2026-09-02 — option labels and the small copy land on 14px, the
+headline on 34px, the section eyebrow on 10px. This is a deliberate divergence
+from the reference, not drift: measured at matched viewports the two were
+identical before this change.
+
+**One exception, and it is load-bearing: form controls stay at 16px.** iOS
+Safari zooms the page in on any focused `input`, `select` or `textarea` under
+16px and does not zoom back out — a bug the client hit on a real iPhone during
+v1. The rule at `.field input, .field select, .field textarea, .reveal
+textarea, .reveal input` in `theme.py` is excluded from the scale and must
+stay excluded. Take room out of padding instead if a value has to fit a
+narrower box.
+
 ## The 34 screens
 
 24 numbered questions plus ten interstitials:
