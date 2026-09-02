@@ -95,6 +95,27 @@ MOLECULES = [
     ('Tadalafil', 'Extends the window', '4 mg'),
 ]
 
+# Screen 5 reads as a benefit list, not an ingredient table: the reference leads
+# each row with what the molecule does for you and names the molecule second.
+# Bubble hues follow the goal-icon tokens - purple, green, red, blue.
+MECHANISM = [
+    ('Spark Desire', 'Apomorphine primes the brain&rsquo;s arousal pathways.',
+     '#F3EBFF', '#A855F7',
+     _ic('<path d="M12 6a3.2 3.2 0 0 0-6-1.1A2.7 2.7 0 0 0 4.2 9.4 2.8 2.8 0 0 0 6 14.4'
+         'a3 3 0 0 0 3 2.6"/><path d="M12 6a3.2 3.2 0 0 1 6-1.1 2.7 2.7 0 0 1 1.8 4.5'
+         'A2.8 2.8 0 0 1 18 14.4a3 3 0 0 1-3 2.6"/><path d="M12 6v15"/>')),
+    ('Start Fast', 'L-Citrulline amplifies blood flow for speed.',
+     '#DFF7E6', '#22C55E',
+     _ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>')),
+    ('Boost Performance', 'Sildenafil supports a strong blood-flow response.',
+     '#FEE2E2', '#EF4444',
+     _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5c0 5-7 9.5-7 9.5z"/>')),
+    ('Last Longer', 'Tadalafil extends the effect window (up to 36h reported).',
+     '#DBEAFE', '#3B82F6',
+     _ic('<rect x="2.5" y="7.5" width="15" height="9" rx="2.6"/>'
+         '<path d="M20.5 10.5v3"/><path d="M6 10.5v3"/>')),
+]
+
 # Placeholder copy written for this concept, not real reviews - see the module
 # docstring. Structure and slot are the reference's.
 QUOTES = {
@@ -331,14 +352,14 @@ def screen_interstitial(p):
                 'for spontaneity.</p>'
                 + cta(blocked=False) + '</div>')
     if n == 5:
-        rows = ''.join('<div class="mol"><div><b>%s</b><span>%s</span></div></div>'
-                       % (a, b) for a, b, _ in MOLECULES)
+        rows = ''.join(
+            '<div class="mech"><span class="bubble" style="--bub:%s;--gly:%s">%s</span>'
+            '<div><b>%s</b><span>%s</span></div></div>' % (bub, gly, svg, a, b)
+            for a, b, bub, gly, svg in MECHANISM)
         return ('<div class="col">'
-                + head('How BRAEVON&rsquo;s 4-in-1 works for you',
-                       'It is engineered to hit both desire (the brain) and performance '
-                       '(the body) in one dose.')
-                + '<div class="media" style="margin-top:20px">'
-                  '<img src="assets/images/ingredients.png" alt="BRAEVON 4-in-1"/></div>'
+                + head('How BRAEVON&rsquo;s 4-in-1 Works for you',
+                       'BRAEVON&rsquo;s 4-in-1 is engineered to hit both Desire (the brain) '
+                       'and Performance (the body) in one dose.')
                 + '<div class="reviewcard">%s</div>' % rows
                 + cta(blocked=False) + '</div>')
     if n == 8:

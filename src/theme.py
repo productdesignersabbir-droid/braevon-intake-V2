@@ -499,6 +499,18 @@ img{max-width:100%;display:block}
 .mol span{font-size:10px;color:var(--muted);display:block;font-weight:400}
 .mol .dose{font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
 
+/* Screen 5's benefit rows. Same divided card as .mol, plus the goal screen's
+   36px bubble so each benefit carries its own hue, as the reference does. */
+.mech{display:flex;align-items:flex-start;gap:14px;padding:14px 0;
+  border-top:1px solid var(--border)}
+.mech:first-child{border-top:none}
+.mech .bubble{flex:none;width:36px;height:36px;border-radius:50%;
+  background:var(--bub);color:var(--gly);display:grid;place-items:center}
+.mech .bubble svg{width:19px;height:19px}
+.mech b{font-size:13px;font-weight:700;display:block}
+.mech span:not(.bubble){font-size:12px;line-height:1.5;color:var(--muted);
+  display:block;font-weight:400;margin-top:3px}
+
 /* ---------------------------------------------------- disqualification */
 /* The one full-bleed dark surface in the flow, because it is a stop and not a
    step. Same call as v1, and the reference's own "NO RX" screen agrees. */
