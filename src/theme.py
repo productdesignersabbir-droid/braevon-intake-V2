@@ -107,13 +107,23 @@ img{max-width:100%;display:block}
 /* The reference has no back control; v1 shipped one on every screen at the
    client's request. With the wordmark on the left it cannot sit in the
    masthead, so it rides beside the progress bar — where v1 kept it too. */
-.navrow{display:flex;align-items:center;gap:12px;padding:16px var(--pad) 0;height:28px}
+/* Three columns, not a flex row: the bar has to sit centred at its own width
+   with the back button beside it rather than eating into it. 24px either side
+   leaves the middle cell at 384px on a 432 column, which is the reference's
+   386 to within two pixels. */
+.navrow{display:grid;grid-template-columns:24px 1fr 24px;align-items:center;
+  padding:16px var(--pad) 0;height:28px}
 .back-btn{
-  width:32px;height:32px;flex:none;display:grid;place-items:center;
+  position:relative;
+  width:24px;height:24px;display:grid;place-items:center;
   background:none;border:none;padding:0;cursor:pointer;color:var(--muted);
   border-radius:var(--radius);
 }
-.back-btn svg{width:19px;height:19px}
+/* 44px of hit area without a 44px layout box. Padding cannot do this — the
+   global border-box would take the padding out of the 24px and crush the
+   glyph instead of growing the target. */
+.back-btn::after{content:"";position:absolute;inset:-10px}
+.back-btn svg{width:18px;height:18px}
 .back-btn:hover{background:var(--neutral-tint);color:var(--ink)}
 /* Hidden, not removed: the bar must not shift sideways between a screen with a
    back button and one without. */
@@ -123,8 +133,11 @@ img{max-width:100%;display:block}
 /* Five segments, as the reference runs it: the 24 questions are grouped into
    five sections and each segment fills across its own section, so the bar
    reads as chapters rather than as one long crawl. */
-.progress{flex:1;display:flex;gap:8px;min-width:0}
-.seg{flex:1;height:12px;border-radius:6px;background:var(--track);overflow:hidden}
+/* 58px segments with 24px between them — the reference's own geometry, which
+   comes to 386px and is centred rather than filling the column. Below that the
+   segments share what room there is; the gap stays put. */
+.progress{grid-column:2;display:flex;gap:24px;width:100%;max-width:386px;margin:0 auto;min-width:0}
+.seg{flex:1;max-width:58px;height:12px;border-radius:6px;background:var(--track);overflow:hidden}
 .seg span{display:block;height:100%;width:0;border-radius:6px;background:var(--accent);
   transition:width .32s cubic-bezier(.4,0,.2,1)}
 .progress[hidden]{display:none}
