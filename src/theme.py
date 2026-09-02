@@ -243,12 +243,35 @@ img{max-width:100%;display:block}
 }
 .opt-note{margin:-4px 0 0;font-size:11px;color:var(--muted);font-weight:600}
 
+/* ------------------------------------------------ the fact interstitial */
+/* Screen 2, centred on white the way the reference sets it. */
+.col.fact{text-align:center}
+.fact-name{margin:8px 0 0;font-size:14px;font-weight:500;color:var(--muted)}
+.fact-pill{
+  align-self:center;margin:12px 0 0;padding:8px 20px;border-radius:999px;
+  font-size:17px;font-weight:500;color:#fff;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent-tint) 100%);
+}
+.fact-k{margin:26px 0 0;font-size:50px;line-height:1;font-weight:600;color:var(--ink)}
+/* "10-15" is a whole accented line; "36 HRS" is a coloured number against ink
+   units, so there the span carries it. nth-of-type would count every <p> in
+   the column, not just the figures, so the first one is marked explicitly. */
+.fact-k.accent{color:var(--accent)}
+.fact-k span{color:var(--accent)}
+.fact-u{margin:4px 0 0;font-size:24px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.fact-cap{margin:10px 0 0;font-size:17px;line-height:1.4;color:var(--ink)}
+.fact-cap b{font-weight:700;font-style:italic}
+.fact-rule{width:34px;height:2px;background:var(--border);margin:26px auto 0;border-radius:2px}
+
 /* Two-up cards — the sex question. No ring: with only two choices side by side
    the fill and border carry the state on their own, and the reference draws its
    own male/female question the same way. */
 .opts.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-opt)}
-.opt.tile{justify-content:center;text-align:center;padding:18px 16px}
-.opt.tile .lbl{flex:none;font-weight:600}
+.opt.tile{flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;gap:14px;padding:24px 20px;min-height:170px}
+.opt.tile .lbl{flex:none;font-size:17px;font-weight:600}
+.opt.tile .lbl small{display:block;margin-top:8px;font-size:12px;font-weight:400;
+  line-height:1.35;color:var(--muted)}
 
 /* --------------------------------------------------------------- fields */
 .fields{display:flex;flex-wrap:wrap;gap:12px}
@@ -393,6 +416,9 @@ img{max-width:100%;display:block}
   display:grid;place-items:center;
 }
 .opt.goal .bubble svg{width:19px;height:19px}
+.bubble.big{width:64px;height:64px;border-radius:50%;flex:none;display:grid;
+  place-items:center;background:var(--bub);color:var(--gly)}
+.bubble.big svg{width:30px;height:30px}
 
 
 /* ------------------------------------------------------------- markety */

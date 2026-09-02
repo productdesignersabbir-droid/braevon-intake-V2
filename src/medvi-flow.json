@@ -4,6 +4,7 @@
   "name": "Q1_A0 - 01",
   "title": "You Deserve a Better Sex Life.",
   "subs": [
+   "Select your primary goal:",
    "See if MEDVi QUAD is right for you."
   ],
   "options": [
@@ -67,7 +68,9 @@
   "n": 3,
   "name": "A1 - Sex - 02",
   "title": "Are you male or female?",
-  "subs": [],
+  "subs": [
+   "QUAD medication is only suitable for males"
+  ],
   "options": [
    {
     "value": "Male",
@@ -1558,6 +1561,7 @@
   "name": "Blood Pressure 2 - 07.a",
   "title": "What was your last blood pressure reading?",
   "subs": [
+   "Please use a measurement from the last 6 months.",
    "Systolic (top number)"
   ],
   "options": [
@@ -1628,6 +1632,7 @@
   "name": "Blood Pressure 3 - 07.b",
   "title": "What was your last blood pressure reading?",
   "subs": [
+   "Please use a measurement from the last 6 months.",
    "Diastolic (bottom number)"
   ],
   "options": [
@@ -1969,7 +1974,9 @@
   "n": 30,
   "name": "Cardiovascular risk - 11",
   "title": "Do you have any of the following cardiovascular risk factors?",
-  "subs": [],
+  "subs": [
+   "Please check all that apply."
+  ],
   "options": [
    {
     "value": "High cholesterol",
@@ -2113,7 +2120,9 @@
   "n": 34,
   "name": "Heart Disease Symptom - 12",
   "title": "ED can be an early sign of heart disease. Do any of the following symptoms apply to you?",
-  "subs": [],
+  "subs": [
+   "Please check all that apply."
+  ],
   "options": [
    {
     "value": "Abnormal heart beats or heart rhythm - rapid, irregular, unusually slow (fewer than 50 beats/minute)",
@@ -2455,7 +2464,9 @@
   "n": 40,
   "name": "Other Allergies - 16",
   "title": "Do you have any other allergies?",
-  "subs": [],
+  "subs": [
+   "(medications, food, dyes, etc.)"
+  ],
   "options": [
    {
     "value": "no",
@@ -2543,6 +2554,7 @@
   "name": "Birth Date - 20",
   "title": "LAST STEP",
   "subs": [
+   "We need to verify your age for medical review purposes.",
    "Month",
    "Day",
    "Year"
@@ -2643,8 +2655,8 @@
   "name": "Medical Review - 21",
   "title": "Your Medical Review",
   "subs": [
+   "Success Probability",
    "You are a strong candidate for prescription ED treatment",
-   "How QUAD® Can Help",
    "How QUAD® Can Help",
    "Let's proceed to check your eligibility.",
    "First Name",
@@ -2751,6 +2763,7 @@
   "name": "Submission",
   "title": "{first_name}, how can you be reached if necessary?",
   "subs": [
+   "Our medical teams and pharmacy use email and text for patient communication.",
    "Email",
    "Phone Number"
   ],

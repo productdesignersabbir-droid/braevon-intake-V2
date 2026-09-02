@@ -134,14 +134,34 @@ def fields_of(body):
 
 
 def heads(body):
+    """The h1, plus the paragraph the reference sets under it.
+
+    That subtitle is a plain <p class="framer-text ...">, not an h2 — reading
+    only the headings dropped lines like "QUAD medication is only suitable for
+    males" off the sex screen. It is taken only when it appears between the h1
+    and the first option, so the captions inside a long option list are not
+    mistaken for it."""
     h1 = re.search(r'<h1[^>]*>(.*?)</h1>', body, re.S)
-    subs = [txt(x) for x in re.findall(r'<h[23][^>]*>(.*?)</h[23]>', body, re.S)]
-    return (txt(h1.group(1)) if h1 else None), [s for s in subs if s]
+    subs = []
+    if h1:
+        after = body[h1.end():]
+        stop = after.find('<label')
+        window = after if stop < 0 else after[:stop]
+        m = re.search(r'<p class="framer-text[^"]*"[^>]*>(.*?)</p>', window, re.S)
+        if m:
+            subs.append(txt(m.group(1)))
+    subs += [txt(x) for x in re.findall(r'<h[23][^>]*>(.*?)</h[23]>', body, re.S)]
+    seen, out = set(), []
+    for x in subs:
+        if x and x not in seen:
+            seen.add(x)
+            out.append(x)
+    return (txt(h1.group(1)) if h1 else None), out
 
 
 # ---------------------------------------------------------------- annotation
-# The reference encodes its branching in the page names — "5.a.1" is the
-# follow-up to option 1 of question 5, "13.a.2" to the alpha blocker on 13 —
+# The reference encodes its branching in the page names - "5.a.1" is the
+# follow-up to option 1 of question 5, "13.a.2" to the alpha blocker on 13 -
 # and its safety rules in the notes under the options. Both are read off here
 # rather than hand-listed, so a change to the reference shows up as a diff.
 
@@ -154,8 +174,6 @@ NONE_OPTION = re.compile(r"(none of the|no, i don'?t)", re.I)
 
 
 def annotate(flow):
-    by_name = {p['name']: p for p in flow}
-
     def group_of(prefix):
         for p in flow:
             if p['name'].startswith(prefix) and p['group']:
@@ -187,10 +205,9 @@ def annotate(flow):
             cond = {'group': meds_group, 'any': ['Any alpha blocker']}
         p['cond'] = cond
 
-        # safety rules. Two shapes: a note on one option saying it disqualifies,
-        # or a note on the exclusive option saying everything else does.
-        # "Select this to continue…" on most safety screens, but the drugs
-        # screen words it as "…will make you ineligible" under its own None.
+        # Safety rules. Two shapes: a note on one option saying it disqualifies,
+        # or a note on the exclusive option saying everything else does. The
+        # drugs screen words the second one as "...will make you ineligible".
         safe = [o for o in p['options']
                 if o.get('note') and (EXCLUSIVE_SAFE.search(o['note'])
                                       or (NONE_OPTION.match(o['label'])
@@ -205,7 +222,6 @@ def annotate(flow):
             p['exclusive'] = None
             p['dq_on'] = hits
             p['dq_kind'] = 'named' if hits else None
-        # a "none of these" option is exclusive even where nothing disqualifies
         if not p['exclusive']:
             for o in p['options']:
                 if NONE_OPTION.match(o['label']):

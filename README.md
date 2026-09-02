@@ -100,6 +100,22 @@ stay in the repo so it can be pulled back a screen at a time.
   Effects"). The exclusive answer is hoisted to the top of every list here, so
   a caption would end up against the wrong block. Worth restoring properly if
   those screens stay.
+
+## Control shapes
+
+Not every screen is a stacked list. Measured off the live reference, seven ask
+their question as **two cards side by side** — 208x190 rather than 432x51 —
+and they are listed in `TILE_SCREENS`: sex (3), morning erections (7), blood
+pressure diagnosis (24), the two allergy screens (39, 40), current medications
+(41) and the note to the doctor (42). The sex screen's cards carry a 64px icon
+bubble in the reference's own blue and pink; the other six carry a small mark
+that reads as decoration and are left plain.
+
+The reference's subtitle is a plain `<p class="framer-text">` under the h1, not
+a heading — reading only headings dropped lines like "QUAD medication is only
+suitable for males" off the sex screen. `heads()` takes the first such
+paragraph between the h1 and the first option, so captions inside an option
+list are not mistaken for it.
 - **The 137% partner figure** on screen 33 is the reference's and has no
   Braevon source. It is marked as such on the screen.
 

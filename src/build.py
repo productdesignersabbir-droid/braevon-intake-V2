@@ -38,6 +38,11 @@ FLOW = json.load(open(os.path.join(HERE, 'medvi-flow.json'), encoding='utf-8'))
 BRAND = 'BRAEVON'
 STOP_SCREEN = 46          # the reference's "NO RX" page; here it is the overlay
 INTERSTITIALS = {2, 5, 8, 32, 33, 44}
+# Screens the reference lays out as two cards side by side rather than a
+# stacked list — measured off the live page, where the option wrapper is
+# flex-direction:row and each card is 208x190 instead of 432x51.
+TILE_SCREENS = {3, 7, 24, 39, 40, 41, 42}
+
 SEGMENTS = 5
 
 
@@ -71,6 +76,16 @@ GOAL_STYLE = {
                                     _ic('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v5h-5"/>')),
     'Boost confidence':            ('#FFEDD5', '#F97316',
                                     _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>')),
+}
+
+# The sex screen's two cards carry a 64px icon bubble in the reference, in the
+# same two hues its goal icons use. The other tile screens carry a small mark
+# that reads as decoration, and are left plain.
+TILE_ICONS = {
+    (3, 'male'):   ('#DBEAFE', '#3B82F6',
+                    _ic('<circle cx="10" cy="14" r="6"/><path d="M15 9l6-6M15 3h6v6"/>')),
+    (3, 'female'): ('#FCE7F3', '#EC4899',
+                    _ic('<circle cx="12" cy="9" r="6"/><path d="M12 15v7M9 19h6"/>')),
 }
 
 MOLECULES = [
@@ -135,8 +150,16 @@ def head(title=None, sub=None, eyebrow=None):
     return out
 
 
-def option(o, exclusive, goal=False):
+def option(o, exclusive, goal=False, tile=False, screen=None):
     label = esc(brandify(o['label']))
+    if tile:
+        note = ('<small>%s</small>' % esc(brandify(o['note']))) if o.get('note') else ''
+        art = TILE_ICONS.get((screen, (o['value'] or '').lower()))
+        bub = ('<span class="bubble big" style="--bub:%s;--gly:%s">%s</span>' % art
+               ) if art else ''
+        return ('<button class="opt tile" data-value="%s">%s'
+                '<span class="lbl">%s%s</span></button>'
+                % (attr(o['value']), bub, label, note))
     if goal:
         bub, gly, glyph = GOAL_STYLE.get(o['label'], ('#FDECE6', '#E6430D', ICON['shield']))
         return ('<button class="opt goal" data-value="%s"><span class="bubble" '
@@ -159,10 +182,12 @@ def options_block(p):
     every option scrolled past is one they might tick by mistake. The reference
     puts it first for the same reason."""
     goal = p['n'] == 1
-    opts = sorted(p['options'], key=lambda o: o['value'] != p['exclusive'])
-    return ('<div class="opts" data-group="%s" data-mode="%s">%s</div>'
-            % (attr(p['group']), p['mode'],
-               ''.join(option(o, p['exclusive'], goal) for o in opts)))
+    tile = p['n'] in TILE_SCREENS
+    opts = (p['options'] if tile
+            else sorted(p['options'], key=lambda o: o['value'] != p['exclusive']))
+    return ('<div class="opts%s" data-group="%s" data-mode="%s">%s</div>'
+            % (' tilegrid' if tile else '', attr(p['group']), p['mode'],
+               ''.join(option(o, p['exclusive'], goal, tile, p['n']) for o in opts)))
 
 
 def field_block(f, label=None):
@@ -292,14 +317,18 @@ def screen_submission(p):
 def screen_interstitial(p):
     n = p['n']
     if n == 2:
-        return ('<div class="col">'
-                + head('Fast acting. Long lasting.', eyebrow='BRAEVON 4-in-1')
-                + '<div class="factcard" style="margin-top:20px">'
-                  '<div class="k">10&ndash;15</div><div class="u">minutes</div>'
-                  '<p>Fast onset for the &ldquo;get it&rdquo;.</p></div>'
-                  '<div class="factcard" style="margin-top:12px">'
-                  '<div class="k">36</div><div class="u">hours</div>'
-                  '<p>The &ldquo;keep it&rdquo; window, for spontaneity.</p></div>'
+        # Centred, on white, exactly as the reference sets it: the product name,
+        # a gradient pill, then two figures at 58px with a rule between them.
+        return ('<div class="col fact">'
+                '<p class="fact-name">BRAEVON 4-in-1</p>'
+                '<p class="fact-pill">Fast Acting / Long Lasting</p>'
+                '<p class="fact-k accent">10&ndash;15</p>'
+                '<p class="fact-u">MINUTES</p>'
+                '<p class="fact-cap">Fast onset for the <b>&ldquo;Get it.&rdquo;</b></p>'
+                '<div class="fact-rule"></div>'
+                '<p class="fact-k"><span>36</span> HRS</p>'
+                '<p class="fact-cap">The <b>&ldquo;Keep it&rdquo;</b> window<br/>'
+                'for spontaneity.</p>'
                 + cta(blocked=False) + '</div>')
     if n == 5:
         rows = ''.join('<div class="mol"><div><b>%s</b><span>%s</span></div></div>'
