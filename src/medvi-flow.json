@@ -1,0 +1,2779 @@
+[
+ {
+  "n": 1,
+  "name": "Q1_A0 - 01",
+  "title": "You Deserve a Better Sex Life.",
+  "subs": [
+   "See if MEDVi QUAD is right for you."
+  ],
+  "options": [
+   {
+    "value": "Improve stamina & endurance",
+    "label": "Improve stamina & endurance",
+    "type": "radio",
+    "name": "Q1_primary_goal"
+   },
+   {
+    "value": "Increase erection strength",
+    "label": "Increase erection strength",
+    "type": "radio",
+    "name": "Q1_primary_goal"
+   },
+   {
+    "value": "Boost sex drive & desire",
+    "label": "Boost sex drive & desire",
+    "type": "radio",
+    "name": "Q1_primary_goal"
+   },
+   {
+    "value": "Quicker recovery",
+    "label": "Quicker recovery",
+    "type": "radio",
+    "name": "Q1_primary_goal"
+   },
+   {
+    "value": "Boost confidence",
+    "label": "Boost confidence",
+    "type": "radio",
+    "name": "Q1_primary_goal"
+   }
+  ],
+  "fields": [],
+  "group": "Q1_primary_goal",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 2,
+  "name": "FACT-1-02",
+  "title": "10-15MINUTES",
+  "subs": [
+   "Fast onset for the \"Get it.\"",
+   "The \"Keep it\" window for spontaneity."
+  ],
+  "options": [],
+  "fields": [],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 3,
+  "name": "A1 - Sex - 02",
+  "title": "Are you male or female?",
+  "subs": [],
+  "options": [
+   {
+    "value": "Male",
+    "label": "Male",
+    "type": "radio",
+    "name": "sex"
+   },
+   {
+    "value": "Female",
+    "label": "Female",
+    "type": "radio",
+    "name": "sex"
+   }
+  ],
+  "fields": [],
+  "group": "sex",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 4,
+  "name": "A2 - 03",
+  "title": "Do you ever have a problem getting or maintaining an erection?",
+  "subs": [],
+  "options": [
+   {
+    "value": "Every Time",
+    "label": "Every time",
+    "type": "radio",
+    "name": "Q3_problem_getting_or_maintaining_erection"
+   },
+   {
+    "value": "More than half the time",
+    "label": "More than half the time",
+    "type": "radio",
+    "name": "Q3_problem_getting_or_maintaining_erection"
+   },
+   {
+    "value": "Occasionally",
+    "label": "Occasionally",
+    "type": "radio",
+    "name": "Q3_problem_getting_or_maintaining_erection"
+   },
+   {
+    "value": "Rarely",
+    "label": "Rarely",
+    "type": "radio",
+    "name": "Q3_problem_getting_or_maintaining_erection"
+   },
+   {
+    "value": "Never",
+    "label": "Never",
+    "type": "radio",
+    "name": "Q3_problem_getting_or_maintaining_erection",
+    "note": "This answer will disqualify you from medication"
+   }
+  ],
+  "fields": [],
+  "group": "Q3_problem_getting_or_maintaining_erection",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [
+   "Never"
+  ],
+  "dq_kind": "named"
+ },
+ {
+  "n": 5,
+  "name": "INT Quad 4in1",
+  "title": "How QUAD's 4-in-1 Works for you",
+  "subs": [
+   "MEDVi QUAD's is engineered to hit both Desire (the brain) and Performance (the body) in one dose."
+  ],
+  "options": [],
+  "fields": [],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 6,
+  "name": "A3 -03",
+  "title": "Do your erections last as long as you'd like?",
+  "subs": [],
+  "options": [
+   {
+    "value": "Never",
+    "label": "Never",
+    "type": "radio",
+    "name": "Q4_erection_last_as_long_as_desired"
+   },
+   {
+    "value": "Rarely",
+    "label": "Rarely",
+    "type": "radio",
+    "name": "Q4_erection_last_as_long_as_desired"
+   },
+   {
+    "value": "Sometimes",
+    "label": "Sometimes",
+    "type": "radio",
+    "name": "Q4_erection_last_as_long_as_desired"
+   },
+   {
+    "value": "Yes, always",
+    "label": "Yes, always",
+    "type": "radio",
+    "name": "Q4_erection_last_as_long_as_desired"
+   }
+  ],
+  "fields": [],
+  "group": "Q4_erection_last_as_long_as_desired",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 7,
+  "name": "A4 - 04",
+  "title": "Do you still wake up with an erection?",
+  "subs": [],
+  "options": [
+   {
+    "value": "yes",
+    "label": "Yes",
+    "type": "radio",
+    "name": "Q5_still_wakes_up_with_erection"
+   },
+   {
+    "value": "no",
+    "label": "No",
+    "type": "radio",
+    "name": "Q5_still_wakes_up_with_erection"
+   }
+  ],
+  "fields": [],
+  "group": "Q5_still_wakes_up_with_erection",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 8,
+  "name": "INT Quad Solution",
+  "title": "You deserve a solution that starts in minutes and lasts as long as you need it to",
+  "subs": [
+   "THE 4-IN-1 ADVANTAGE"
+  ],
+  "options": [],
+  "fields": [],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 9,
+  "name": "ED Tried 1 - 5",
+  "title": "What, if any, ED treatments have you tried?",
+  "subs": [],
+  "options": [
+   {
+    "value": "Viagra",
+    "label": "Viagra (or sildenafil)",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried"
+   },
+   {
+    "value": "Cialis",
+    "label": "Cialis (or tadalafil)",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried"
+   },
+   {
+    "value": "Levitra",
+    "label": "Levitra (or vardenafil)",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried"
+   },
+   {
+    "value": "Staxyn",
+    "label": "Staxyn (or vardenafil)",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried"
+   },
+   {
+    "value": "Stendra",
+    "label": "Stendra (or avanafil)",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried"
+   },
+   {
+    "value": "A medication or supplement which is not listed here",
+    "label": "A medication or supplement which is not listed here",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried"
+   },
+   {
+    "value": "Penile surgery, penile injections, penile vacuum pump, or prosthesis",
+    "label": "Penile surgery, penile injections, penile vacuum pump, or prosthesis",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried",
+    "note": "This answer will disqualify you from medication"
+   },
+   {
+    "value": "None of the above",
+    "label": "None of the above",
+    "type": "checkbox",
+    "name": "Q6_ed_treatments_tried"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q6_ed_treatments_tried",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q6_ed_treatments_tried",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": "None of the above",
+  "dq_on": [
+   "Penile surgery, penile injections, penile vacuum pump, or prosthesis"
+  ],
+  "dq_kind": "named"
+ },
+ {
+  "n": 10,
+  "name": "ED Tried 2 - 5.a.1",
+  "title": "How well did Viagra work for you?",
+  "subs": [],
+  "options": [
+   {
+    "value": "It didn't work",
+    "label": "It didn't work",
+    "type": "radio",
+    "name": "Q6a1_viagra_effectiveness"
+   },
+   {
+    "value": "It was better than nothing, but not reliable",
+    "label": "It was better than nothing, but not reliable",
+    "type": "radio",
+    "name": "Q6a1_viagra_effectiveness"
+   },
+   {
+    "value": "It worked, but I'm looking for something better",
+    "label": "It worked, but I'm looking for something better",
+    "type": "radio",
+    "name": "Q6a1_viagra_effectiveness"
+   },
+   {
+    "value": "It was very effective",
+    "label": "It was very effective",
+    "type": "radio",
+    "name": "Q6a1_viagra_effectiveness"
+   }
+  ],
+  "fields": [],
+  "group": "Q6a1_viagra_effectiveness",
+  "mode": "single",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Viagra"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 11,
+  "name": "ED Tried 2 - 5.a.2",
+  "title": "How well did Cialis work for you?",
+  "subs": [],
+  "options": [
+   {
+    "value": "It didn't work",
+    "label": "It didn't work",
+    "type": "radio",
+    "name": "Q6a2_cialis_effectiveness"
+   },
+   {
+    "value": "It was better than nothing, but not reliable",
+    "label": "It was better than nothing, but not reliable",
+    "type": "radio",
+    "name": "Q6a2_cialis_effectiveness"
+   },
+   {
+    "value": "It worked, but I'm looking for something better",
+    "label": "It worked, but I'm looking for something better",
+    "type": "radio",
+    "name": "Q6a2_cialis_effectiveness"
+   },
+   {
+    "value": "It was very effective",
+    "label": "It was very effective",
+    "type": "radio",
+    "name": "Q6a2_cialis_effectiveness"
+   }
+  ],
+  "fields": [],
+  "group": "Q6a2_cialis_effectiveness",
+  "mode": "single",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Cialis"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 12,
+  "name": "ED Tried 2 - 5.a.3",
+  "title": "How well did Levitra work for you?",
+  "subs": [],
+  "options": [
+   {
+    "value": "It didn't work",
+    "label": "It didn't work",
+    "type": "radio",
+    "name": "Q6a3_levitra_effectiveness"
+   },
+   {
+    "value": "It was better than nothing, but not reliable",
+    "label": "It was better than nothing, but not reliable",
+    "type": "radio",
+    "name": "Q6a3_levitra_effectiveness"
+   },
+   {
+    "value": "It worked, but I'm looking for something better",
+    "label": "It worked, but I'm looking for something better",
+    "type": "radio",
+    "name": "Q6a3_levitra_effectiveness"
+   },
+   {
+    "value": "It was very effective",
+    "label": "It was very effective",
+    "type": "radio",
+    "name": "Q6a3_levitra_effectiveness"
+   }
+  ],
+  "fields": [],
+  "group": "Q6a3_levitra_effectiveness",
+  "mode": "single",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Levitra"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 13,
+  "name": "ED Tried 2 - 5.a.4",
+  "title": "How well did Staxyn work for you?",
+  "subs": [],
+  "options": [
+   {
+    "value": "It didn't work",
+    "label": "It didn't work",
+    "type": "radio",
+    "name": "Q6a4_staxyn_effectiveness"
+   },
+   {
+    "value": "It was better than nothing, but not reliable",
+    "label": "It was better than nothing, but not reliable",
+    "type": "radio",
+    "name": "Q6a4_staxyn_effectiveness"
+   },
+   {
+    "value": "It worked, but I'm looking for something better",
+    "label": "It worked, but I'm looking for something better",
+    "type": "radio",
+    "name": "Q6a4_staxyn_effectiveness"
+   },
+   {
+    "value": "It was very effective",
+    "label": "It was very effective",
+    "type": "radio",
+    "name": "Q6a4_staxyn_effectiveness"
+   }
+  ],
+  "fields": [],
+  "group": "Q6a4_staxyn_effectiveness",
+  "mode": "single",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Staxyn"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 14,
+  "name": "ED Tried 2 - 5.a.5",
+  "title": "How well did Stendra work for you?",
+  "subs": [],
+  "options": [
+   {
+    "value": "It didn't work",
+    "label": "It didn't work",
+    "type": "radio",
+    "name": "Q6a5_stendra_effectiveness"
+   },
+   {
+    "value": "It was better than nothing, but not reliable",
+    "label": "It was better than nothing, but not reliable",
+    "type": "radio",
+    "name": "Q6a5_stendra_effectiveness"
+   },
+   {
+    "value": "It worked, but I'm looking for something better",
+    "label": "It worked, but I'm looking for something better",
+    "type": "radio",
+    "name": "Q6a5_stendra_effectiveness"
+   },
+   {
+    "value": "It was very effective",
+    "label": "It was very effective",
+    "type": "radio",
+    "name": "Q6a5_stendra_effectiveness"
+   }
+  ],
+  "fields": [],
+  "group": "Q6a5_stendra_effectiveness",
+  "mode": "single",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Stendra"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 15,
+  "name": "ED Tried 2 - 5.a.6",
+  "title": "How well did the other medication/s work for you?",
+  "subs": [],
+  "options": [
+   {
+    "value": "It didn't work",
+    "label": "It didn't work",
+    "type": "radio",
+    "name": "Q6a6_other_ed_meds_effectiveness"
+   },
+   {
+    "value": "It was better than nothing, but not reliable",
+    "label": "It was better than nothing, but not reliable",
+    "type": "radio",
+    "name": "Q6a6_other_ed_meds_effectiveness"
+   },
+   {
+    "value": "It worked, but I'm looking for something better",
+    "label": "It worked, but I'm looking for something better",
+    "type": "radio",
+    "name": "Q6a6_other_ed_meds_effectiveness"
+   },
+   {
+    "value": "It was very effective",
+    "label": "It was very effective",
+    "type": "radio",
+    "name": "Q6a6_other_ed_meds_effectiveness"
+   }
+  ],
+  "fields": [],
+  "group": "Q6a6_other_ed_meds_effectiveness",
+  "mode": "single",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "A medication or supplement which is not listed here"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 16,
+  "name": "ED Tried 3 - 5.b.1",
+  "title": "For your safety, please choose any (or none) of the side effects you experienced with Viagra:",
+  "subs": [
+   "Serious Reactions",
+   "Common Side Effects"
+  ],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "severe_allergic_reaction",
+    "label": "Severe allergic reaction",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects",
+    "note": "“anaphylaxis” symptoms may include rash, wheezing, lip/tongue/throat swelling, shortness of breath, nausea/vomiting/diarrhea, flushing, dizziness/fainting, heart attack, or seizures"
+   },
+   {
+    "value": "heart_attack_stroke_or_heart_rhythm_disorder",
+    "label": "Heart attack, stroke, or heart rhythm disorder",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "severely_low_blood_pressure",
+    "label": "Severely low blood pressure",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects",
+    "note": "less than 90 over 50"
+   },
+   {
+    "value": "Internal_bleeding",
+    "label": "Internal bleeding",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects",
+    "note": "brain, lung, retina, or other area"
+   },
+   {
+    "value": "vision_or_hearing_changes_or_loss",
+    "label": "Vision or hearing changes or loss",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "seizures",
+    "label": "Seizures",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "persistent_or_painful_erection",
+    "label": "Persistent or painful erection",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects",
+    "note": "lasting more than 4 hour"
+   },
+   {
+    "value": "reduced_white_or_red_blood_cell_count",
+    "label": "Reduced white or red blood cell count",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects",
+    "note": "low hemoglobin or “anemia”"
+   },
+   {
+    "value": "headache",
+    "label": "Headache",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "upset_stomach",
+    "label": "Upset stomach",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "skin_flushing_or_mild_skin_rash",
+    "label": "Skin flushing or mild skin rash",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "trouble_sleeping",
+    "label": "Trouble sleeping",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "muscle_aches",
+    "label": "Muscle aches",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "runny_nose_or_sinus_congestion",
+    "label": "Runny nose or sinus congestion",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   },
+   {
+    "value": "numbness_or_tingling_of_extremities",
+    "label": "Numbness or tingling of extremities",
+    "type": "checkbox",
+    "name": "Q6b1_viagra_side_effects"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q6b1_viagra_side_effects",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q6b1_viagra_side_effects",
+  "mode": "multi",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Viagra"
+   ]
+  },
+  "exclusive": "None of these",
+  "dq_on": [
+   "severe_allergic_reaction",
+   "heart_attack_stroke_or_heart_rhythm_disorder",
+   "severely_low_blood_pressure",
+   "Internal_bleeding",
+   "vision_or_hearing_changes_or_loss",
+   "seizures",
+   "persistent_or_painful_erection",
+   "reduced_white_or_red_blood_cell_count",
+   "headache",
+   "upset_stomach",
+   "skin_flushing_or_mild_skin_rash",
+   "trouble_sleeping",
+   "muscle_aches",
+   "runny_nose_or_sinus_congestion",
+   "numbness_or_tingling_of_extremities"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 17,
+  "name": "ED Tried 3 - 5.b.2",
+  "title": "For your safety, please choose any (or none) of the side effects you experienced with Cialis:",
+  "subs": [
+   "Serious Reactions",
+   "Common Side Effects"
+  ],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "severe_allergic_reaction",
+    "label": "Severe allergic reaction",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects",
+    "note": "“anaphylaxis” symptoms may include rash, wheezing, lip/tongue/throat swelling, shortness of breath, nausea/vomiting/diarrhea, flushing, dizziness/fainting, heart attack, or seizures"
+   },
+   {
+    "value": "heart_attack_stroke_or_heart_rhythm_disorder",
+    "label": "Heart attack, stroke, or heart rhythm disorder",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "severely_low_blood_pressure",
+    "label": "Severely low blood pressure",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects",
+    "note": "less than 90 over 50"
+   },
+   {
+    "value": "Internal_bleeding",
+    "label": "Internal bleeding",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects",
+    "note": "brain, lung, retina, or other area"
+   },
+   {
+    "value": "vision_or_hearing_changes_or_loss",
+    "label": "Vision or hearing changes or loss",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "seizures",
+    "label": "Seizures",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "persistent_or_painful_erection",
+    "label": "Persistent or painful erection",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects",
+    "note": "lasting more than 4 hour"
+   },
+   {
+    "value": "reduced_white_or_red_blood_cell_count",
+    "label": "Reduced white or red blood cell count",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects",
+    "note": "low hemoglobin or “anemia”"
+   },
+   {
+    "value": "headache",
+    "label": "Headache",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "upset_stomach",
+    "label": "Upset stomach",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "skin_flushing_or_mild_skin_rash",
+    "label": "Skin flushing or mild skin rash",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "trouble_sleeping",
+    "label": "Trouble sleeping",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "muscle_aches",
+    "label": "Muscle aches",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "runny_nose_or_sinus_congestion",
+    "label": "Runny nose or sinus congestion",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   },
+   {
+    "value": "numbness_or_tingling_of_extremities",
+    "label": "Numbness or tingling of extremities",
+    "type": "checkbox",
+    "name": "Q6b2_cialis_side_effects"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q6b2_cialis_side_effects",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q6b2_cialis_side_effects",
+  "mode": "multi",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Cialis"
+   ]
+  },
+  "exclusive": "None of these",
+  "dq_on": [
+   "severe_allergic_reaction",
+   "heart_attack_stroke_or_heart_rhythm_disorder",
+   "severely_low_blood_pressure",
+   "Internal_bleeding",
+   "vision_or_hearing_changes_or_loss",
+   "seizures",
+   "persistent_or_painful_erection",
+   "reduced_white_or_red_blood_cell_count",
+   "headache",
+   "upset_stomach",
+   "skin_flushing_or_mild_skin_rash",
+   "trouble_sleeping",
+   "muscle_aches",
+   "runny_nose_or_sinus_congestion",
+   "numbness_or_tingling_of_extremities"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 18,
+  "name": "ED Tried 3 - 5.b.3",
+  "title": "For your safety, please choose any (or none) of the side effects you experienced with Levitra:",
+  "subs": [
+   "Serious Reactions",
+   "Common Side Effects"
+  ],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "severe_allergic_reaction",
+    "label": "Severe allergic reaction",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects",
+    "note": "“anaphylaxis” symptoms may include rash, wheezing, lip/tongue/throat swelling, shortness of breath, nausea/vomiting/diarrhea, flushing, dizziness/fainting, heart attack, or seizures"
+   },
+   {
+    "value": "heart_attack_stroke_or_heart_rhythm_disorder",
+    "label": "Heart attack, stroke, or heart rhythm disorder",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "severely_low_blood_pressure",
+    "label": "Severely low blood pressure",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects",
+    "note": "less than 90 over 50"
+   },
+   {
+    "value": "Internal_bleeding",
+    "label": "Internal bleeding",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects",
+    "note": "brain, lung, retina, or other area"
+   },
+   {
+    "value": "vision_or_hearing_changes_or_loss",
+    "label": "Vision or hearing changes or loss",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "seizures",
+    "label": "Seizures",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "persistent_or_painful_erection",
+    "label": "Persistent or painful erection",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects",
+    "note": "lasting more than 4 hour"
+   },
+   {
+    "value": "reduced_white_or_red_blood_cell_count",
+    "label": "Reduced white or red blood cell count",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects",
+    "note": "low hemoglobin or “anemia”"
+   },
+   {
+    "value": "headache",
+    "label": "Headache",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "upset_stomach",
+    "label": "Upset stomach",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "skin_flushing_or_mild_skin_rash",
+    "label": "Skin flushing or mild skin rash",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "trouble_sleeping",
+    "label": "Trouble sleeping",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "muscle_aches",
+    "label": "Muscle aches",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "runny_nose_or_sinus_congestion",
+    "label": "Runny nose or sinus congestion",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   },
+   {
+    "value": "numbness_or_tingling_of_extremities",
+    "label": "Numbness or tingling of extremities",
+    "type": "checkbox",
+    "name": "Q6b3_levitra_side_effects"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q6b3_levitra_side_effects",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q6b3_levitra_side_effects",
+  "mode": "multi",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Levitra"
+   ]
+  },
+  "exclusive": "None of these",
+  "dq_on": [
+   "severe_allergic_reaction",
+   "heart_attack_stroke_or_heart_rhythm_disorder",
+   "severely_low_blood_pressure",
+   "Internal_bleeding",
+   "vision_or_hearing_changes_or_loss",
+   "seizures",
+   "persistent_or_painful_erection",
+   "reduced_white_or_red_blood_cell_count",
+   "headache",
+   "upset_stomach",
+   "skin_flushing_or_mild_skin_rash",
+   "trouble_sleeping",
+   "muscle_aches",
+   "runny_nose_or_sinus_congestion",
+   "numbness_or_tingling_of_extremities"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 19,
+  "name": "ED Tried 3 - 5.b.4",
+  "title": "For your safety, please choose any (or none) of the side effects you experienced with Staxyn:",
+  "subs": [
+   "Serious Reactions",
+   "Common Side Effects"
+  ],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "severe_allergic_reaction",
+    "label": "Severe allergic reaction",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects",
+    "note": "“anaphylaxis” symptoms may include rash, wheezing, lip/tongue/throat swelling, shortness of breath, nausea/vomiting/diarrhea, flushing, dizziness/fainting, heart attack, or seizures"
+   },
+   {
+    "value": "heart_attack_stroke_or_heart_rhythm_disorder",
+    "label": "Heart attack, stroke, or heart rhythm disorder",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "severely_low_blood_pressure",
+    "label": "Severely low blood pressure",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects",
+    "note": "less than 90 over 50"
+   },
+   {
+    "value": "Internal_bleeding",
+    "label": "Internal bleeding",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects",
+    "note": "brain, lung, retina, or other area"
+   },
+   {
+    "value": "vision_or_hearing_changes_or_loss",
+    "label": "Vision or hearing changes or loss",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "seizures",
+    "label": "Seizures",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "persistent_or_painful_erection",
+    "label": "Persistent or painful erection",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects",
+    "note": "lasting more than 4 hour"
+   },
+   {
+    "value": "reduced_white_or_red_blood_cell_count",
+    "label": "Reduced white or red blood cell count",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects",
+    "note": "low hemoglobin or “anemia”"
+   },
+   {
+    "value": "headache",
+    "label": "Headache",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "upset_stomach",
+    "label": "Upset stomach",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "skin_flushing_or_mild_skin_rash",
+    "label": "Skin flushing or mild skin rash",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "trouble_sleeping",
+    "label": "Trouble sleeping",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "muscle_aches",
+    "label": "Muscle aches",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "runny_nose_or_sinus_congestion",
+    "label": "Runny nose or sinus congestion",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   },
+   {
+    "value": "numbness_or_tingling_of_extremities",
+    "label": "Numbness or tingling of extremities",
+    "type": "checkbox",
+    "name": "Q6b4_staxyn_side_effects"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q6b4_staxyn_side_effects",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q6b4_staxyn_side_effects",
+  "mode": "multi",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Staxyn"
+   ]
+  },
+  "exclusive": "None of these",
+  "dq_on": [
+   "severe_allergic_reaction",
+   "heart_attack_stroke_or_heart_rhythm_disorder",
+   "severely_low_blood_pressure",
+   "Internal_bleeding",
+   "vision_or_hearing_changes_or_loss",
+   "seizures",
+   "persistent_or_painful_erection",
+   "reduced_white_or_red_blood_cell_count",
+   "headache",
+   "upset_stomach",
+   "skin_flushing_or_mild_skin_rash",
+   "trouble_sleeping",
+   "muscle_aches",
+   "runny_nose_or_sinus_congestion",
+   "numbness_or_tingling_of_extremities"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 20,
+  "name": "ED Tried 3 - 5.b.5",
+  "title": "For your safety, please choose any (or none) of the side effects you experienced with Stendra:",
+  "subs": [
+   "Serious Reactions",
+   "Common Side Effects"
+  ],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "severe_allergic_reaction",
+    "label": "Severe allergic reaction",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects",
+    "note": "“anaphylaxis” symptoms may include rash, wheezing, lip/tongue/throat swelling, shortness of breath, nausea/vomiting/diarrhea, flushing, dizziness/fainting, heart attack, or seizures"
+   },
+   {
+    "value": "heart_attack_stroke_or_heart_rhythm_disorder",
+    "label": "Heart attack, stroke, or heart rhythm disorder",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "severely_low_blood_pressure",
+    "label": "Severely low blood pressure",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects",
+    "note": "less than 90 over 50"
+   },
+   {
+    "value": "Internal_bleeding",
+    "label": "Internal bleeding",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects",
+    "note": "brain, lung, retina, or other area"
+   },
+   {
+    "value": "vision_or_hearing_changes_or_loss",
+    "label": "Vision or hearing changes or loss",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "seizures",
+    "label": "Seizures",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "persistent_or_painful_erection",
+    "label": "Persistent or painful erection",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects",
+    "note": "lasting more than 4 hour"
+   },
+   {
+    "value": "reduced_white_or_red_blood_cell_count",
+    "label": "Reduced white or red blood cell count",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects",
+    "note": "low hemoglobin or “anemia”"
+   },
+   {
+    "value": "headache",
+    "label": "Headache",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "upset_stomach",
+    "label": "Upset stomach",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "skin_flushing_or_mild_skin_rash",
+    "label": "Skin flushing or mild skin rash",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "trouble_sleeping",
+    "label": "Trouble sleeping",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "muscle_aches",
+    "label": "Muscle aches",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "runny_nose_or_sinus_congestion",
+    "label": "Runny nose or sinus congestion",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   },
+   {
+    "value": "numbness_or_tingling_of_extremities",
+    "label": "Numbness or tingling of extremities",
+    "type": "checkbox",
+    "name": "Q6b5_stendra_side_effects"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q6b5_stendra_side_effects",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q6b5_stendra_side_effects",
+  "mode": "multi",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Stendra"
+   ]
+  },
+  "exclusive": "None of these",
+  "dq_on": [
+   "severe_allergic_reaction",
+   "heart_attack_stroke_or_heart_rhythm_disorder",
+   "severely_low_blood_pressure",
+   "Internal_bleeding",
+   "vision_or_hearing_changes_or_loss",
+   "seizures",
+   "persistent_or_painful_erection",
+   "reduced_white_or_red_blood_cell_count",
+   "headache",
+   "upset_stomach",
+   "skin_flushing_or_mild_skin_rash",
+   "trouble_sleeping",
+   "muscle_aches",
+   "runny_nose_or_sinus_congestion",
+   "numbness_or_tingling_of_extremities"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 21,
+  "name": "ED Tried 3 - 5.b.6",
+  "title": "For your safety, please choose any (or none) of the side effects you experienced with the medication/s",
+  "subs": [
+   "Serious Reactions",
+   "Common Side Effects"
+  ],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "severe_allergic_reaction",
+    "label": "Severe allergic reaction",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects",
+    "note": "“anaphylaxis” symptoms may include rash, wheezing, lip/tongue/throat swelling, shortness of breath, nausea/vomiting/diarrhea, flushing, dizziness/fainting, heart attack, or seizures"
+   },
+   {
+    "value": "heart_attack_stroke_or_heart_rhythm_disorder",
+    "label": "Heart attack, stroke, or heart rhythm disorder",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "severely_low_blood_pressure",
+    "label": "Severely low blood pressure",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects",
+    "note": "less than 90 over 50"
+   },
+   {
+    "value": "Internal_bleeding",
+    "label": "Internal bleeding",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects",
+    "note": "brain, lung, retina, or other area"
+   },
+   {
+    "value": "vision_or_hearing_changes_or_loss",
+    "label": "Vision or hearing changes or loss",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "seizures",
+    "label": "Seizures",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "persistent_or_painful_erection",
+    "label": "Persistent or painful erection",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects",
+    "note": "lasting more than 4 hour"
+   },
+   {
+    "value": "reduced_white_or_red_blood_cell_count",
+    "label": "Reduced white or red blood cell count",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects",
+    "note": "low hemoglobin or “anemia”"
+   },
+   {
+    "value": "headache",
+    "label": "Headache",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "upset_stomach",
+    "label": "Upset stomach",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "skin_flushing_or_mild_skin_rash",
+    "label": "Skin flushing or mild skin rash",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "trouble_sleeping",
+    "label": "Trouble sleeping",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "muscle_aches",
+    "label": "Muscle aches",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "runny_nose_or_sinus_congestion",
+    "label": "Runny nose or sinus congestion",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   },
+   {
+    "value": "numbness_or_tingling_of_extremities",
+    "label": "Numbness or tingling of extremities",
+    "type": "checkbox",
+    "name": "Q6b6_other_ed_meds_side_effects"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q6b6_other_ed_meds_side_effects",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q6b6_other_ed_meds_side_effects",
+  "mode": "multi",
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "A medication or supplement which is not listed here"
+   ]
+  },
+  "exclusive": "None of these",
+  "dq_on": [
+   "severe_allergic_reaction",
+   "heart_attack_stroke_or_heart_rhythm_disorder",
+   "severely_low_blood_pressure",
+   "Internal_bleeding",
+   "vision_or_hearing_changes_or_loss",
+   "seizures",
+   "persistent_or_painful_erection",
+   "reduced_white_or_red_blood_cell_count",
+   "headache",
+   "upset_stomach",
+   "skin_flushing_or_mild_skin_rash",
+   "trouble_sleeping",
+   "muscle_aches",
+   "runny_nose_or_sinus_congestion",
+   "numbness_or_tingling_of_extremities"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 22,
+  "name": "ED Tried 4 - 5.c",
+  "title": "Please list the dosage and how long you used each medication.",
+  "subs": [],
+  "options": [],
+  "fields": [
+   {
+    "tag": "textarea",
+    "name": "Q6c_list_ed_details",
+    "input_type": null,
+    "placeholder": "e.g., Viagra 50mg for 3 months "
+   }
+  ],
+  "group": null,
+  "mode": null,
+  "cond": {
+   "group": "Q6_ed_treatments_tried",
+   "any": [
+    "Viagra",
+    "Cialis",
+    "Levitra",
+    "Staxyn",
+    "Stendra",
+    "A medication or supplement which is not listed here"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 23,
+  "name": "Physical Exam - 06",
+  "title": "So far so good! Let's continue",
+  "subs": [
+   "When was your most recent physical exam?"
+  ],
+  "options": [
+   {
+    "value": "yes",
+    "label": "Within the last 3 years",
+    "type": "radio",
+    "name": "Q7_had_physical_exam_within_last_3_years"
+   },
+   {
+    "value": "no",
+    "label": "More than 3 years ago",
+    "type": "radio",
+    "name": "Q7_had_physical_exam_within_last_3_years",
+    "note": "This answer will disqualify you from medication"
+   }
+  ],
+  "fields": [],
+  "group": "Q7_had_physical_exam_within_last_3_years",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [
+   "no"
+  ],
+  "dq_kind": "named"
+ },
+ {
+  "n": 24,
+  "name": "Blood Pressure 1 - 07",
+  "title": "Have you been diagnosed with high blood pressure (hypertension) or low blood pressure (hypotension)?",
+  "subs": [],
+  "options": [
+   {
+    "value": "no",
+    "label": "No",
+    "type": "radio",
+    "name": "Q8_diagnosed_with_high_blood_pressure_hypertension",
+    "note": "I do not have high blood pressure"
+   },
+   {
+    "value": "yes",
+    "label": "Yes",
+    "type": "radio",
+    "name": "Q8_diagnosed_with_high_blood_pressure_hypertension",
+    "note": "I have high blood pressure"
+   }
+  ],
+  "fields": [],
+  "group": "Q8_diagnosed_with_high_blood_pressure_hypertension",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 25,
+  "name": "Blood Pressure 2 - 07.a",
+  "title": "What was your last blood pressure reading?",
+  "subs": [
+   "Systolic (top number)"
+  ],
+  "options": [
+   {
+    "value": "Under 90",
+    "label": "Under 90",
+    "type": "radio",
+    "name": "Q8a_blood_pressure_reading_systolic",
+    "note": "Low Blood Pressure"
+   },
+   {
+    "value": "91 - 109",
+    "label": "91 - 109",
+    "type": "radio",
+    "name": "Q8a_blood_pressure_reading_systolic",
+    "note": "Below normal"
+   },
+   {
+    "value": "110 - 139",
+    "label": "110 - 139",
+    "type": "radio",
+    "name": "Q8a_blood_pressure_reading_systolic",
+    "note": "Normal"
+   },
+   {
+    "value": "140 - 149",
+    "label": "140 - 149",
+    "type": "radio",
+    "name": "Q8a_blood_pressure_reading_systolic",
+    "note": "Elevated"
+   },
+   {
+    "value": "91 - 119",
+    "label": "150-159",
+    "type": "radio",
+    "name": "Q8a_blood_pressure_reading_systolic",
+    "note": "Hypertension Stage 1"
+   },
+   {
+    "value": "Over 160",
+    "label": "Over 160",
+    "type": "radio",
+    "name": "Q8a_blood_pressure_reading_systolic",
+    "note": "Hypertension Stage 2"
+   },
+   {
+    "value": "I Don't Know",
+    "label": "I Don't Know",
+    "type": "radio",
+    "name": "Q8a_blood_pressure_reading_systolic"
+   }
+  ],
+  "fields": [],
+  "group": "Q8a_blood_pressure_reading_systolic",
+  "mode": "single",
+  "cond": {
+   "group": "Q8_diagnosed_with_high_blood_pressure_hypertension",
+   "any": [
+    "yes"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 26,
+  "name": "Blood Pressure 3 - 07.b",
+  "title": "What was your last blood pressure reading?",
+  "subs": [
+   "Diastolic (bottom number)"
+  ],
+  "options": [
+   {
+    "value": "Under 50",
+    "label": "Under 50",
+    "type": "radio",
+    "name": "Q8b_blood_pressure_reading_diastolic",
+    "note": "Below normal"
+   },
+   {
+    "value": "51 - 60",
+    "label": "51 - 60",
+    "type": "radio",
+    "name": "Q8b_blood_pressure_reading_diastolic",
+    "note": "Below normal"
+   },
+   {
+    "value": "61 - 80",
+    "label": "61 - 80",
+    "type": "radio",
+    "name": "Q8b_blood_pressure_reading_diastolic",
+    "note": "Normal / Elevated"
+   },
+   {
+    "value": "81 - 90",
+    "label": "81 - 90",
+    "type": "radio",
+    "name": "Q8b_blood_pressure_reading_diastolic",
+    "note": "Hypertension Stage 1"
+   },
+   {
+    "value": "Over 90",
+    "label": "Over 90",
+    "type": "radio",
+    "name": "Q8b_blood_pressure_reading_diastolic",
+    "note": "Hypertension"
+   }
+  ],
+  "fields": [],
+  "group": "Q8b_blood_pressure_reading_diastolic",
+  "mode": "single",
+  "cond": {
+   "group": "Q8_diagnosed_with_high_blood_pressure_hypertension",
+   "any": [
+    "yes"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 27,
+  "name": "Health Conditions - 08",
+  "title": "For your safety, please check any conditions you have ever had.",
+  "subs": [
+   "Do you currently have, or have you ever had, any of the following:",
+   "Heart & Blood Pressure",
+   "Blood & Neurological",
+   "Other Conditions"
+  ],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "You have been advised by a clinician not to have sex (for any reason)",
+    "label": "Advised by a doctor to avoid sexual activity",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "_Heart attack or heart failure in the past 6 months",
+    "label": "Heart attack or heart failure in the past 6 months",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Severe low blood pressure (hypotension)",
+    "label": "Severe low blood pressure (hypotension)",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Pulmonary hypertension",
+    "label": "Pulmonary hypertension (high blood pressure in the lungs)",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "A specific heart muscle disease (like hypertrophic cardiomyopathy)",
+    "label": "A specific heart muscle disease (like hypertrophic cardiomyopathy)",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "stroke",
+    "label": "Stroke",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "A severe nervous system disorder",
+    "label": "A severe nervous system disorder",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "A blood clotting or bleeding disorder",
+    "label": "A blood clotting or bleeding disorder",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Sickle cell anemia, multiple myeloma, or leukemia",
+    "label": "Sickle cell anemia, multiple myeloma, or leukemia",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Severe migraines",
+    "label": "Severe migraines",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Severe depression, mania, or schizophrenia",
+    "label": "Severe depression, mania, or schizophrenia",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Retinitis pigmentosa (a genetic eye disorder) or sudden vision loss",
+    "label": "Retinitis pigmentosa (a genetic eye disorder) or sudden vision loss",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Hallucinations, mania, schizophrenia, psychosis, or bipolar disorder",
+    "label": "Hallucinations, mania, schizophrenia, psychosis, or bipolar disorder",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Low blood pressure, dizziness, or fainting upon standing from a seated or reclined position, also known as orthostatic hypotension",
+    "label": "Low blood pressure, dizziness, or fainting upon standing from a seated or reclined position, also known as orthostatic hypotension",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   },
+   {
+    "value": "Parkinson's disease or dopamine-related movement disorders",
+    "label": "Parkinson's disease or dopamine-related movement disorders",
+    "type": "checkbox",
+    "name": "Q9_have_or_had_any_of_these_health_conditions"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q9_have_or_had_any_of_these_health_conditions",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q9_have_or_had_any_of_these_health_conditions",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": "None of these",
+  "dq_on": [
+   "You have been advised by a clinician not to have sex (for any reason)",
+   "_Heart attack or heart failure in the past 6 months",
+   "Severe low blood pressure (hypotension)",
+   "Pulmonary hypertension",
+   "A specific heart muscle disease (like hypertrophic cardiomyopathy)",
+   "stroke",
+   "A severe nervous system disorder",
+   "A blood clotting or bleeding disorder",
+   "Sickle cell anemia, multiple myeloma, or leukemia",
+   "Severe migraines",
+   "Severe depression, mania, or schizophrenia",
+   "Retinitis pigmentosa (a genetic eye disorder) or sudden vision loss",
+   "Hallucinations, mania, schizophrenia, psychosis, or bipolar disorder",
+   "Low blood pressure, dizziness, or fainting upon standing from a seated or reclined position, also known as orthostatic hypotension",
+   "Parkinson's disease or dopamine-related movement disorders"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 28,
+  "name": "Other Conditions - 09",
+  "title": "Thank you. Now, please check any of the following that apply.",
+  "subs": [],
+  "options": [
+   {
+    "value": "A marked curve or bend in the penis that interferes with sex or Peyronie’s disease",
+    "label": "A marked curve or bend in the penis that interferes with sex or Peyronie’s disease",
+    "type": "checkbox",
+    "name": "Q10_sex_organ_health_conditions"
+   },
+   {
+    "value": "Foreskin that is too tight",
+    "label": "Foreskin that is too tight",
+    "type": "checkbox",
+    "name": "Q10_sex_organ_health_conditions"
+   },
+   {
+    "value": "Prolonged erections lasting longer than four hours",
+    "label": "Prolonged erections lasting longer than four hours",
+    "type": "checkbox",
+    "name": "Q10_sex_organ_health_conditions"
+   },
+   {
+    "value": "Pain with erections or with ejaculation",
+    "label": "Pain with erections or with ejaculation",
+    "type": "checkbox",
+    "name": "Q10_sex_organ_health_conditions"
+   },
+   {
+    "value": "none of these",
+    "label": "No, I do not have any of these conditions",
+    "type": "checkbox",
+    "name": "Q10_sex_organ_health_conditions"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q10_sex_organ_health_conditions",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q10_sex_organ_health_conditions",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 29,
+  "name": "Diagnosed - 10",
+  "title": "Have you also been diagnosed with any of the following?",
+  "subs": [],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "None of these",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions",
+    "note": "Select this to continue. All other answers will make you ineligible."
+   },
+   {
+    "value": "Surgery or radiation to the prostate or pelvis",
+    "label": "Surgery or radiation to the prostate or pelvis",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Multiple sclerosis (MS) or similar disease, spinal injuries or paralysis, or neurological diseases",
+    "label": "Multiple sclerosis (MS) or similar disease, spinal injuries or paralysis, or neurological diseases",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Kidney transplant or any condition affecting the kidney",
+    "label": "Kidney transplant or any condition affecting the kidney",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Liver disease characterized by abnormal liver labs (liver function tests)",
+    "label": "Liver disease characterized by abnormal liver labs (liver function tests)",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Stomach, intestinal or bowel ulcers",
+    "label": "Stomach, intestinal or bowel ulcers",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Prostate or bladder cancer",
+    "label": "Prostate or bladder cancer",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Heart arrhythmias, which is an abnormal beating of the heart",
+    "label": "Heart arrhythmias, which is an abnormal beating of the heart",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Inflammatory bowel disease such as Crohn’s or ulcerative colitis",
+    "label": "Inflammatory bowel disease such as Crohn’s or ulcerative colitis",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   },
+   {
+    "value": "Any acquired congenital or developmental abnormalities of the heart including heart murmurs",
+    "label": "Any acquired congenital or developmental abnormalities of the heart including heart murmurs",
+    "type": "checkbox",
+    "name": "Q11_been_diagnosed_with_any_of_the_following_health_conditions"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q11_been_diagnosed_with_any_of_the_following_health_conditions",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q11_been_diagnosed_with_any_of_the_following_health_conditions",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": "None of these",
+  "dq_on": [
+   "Surgery or radiation to the prostate or pelvis",
+   "Multiple sclerosis (MS) or similar disease, spinal injuries or paralysis, or neurological diseases",
+   "Kidney transplant or any condition affecting the kidney",
+   "Liver disease characterized by abnormal liver labs (liver function tests)",
+   "Stomach, intestinal or bowel ulcers",
+   "Prostate or bladder cancer",
+   "Heart arrhythmias, which is an abnormal beating of the heart",
+   "Inflammatory bowel disease such as Crohn’s or ulcerative colitis",
+   "Any acquired congenital or developmental abnormalities of the heart including heart murmurs"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 30,
+  "name": "Cardiovascular risk - 11",
+  "title": "Do you have any of the following cardiovascular risk factors?",
+  "subs": [],
+  "options": [
+   {
+    "value": "High cholesterol",
+    "label": "High cholesterol",
+    "type": "checkbox",
+    "name": "Q12_cardiovascular_risk_factors"
+   },
+   {
+    "value": "High blood pressure",
+    "label": "High blood pressure",
+    "type": "checkbox",
+    "name": "Q12_cardiovascular_risk_factors"
+   },
+   {
+    "value": "Diabetes, pre-diabetes, or glucose intolerance",
+    "label": "Diabetes, pre-diabetes, or glucose intolerance",
+    "type": "checkbox",
+    "name": "Q12_cardiovascular_risk_factors"
+   },
+   {
+    "value": "Father had heart attack/disease before age 55",
+    "label": "Father had heart attack/disease (before age 55)",
+    "type": "checkbox",
+    "name": "Q12_cardiovascular_risk_factors"
+   },
+   {
+    "value": "Mother had heart attack/disease before age 65",
+    "label": "Mother had heart attack/disease (before age 65)",
+    "type": "checkbox",
+    "name": "Q12_cardiovascular_risk_factors"
+   },
+   {
+    "value": "None of these",
+    "label": "None of these apply to me",
+    "type": "checkbox",
+    "name": "Q12_cardiovascular_risk_factors"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q12_cardiovascular_risk_factors",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q12_cardiovascular_risk_factors",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": "None of these",
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 31,
+  "name": "Cardiovascular risk 2 - if diabetis  - 11a",
+  "title": "In the past 3 months, what was your last hemoglobin A1C value?",
+  "subs": [],
+  "options": [
+   {
+    "value": "Less than 7%",
+    "label": "Less than 7%",
+    "type": "radio",
+    "name": "Q12a_hemoglobin-A1C-value"
+   },
+   {
+    "value": "7% - 7.9%",
+    "label": "7% - 7.9%",
+    "type": "radio",
+    "name": "Q12a_hemoglobin-A1C-value"
+   },
+   {
+    "value": "8% - 8.9%",
+    "label": "8% - 8.9%",
+    "type": "radio",
+    "name": "Q12a_hemoglobin-A1C-value"
+   },
+   {
+    "value": "9% - 9.9%",
+    "label": "9% - 9.9%",
+    "type": "radio",
+    "name": "Q12a_hemoglobin-A1C-value"
+   },
+   {
+    "value": "10% or higher",
+    "label": "10% or higher",
+    "type": "radio",
+    "name": "Q12a_hemoglobin-A1C-value"
+   },
+   {
+    "value": "I don't know",
+    "label": "I don't know / I haven't been tested",
+    "type": "radio",
+    "name": "Q12a_hemoglobin-A1C-value"
+   }
+  ],
+  "fields": [],
+  "group": "Q12a_hemoglobin-A1C-value",
+  "mode": "single",
+  "cond": {
+   "group": "Q12_cardiovascular_risk_factors",
+   "any": [
+    "Diabetes, pre-diabetes, or glucose intolerance"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 32,
+  "name": "int - quote 01",
+  "title": "“QUAD probably saved my marriage.”",
+  "subs": [],
+  "options": [],
+  "fields": [],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 33,
+  "name": "FACT-2 - 12",
+  "title": "137%",
+  "subs": [
+   "improvement in sexfor partner"
+  ],
+  "options": [],
+  "fields": [],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 34,
+  "name": "Heart Disease Symptom - 12",
+  "title": "ED can be an early sign of heart disease. Do any of the following symptoms apply to you?",
+  "subs": [],
+  "options": [
+   {
+    "value": "Abnormal heart beats or heart rhythm - rapid, irregular, unusually slow (fewer than 50 beats/minute)",
+    "label": "Abnormal heart beats or heart rhythm - rapid, irregular, unusually slow (fewer than 50 beats/minute)",
+    "type": "checkbox",
+    "name": "Q13_heart_disease_symptoms"
+   },
+   {
+    "value": "Severe cramping or pain in the calves or thighs with exercise (claudication)",
+    "label": "Severe cramping or pain in the calves or thighs with exercise (claudication)",
+    "type": "checkbox",
+    "name": "Q13_heart_disease_symptoms"
+   },
+   {
+    "value": "Any unexplained fainting, dizziness or lightheadedness",
+    "label": "Any unexplained fainting, dizziness or lightheadedness",
+    "type": "checkbox",
+    "name": "Q13_heart_disease_symptoms"
+   },
+   {
+    "value": "Chest pain (angina) or shortness of breath while walking up 2 flights of stairs",
+    "label": "Chest pain (angina) or shortness of breath while walking up 2 flights of stairs",
+    "type": "checkbox",
+    "name": "Q13_heart_disease_symptoms"
+   },
+   {
+    "value": "None of these",
+    "label": "None of these apply to me",
+    "type": "checkbox",
+    "name": "Q13_heart_disease_symptoms"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q13_heart_disease_symptoms",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q13_heart_disease_symptoms",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": "None of these",
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 35,
+  "name": "Medication - 13",
+  "title": "Please check all medications or supplements you use, even if only occasionally.",
+  "subs": [],
+  "options": [
+   {
+    "value": "Any medicine containing nitrates except nitroglycerin under the tongue",
+    "label": "Any medicine containing nitrates except nitroglycerin under the tongue",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use",
+    "note": "(such as BiDil, isosorbide dinitrate, Imdur, Ismo, Isordil, Monoket, nitroprusside, Nipride, nitroglycerin patch/ointment, Nitro-Bid, Nitro-Dur)"
+   },
+   {
+    "value": "Supplements that boost nitric oxide",
+    "label": "Supplements that boost nitric oxide",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Nitroglycerin under the tongue spray or tablet",
+    "label": "Nitroglycerin under the tongue (spray or tablet)",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Adempas (riociguat), which is used to treat pulmonary hypertension",
+    "label": "Adempas (riociguat), which is used to treat pulmonary hypertension",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Any alpha blocker",
+    "label": "Any alpha blocker",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Isosorbide mononitrate or isosorbide dinitrate",
+    "label": "Isosorbide mononitrate or isosorbide dinitrate",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Ritonavir or any HIV protease inhibitor",
+    "label": "Ritonavir or any HIV protease inhibitor",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Dopamine agonist or antagonist medications",
+    "label": "Dopamine agonist or antagonist medications",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Serotonin receptor antagonists such as ondansetron (Zofran) to treat nausea/vomiting",
+    "label": "Serotonin receptor antagonists such as ondansetron (Zofran) to treat nausea/vomiting",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Any benzodiazepines",
+    "label": "Any benzodiazepines",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Any opioids",
+    "label": "Any opioids",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "Any sedative hypnotic sleep medications such as zolpidem or eszopiclone",
+    "label": "Any sedative hypnotic sleep medications such as zolpidem or eszopiclone",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "More than 2 alcoholic drinks per day on average (men)",
+    "label": "More than 2 alcoholic drinks per day on average (men)",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   },
+   {
+    "value": "None of these",
+    "label": "No, I don't use any of these",
+    "type": "checkbox",
+    "name": "Q14_medications_or_suplements_you_use"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q14_medications_or_suplements_you_use",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q14_medications_or_suplements_you_use",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": "None of these",
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 36,
+  "name": "Medication - 13.a.1",
+  "title": "In the past 2 weeks, how often have you used nitroglycerin under the tongue?",
+  "subs": [],
+  "options": [
+   {
+    "value": "zero times",
+    "label": "Zero times",
+    "type": "radio",
+    "name": "Q14a1_used_nitroglycerin_under_the_tongue_past_2_weeks"
+   },
+   {
+    "value": "1 time",
+    "label": "1 time",
+    "type": "radio",
+    "name": "Q14a1_used_nitroglycerin_under_the_tongue_past_2_weeks"
+   },
+   {
+    "value": "2 or more times",
+    "label": "2 or more times",
+    "type": "radio",
+    "name": "Q14a1_used_nitroglycerin_under_the_tongue_past_2_weeks"
+   },
+   {
+    "value": "I don't know",
+    "label": "I don’t know",
+    "type": "radio",
+    "name": "Q14a1_used_nitroglycerin_under_the_tongue_past_2_weeks"
+   }
+  ],
+  "fields": [],
+  "group": "Q14a1_used_nitroglycerin_under_the_tongue_past_2_weeks",
+  "mode": "single",
+  "cond": {
+   "group": "Q14_medications_or_suplements_you_use",
+   "any": [
+    "Nitroglycerin under the tongue spray or tablet"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 37,
+  "name": "Medication - 13.a.2",
+  "title": "When was the last time you had your alpha blocker dose adjusted?",
+  "subs": [],
+  "options": [
+   {
+    "value": "Less than 4 weeks ago",
+    "label": "Less than 4 weeks ago",
+    "type": "radio",
+    "name": "Q14a2_last_time_alpha_blocker_adjusted"
+   },
+   {
+    "value": "4 weeks or more ago",
+    "label": "4 weeks or more ago",
+    "type": "radio",
+    "name": "Q14a2_last_time_alpha_blocker_adjusted"
+   },
+   {
+    "value": "I don’t know",
+    "label": "I don’t know",
+    "type": "radio",
+    "name": "Q14a2_last_time_alpha_blocker_adjusted"
+   }
+  ],
+  "fields": [],
+  "group": "Q14a2_last_time_alpha_blocker_adjusted",
+  "mode": "single",
+  "cond": {
+   "group": "Q14_medications_or_suplements_you_use",
+   "any": [
+    "Any alpha blocker"
+   ]
+  },
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 38,
+  "name": "Recreational Drugs - 14",
+  "title": "In the past 6 months, have you used any of these recreational drugs?",
+  "subs": [],
+  "options": [
+   {
+    "value": "None of these",
+    "label": "No, I don't use any of these",
+    "type": "checkbox",
+    "name": "Q15_used_recreational_drugs_past_6_months",
+    "note": "Recreational drug use in the last 6 months will make you ineligible."
+   },
+   {
+    "value": "Methamphetamines or amphetamines (crystal meth)",
+    "label": "Methamphetamines or amphetamines (crystal meth)",
+    "type": "checkbox",
+    "name": "Q15_used_recreational_drugs_past_6_months"
+   },
+   {
+    "value": "Amyl Nitrate or Butyl Nitrate",
+    "label": "Amyl Nitrate or Butyl Nitrate",
+    "type": "checkbox",
+    "name": "Q15_used_recreational_drugs_past_6_months"
+   },
+   {
+    "value": "Cocaine",
+    "label": "Cocaine",
+    "type": "checkbox",
+    "name": "Q15_used_recreational_drugs_past_6_months"
+   },
+   {
+    "value": "Poppers or Rush",
+    "label": "Poppers or Rush",
+    "type": "checkbox",
+    "name": "Q15_used_recreational_drugs_past_6_months"
+   },
+   {
+    "value": "Molly (MDMA, ecstasy)",
+    "label": "Molly (MDMA, ecstasy)",
+    "type": "checkbox",
+    "name": "Q15_used_recreational_drugs_past_6_months"
+   },
+   {
+    "value": "Other drugs",
+    "label": "Other drug, prescription medication not prescribed by a clinician, or prescription medicine not used in the way it was written by a clinician",
+    "type": "checkbox",
+    "name": "Q15_used_recreational_drugs_past_6_months"
+   }
+  ],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "answer_Q15_used_recreational_drugs_past_6_months",
+    "input_type": "text",
+    "placeholder": ""
+   }
+  ],
+  "group": "Q15_used_recreational_drugs_past_6_months",
+  "mode": "multi",
+  "cond": null,
+  "exclusive": "None of these",
+  "dq_on": [
+   "Methamphetamines or amphetamines (crystal meth)",
+   "Amyl Nitrate or Butyl Nitrate",
+   "Cocaine",
+   "Poppers or Rush",
+   "Molly (MDMA, ecstasy)",
+   "Other drugs"
+  ],
+  "dq_kind": "all-but-exclusive"
+ },
+ {
+  "n": 39,
+  "name": "ED Med Allergy - 15",
+  "title": "Are you allergic to any of the following ED medications?",
+  "subs": [],
+  "options": [
+   {
+    "value": "no",
+    "label": "No",
+    "type": "radio",
+    "name": "Q16_allergic_to_any_following_ed_medications",
+    "note": "I do not have allergic reaction"
+   },
+   {
+    "value": "yes",
+    "label": "Yes",
+    "type": "radio",
+    "name": "Q16_allergic_to_any_following_ed_medications",
+    "note": "I have allergic reaction to ED medication"
+   }
+  ],
+  "fields": [],
+  "group": "Q16_allergic_to_any_following_ed_medications",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 40,
+  "name": "Other Allergies - 16",
+  "title": "Do you have any other allergies?",
+  "subs": [],
+  "options": [
+   {
+    "value": "no",
+    "label": "No",
+    "type": "radio",
+    "name": "Q17_have_any_other_allergies",
+    "note": "I do not have allergies"
+   },
+   {
+    "value": "yes",
+    "label": "Yes",
+    "type": "radio",
+    "name": "Q17_have_any_other_allergies",
+    "note": "I have allergies"
+   }
+  ],
+  "fields": [],
+  "group": "Q17_have_any_other_allergies",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 41,
+  "name": "Medication Free text - 17",
+  "title": "Are you currently taking any medications?",
+  "subs": [],
+  "options": [
+   {
+    "value": "no",
+    "label": "No",
+    "type": "radio",
+    "name": "Q18_currently_taking_medication",
+    "note": "I do not take any medication"
+   },
+   {
+    "value": "yes",
+    "label": "Yes",
+    "type": "radio",
+    "name": "Q18_currently_taking_medication",
+    "note": "I take medication"
+   }
+  ],
+  "fields": [],
+  "group": "Q18_currently_taking_medication",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 42,
+  "name": "Tell the doctor - 18",
+  "title": "Is there anything else you'd like the doctor to know?",
+  "subs": [],
+  "options": [
+   {
+    "value": "no",
+    "label": "No",
+    "type": "radio",
+    "name": "Q19_notes_to_the_doctor",
+    "note": "I'm ready to continue"
+   },
+   {
+    "value": "yes",
+    "label": "Yes",
+    "type": "radio",
+    "name": "Q19_notes_to_the_doctor",
+    "note": "I'll add a note below"
+   }
+  ],
+  "fields": [],
+  "group": "Q19_notes_to_the_doctor",
+  "mode": "single",
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 43,
+  "name": "Birth Date - 20",
+  "title": "LAST STEP",
+  "subs": [
+   "Month",
+   "Day",
+   "Year"
+  ],
+  "options": [],
+  "fields": [
+   {
+    "tag": "select",
+    "name": "birth_month",
+    "input_type": null,
+    "placeholder": "",
+    "options": [
+     "January",
+     "January",
+     "February",
+     "March",
+     "April",
+     "May",
+     "June",
+     "July",
+     "August",
+     "September",
+     "October",
+     "November",
+     "December"
+    ]
+   },
+   {
+    "tag": "select",
+    "name": "birth_day",
+    "input_type": null,
+    "placeholder": "",
+    "options": [
+     "01",
+     "01",
+     "02",
+     "03",
+     "04",
+     "05",
+     "06",
+     "07",
+     "08",
+     "09",
+     "10",
+     "11",
+     "12",
+     "13",
+     "14",
+     "15",
+     "16",
+     "17",
+     "18",
+     "19",
+     "20",
+     "21",
+     "22",
+     "23",
+     "24",
+     "25",
+     "26",
+     "27",
+     "28",
+     "29",
+     "30",
+     "31"
+    ]
+   },
+   {
+    "tag": "input",
+    "name": "birth_year",
+    "input_type": "number",
+    "placeholder": "1985"
+   }
+  ],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 44,
+  "name": "INT Quote 2",
+  "title": "“The results were almost immediate… more energy, more desire, and a stronger performance every time.”",
+  "subs": [],
+  "options": [],
+  "fields": [],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 45,
+  "name": "Medical Review - 21",
+  "title": "Your Medical Review",
+  "subs": [
+   "You are a strong candidate for prescription ED treatment",
+   "How QUAD® Can Help",
+   "How QUAD® Can Help",
+   "Let's proceed to check your eligibility.",
+   "First Name",
+   "Last Name",
+   "What state will your medication be shipped to?"
+  ],
+  "options": [],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "first_name",
+    "input_type": "text",
+    "placeholder": ""
+   },
+   {
+    "tag": "input",
+    "name": "last_name",
+    "input_type": "text",
+    "placeholder": ""
+   },
+   {
+    "tag": "select",
+    "name": "state",
+    "input_type": null,
+    "placeholder": "",
+    "options": [
+     "Select State...",
+     "Alabama",
+     "Alaska",
+     "Arizona",
+     "Arkansas",
+     "California",
+     "Colorado",
+     "Connecticut",
+     "Delaware",
+     "District of Columbia",
+     "Florida",
+     "Georgia",
+     "Hawaii",
+     "Idaho",
+     "Illinois",
+     "Indiana",
+     "Iowa",
+     "Kansas",
+     "Kentucky",
+     "Louisiana",
+     "Maine",
+     "Maryland",
+     "Massachusetts",
+     "Michigan",
+     "Minnesota",
+     "Mississippi",
+     "Missouri",
+     "Montana",
+     "Nebraska",
+     "Nevada",
+     "New Hampshire",
+     "New Jersey",
+     "New Mexico",
+     "New York",
+     "North Carolina",
+     "Ohio",
+     "Oklahoma",
+     "Oregon",
+     "Pennsylvania",
+     "Rhode Island",
+     "South Carolina",
+     "South Dakota",
+     "Tennessee",
+     "Texas",
+     "Utah",
+     "Vermont",
+     "Virginia",
+     "Washington",
+     "West Virginia",
+     "Wisconsin",
+     "Wyoming"
+    ]
+   }
+  ],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 46,
+  "name": "NO RX",
+  "title": "Eligibility Status",
+  "subs": [],
+  "options": [],
+  "fields": [],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ },
+ {
+  "n": 47,
+  "name": "Submission",
+  "title": "{first_name}, how can you be reached if necessary?",
+  "subs": [
+   "Email",
+   "Phone Number"
+  ],
+  "options": [],
+  "fields": [
+   {
+    "tag": "input",
+    "name": "email",
+    "input_type": "email",
+    "placeholder": "hello@example.com"
+   },
+   {
+    "tag": "input",
+    "name": "phone_number",
+    "input_type": "tel",
+    "placeholder": "+1 (555) 555-5555"
+   }
+  ],
+  "group": null,
+  "mode": null,
+  "cond": null,
+  "exclusive": null,
+  "dq_on": [],
+  "dq_kind": null
+ }
+]

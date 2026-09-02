@@ -537,17 +537,20 @@ SEGMENTS = 5
 # The wordmark sits on the left and the rating on the right, as v1 had it —
 # so the back control cannot live in the masthead any more. It moves down to
 # sit beside the progress bar, which is where v1 kept it too.
+# The back control sits in the masthead now, not in the progress row: the
+# client asked for the bar to run the full measure, and a button in that row
+# was the only thing indenting it. It keeps its slot when hidden, so the
+# wordmark does not jump between a screen with a back button and one without.
 MASTHEAD = (
     '<header class="masthead">'
+    '<button class="back-btn" id="backBtn" aria-label="Go back">%s</button>'
     '<div class="logo">%s</div>'
     '<div class="rating"><span class="txt">Excellent 4.6</span>%s</div>'
-    '</header><div class="rule"></div>' % (LOGO, STARS))
+    '</header><div class="rule"></div>' % (ICON['back'], LOGO, STARS))
 
 
 def nav(progress):
-    return ('<div class="navrow">'
-            '<button class="back-btn" id="backBtn" aria-label="Go back">%s</button>'
-            '%s</div>' % (ICON['back'], progress))
+    return '<div class="navrow">%s</div>' % progress
 
 
 PROGRESS = nav('<div class="progress" id="prog" role="progressbar" '

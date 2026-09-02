@@ -55,7 +55,7 @@ CSS = r"""
   --surface:#FFFFFF;
   --track:#E7EAED;         /* progress segment, unfilled                 */
   --hairline:#EDEFF3;      /* the resting outline on an option row       */
-  --glow:rgba(230,67,13,.15);   /* the selected row's halo — the resting
+  --glow:rgba(230,67,13,.22);   /* the selected row's halo — the resting
                                    shadow, tinted; no second stroke        */
   --col:480px;             /* the column, at every width                 */
   --pad:24px;              /* its side padding                           */
@@ -90,8 +90,8 @@ img{max-width:100%;display:block}
 
 /* Wordmark left, rating right — v1's masthead, kept. */
 .masthead{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px var(--pad); gap:16px; min-height:46px;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  gap:10px;padding:16px var(--pad);min-height:46px;
 }
 .logo{display:flex;align-items:center;flex:none}
 .logo svg{height:22px;width:auto;display:block}
@@ -114,10 +114,13 @@ img{max-width:100%;display:block}
    with the back button beside it rather than eating into it. 24px either side
    leaves the middle cell at 384px on a 432 column, which is the reference's
    386 to within two pixels. */
-.navrow{display:grid;grid-template-columns:24px 1fr 24px;align-items:center;
-  padding:16px var(--pad) 0;height:28px}
+/* Left edge under the wordmark, right edge under the rating — the client's
+   alignment. The 34px is the back button's slot in the masthead above (24px
+   plus the grid's 10px gap); the wordmark starts after it, so the bar has to
+   start there too. */
+.navrow{position:relative;padding:16px var(--pad) 0 calc(var(--pad) + 34px);height:28px}
 .back-btn{
-  position:relative;
+  position:relative;grid-column:1;
   width:24px;height:24px;display:grid;place-items:center;
   background:none;border:none;padding:0;cursor:pointer;color:var(--muted);
   border-radius:var(--radius);
@@ -139,9 +142,12 @@ img{max-width:100%;display:block}
 /* 58px segments with 24px between them — the reference's own geometry, which
    comes to 386px and is centred rather than filling the column. Below that the
    segments share what room there is; the gap stays put. */
-.progress{grid-column:2;display:flex;gap:24px;width:100%;max-width:386px;margin:0 auto;min-width:0}
-.seg{flex:1;max-width:58px;height:12px;border-radius:6px;background:var(--track);overflow:hidden}
-.seg span{display:block;height:100%;width:0;border-radius:6px;background:var(--accent);
+/* Full measure, so its ends line up with the wordmark and the rating above.
+   It was 386px centred, the reference's own width, until the client asked for
+   it flush on 2026-09-02. */
+.progress{display:flex;gap:24px;width:100%;min-width:0}
+.seg{flex:1;height:12px;border-radius:6px;background:var(--track);overflow:hidden}
+.seg span{display:block;height:100%;width:0;border-radius:6px;background:var(--accent-tint);
   transition:width .32s cubic-bezier(.4,0,.2,1)}
 .progress[hidden]{display:none}
 
@@ -185,7 +191,7 @@ img{max-width:100%;display:block}
   display:flex;align-items:center;gap:12px;width:100%;text-align:left;
   background:var(--surface); border:1px solid var(--hairline);
   border-radius:var(--radius-card); box-shadow:var(--shadow);
-  padding:16px; cursor:pointer; color:var(--ink);
+  padding:13px 16px; cursor:pointer; color:var(--ink);
   transition:border-color .12s ease,box-shadow .16s ease;
 }
 .opt:hover{border-color:#C9CFDA}
@@ -211,17 +217,17 @@ img{max-width:100%;display:block}
    ring on top of that is what read as a hard second stroke, so there isn't one
    — the selected row is the same row, in colour. */
 .opt.selected{
-  border-color:var(--accent);
+  border-color:var(--accent-tint);
   /* Half again as thick as the resting hairline, so the chosen row carries
      weight without becoming a second, harder stroke. The half-pixel comes out
      of the padding, or a chosen row would stand 1px taller than its
      neighbours and the list would shift as you move down it. */
   border-width:1.5px;
   padding:15.5px;
-  box-shadow:0 2px 10px var(--glow);
+  box-shadow:0 3px 16px var(--glow);
 }
-.opt.goal.selected{padding:13.5px 15.5px}
-.opt.tile.selected{padding:21.5px 15.5px}
+.opt.goal.selected{padding:10.5px 15.5px}
+.opt.tile.selected{padding:17.5px 15.5px}
 .opt.selected .ring{border-color:var(--accent);background:var(--accent)}
 .opt.selected .ring::after{
   content:"";position:absolute;inset:0;margin:auto;
@@ -237,7 +243,7 @@ img{max-width:100%;display:block}
    the fill and border carry the state on their own, and the reference draws its
    own male/female question the same way. */
 .opts.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-opt)}
-.opt.tile{justify-content:center;text-align:center;padding:22px 16px}
+.opt.tile{justify-content:center;text-align:center;padding:18px 16px}
 .opt.tile .lbl{flex:none;font-weight:600}
 
 /* --------------------------------------------------------------- fields */
@@ -376,7 +382,7 @@ img{max-width:100%;display:block}
 /* Goal rows are taller than an ordinary option and carry a bubble instead of a
    ring — there is nothing to compare them against yet, so the icon does the
    work the radio would. */
-.opt.goal{padding:14px 16px;gap:14px;min-height:67px}
+.opt.goal{padding:11px 16px;gap:14px;min-height:58px}
 .opt.goal .bubble{
   flex:none;width:36px;height:36px;border-radius:50%;
   background:var(--bub,var(--accent-soft));color:var(--gly,var(--accent));
