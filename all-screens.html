@@ -289,22 +289,22 @@ img{max-width:100%;display:block}
 }
 
 .hero-h1{
-  margin:0;font-size:44px;line-height:1.1;font-weight:700;
+  margin:0;font-size:44px;line-height:1.1;font-weight:600;
   letter-spacing:-.02em;color:var(--title-ink);
 }
-.hero-h1 .hi{font-weight:700}
+.hero-h1 .hi{font-weight:600}
 
 /* The claim strip. The reference fades a blue through a violet; this is the one
    accent, faded out to the right, so it stays inside house rule 2. */
 .strip{
   margin:15px 0 0;padding:9px 14px;border-radius:var(--radius-card);
-  font-size:13px;line-height:1.35;color:var(--ink);white-space:nowrap;
+  font-size:14px;line-height:1.35;color:var(--ink);white-space:nowrap;
   background:linear-gradient(90deg,rgba(230,67,13,.16) 0%,rgba(230,67,13,.06) 55%,rgba(230,67,13,0) 100%);
 }
-.strip strong{font-weight:800;font-style:italic}
+.strip strong{font-weight:700;font-style:italic}
 
 .ask{margin:24px 0 0;font-size:20px;line-height:1.3;font-weight:400;color:var(--ink)}
-.ask strong{font-weight:800}
+.ask strong{font-weight:700}
 .ask-sub{margin:5px 0 0;font-size:16px;color:var(--muted)}
 .ask-sub + .opts{margin-top:24px}
 
@@ -414,15 +414,12 @@ img{max-width:100%;display:block}
   font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
 
 /* ------------------------------------------------------------- narrow */
-@media (max-width:420px){ .hero-h1{font-size:38px} .strip{font-size:12.5px} }
+@media (max-width:420px){ .hero-h1{font-size:38px} .strip{white-space:normal} }
 @media (max-width:379px){
   :root{--pad:18px;--gap-block:26px}
   .qhead{font-size:23px}
   .hero-h1{font-size:34px}
   .hero{margin-bottom:36px}
-  /* Below this the claim will not hold one line at any readable size. Wrapping
-     is the right failure — an ellipsis would quietly eat "In minutes". */
-  .strip{white-space:normal}
 }
 
 /* ------------------------------------------------- all-screens document */
