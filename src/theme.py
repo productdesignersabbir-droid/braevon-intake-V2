@@ -89,9 +89,13 @@ img{max-width:100%;display:block}
 .shell{max-width:var(--col);margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
 
 /* Wordmark left, rating right — v1's masthead, kept. */
+/* Two columns. The back control is absolutely positioned in the gutter rather
+   than taking a slot here, so the wordmark, the progress bar and every screen's
+   content share one left edge at --pad. Giving it a column indented all three. */
 .masthead{
-  display:grid;grid-template-columns:auto 1fr auto;align-items:center;
-  gap:10px;padding:16px var(--pad);min-height:46px;
+  position:relative;
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:12px;padding:16px var(--pad);min-height:46px;
 }
 .logo{display:flex;align-items:center;flex:none}
 .logo svg{height:22px;width:auto;display:block}
@@ -114,13 +118,13 @@ img{max-width:100%;display:block}
    with the back button beside it rather than eating into it. 24px either side
    leaves the middle cell at 384px on a 432 column, which is the reference's
    386 to within two pixels. */
-/* Left edge under the wordmark, right edge under the rating — the client's
-   alignment. The 34px is the back button's slot in the masthead above (24px
-   plus the grid's 10px gap); the wordmark starts after it, so the bar has to
-   start there too. */
-.navrow{position:relative;padding:16px var(--pad) 0 calc(var(--pad) + 34px);height:28px}
+/* One measure for the whole page: the bar starts and ends where the wordmark,
+   the rating and every screen's content do. */
+.navrow{position:relative;padding:16px var(--pad) 0;height:28px}
+/* In the gutter left of the wordmark: 24px wide, ending exactly where the
+   content edge begins, so it indents nothing. */
 .back-btn{
-  position:relative;grid-column:1;
+  position:absolute;left:0;top:50%;transform:translateY(-50%);
   width:24px;height:24px;display:grid;place-items:center;
   background:none;border:none;padding:0;cursor:pointer;color:var(--muted);
   border-radius:var(--radius);
