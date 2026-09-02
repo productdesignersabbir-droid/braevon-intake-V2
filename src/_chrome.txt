@@ -1,0 +1,346 @@
+MASTHEAD = (
+    '<header class="masthead">'
+    '<button class="back-btn" id="backBtn" aria-label="Go back">%s</button>'
+    '<div class="logo">%s</div>'
+    '<div class="rating"><span class="txt">Excellent 4.6</span>%s</div>'
+    '</header><div class="rule"></div>' % (ICON['back'], LOGO, STARS))
+
+
+def nav(progress):
+    return '<div class="navrow">%s</div>' % progress
+
+
+PROGRESS = nav('<div class="progress" id="prog" role="progressbar" '
+               'aria-label="Assessment progress" aria-valuemin="%d" aria-valuemax="%d" '
+               'aria-valuenow="1" aria-valuetext="Question 1 of %d">%s</div>'
+               % (1, TOTAL_Q, TOTAL_Q,
+                  ''.join('<div class="seg"><span></span></div>' for _ in range(SEGMENTS))))
+
+DQ = ('<div class="dq" id="dq" role="dialog" aria-modal="true" aria-labelledby="dqTitle">'
+      '<div class="dq-inner">'
+      '<div class="dq-mark">%s</div>'
+      '<h1 id="dqTitle">We can&rsquo;t continue your assessment</h1>'
+      '<p class="dq-sub">Your safety is our priority. This treatment has specific medical '
+      'criteria, and your answer means our clinicians cannot safely determine your eligibility.</p>'
+      '<div class="dq-reason" id="dqReason"></div>'
+      '<p class="dq-note">If you entered something by mistake, go back and change it. If your '
+      'answer was correct, please speak with your own doctor about other options.</p>'
+      '<button class="dq-back" id="dqBack">Review my answer</button>'
+      '<button class="dq-ghost" id="dqExit">Exit the assessment</button>'
+      '</div></div>' % ICON['warn'])
+
+SCRIPT = r"""
+(function(){
+  var stage=document.getElementById('stage');
+  var steps=[].slice.call(stage.querySelectorAll('.step'));
+  var prog=document.getElementById('prog');
+  var segs=[].slice.call(prog.querySelectorAll('.seg span'));
+  var backBtn=document.getElementById('backBtn');
+  var dq=document.getElementById('dq'), dqReason=document.getElementById('dqReason');
+  var TOTAL_Q=__TOTAL_Q__, SEGMENTS=__SEGMENTS__;
+  var answers={};      /* group -> array of selected values */
+  var idx=0, history=[];
+
+  /* ---------------------------------------------------------- selection */
+  function sel(group){ return answers[group]||[]; }
+
+  stage.addEventListener('click', function(e){
+    var opt=e.target.closest('.opt'); if(!opt) return;
+    var box=opt.closest('.opts'); if(!box) return;
+    var group=box.dataset.group, multi=box.dataset.mode==='multi';
+    var val=opt.dataset.value;
+
+    if(!multi){
+      [].forEach.call(box.querySelectorAll('.opt'), function(o){ o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      answers[group]=[val];
+      if(opt.dataset.sys) setBP(opt.dataset.sys, opt.dataset.dia, false);
+    } else {
+      var on=!opt.classList.contains('selected');
+      opt.classList.toggle('selected', on);
+      /* "None of these" is exclusive both ways: picking it clears the rest,
+         and picking anything else clears it. */
+      if(on && opt.dataset.exclusive){
+        [].forEach.call(box.querySelectorAll('.opt'), function(o){
+          if(o!==opt) o.classList.remove('selected'); });
+      } else if(on){
+        [].forEach.call(box.querySelectorAll('.opt[data-exclusive]'), function(o){
+          o.classList.remove('selected'); });
+      }
+      answers[group]=[].map.call(box.querySelectorAll('.opt.selected'),
+                                function(o){ return o.dataset.value; });
+    }
+    syncReveals(); clearError(opt.closest('.step'));
+    maybeAutoAdvance(opt, multi);
+  });
+
+  /* Answering advances the screen; Continue stays and still works, so this is
+     a shortcut past it rather than a replacement. Four things hold it back:
+
+     - a multi-select waits, unless the answer is the exclusive "None of these"
+       — on "select all that apply" the patient may well want two or three, and
+       leaving on the first tick collects exactly one;
+     - unticking never advances;
+     - an open follow-up still has to be typed into;
+     - the blood-pressure screen never jumps: picking a band fills both numbers
+       and so satisfies the step, but that screen exists precisely so someone
+       who knows their real reading can type it.
+
+     Everything else is `stepValid`, which the Continue button already uses — so
+     screens 4 and 28 hold on their own, their inputs being unfilled. It routes
+     through `advance()`, the same function Continue calls, so a disqualifying
+     answer still opens the stop screen rather than being walked past. */
+  function maybeAutoAdvance(opt, multi){
+    var el=steps[idx];
+    if(el.querySelector('.bp')) return;
+    if(multi && !opt.dataset.exclusive) return;
+    if(!opt.classList.contains('selected')) return;
+    if(el.querySelector('.reveal.on')) return;
+    if(!stepValid(el)) return;
+    setTimeout(function(){ if(steps[idx]===el) advance(); }, 140);
+  }
+
+  /* ------------------------------------------------------------ reveals */
+  function syncReveals(){
+    [].forEach.call(stage.querySelectorAll('.reveal[data-reveal-for]'), function(r){
+      var g=r.dataset.revealFor, on=r.dataset.revealOn, picked=sel(g);
+      var show = on==='*'
+        ? picked.some(function(v){ return v!=='none'; })
+        : picked.indexOf(on)>-1;
+      r.classList.toggle('on', show);
+    });
+  }
+
+  /* ------------------------------------------------------ blood pressure */
+  var sysEl=stage.querySelector('[data-bp-sys]'), diaEl=stage.querySelector('[data-bp-dia]');
+  var bpLead=stage.querySelector('.bp-lead'), bpWarn=stage.querySelector('[data-bp-warning]');
+  function setBP(s,d,manual){
+    if(!sysEl) return;
+    sysEl.value=s; diaEl.value=d;
+    if(bpLead) bpLead.textContent = manual
+      ? 'Using the reading you entered. Pick an option above to go back to an estimate.'
+      : 'Estimated from your selection. Tap a number to enter your own reading.';
+    checkBP();
+  }
+  function checkBP(){
+    if(!sysEl||!bpWarn) return;
+    var s=+sysEl.value||0, d=+diaEl.value||0;
+    bpWarn.classList.toggle('on', s>=160||d>=100||(s>0&&s<90)||(d>0&&d<50));
+  }
+  [sysEl,diaEl].forEach(function(el){
+    if(!el) return;
+    el.addEventListener('input', function(){
+      el.value=el.value.replace(/\D/g,'');
+      var box=stage.querySelector('.opts[data-group="bp"]');
+      if(box){ [].forEach.call(box.querySelectorAll('.opt'),function(o){o.classList.remove('selected');});
+               answers['bp']=['manual']; }
+      if(bpLead) bpLead.textContent='Using the reading you entered. Pick an option above to go back to an estimate.';
+      checkBP();
+    });
+  });
+
+  /* --------------------------------------------------------- validation */
+  function stepValid(el){
+    var ok=true;
+    [].forEach.call(el.querySelectorAll('.opts'), function(box){
+      if(box.dataset.optional) return;
+      if(box.closest('.reveal') && !box.closest('.reveal').classList.contains('on')) return;
+      if(!box.querySelector('.opt.selected')) ok=false;
+    });
+    [].forEach.call(el.querySelectorAll('.field input, .field select'), function(f){
+      if(!f.value.trim()) ok=false;
+    });
+    [].forEach.call(el.querySelectorAll('.reveal.on textarea'), function(t){
+      if(!t.value.trim()) ok=false;
+    });
+    return ok;
+  }
+  function showError(el){
+    var r=el.querySelector('.reveal.on .err');
+    if(r) r.hidden=false;
+    var first=el.querySelector('.opts:not([data-optional]) , .field input, .field select');
+    if(first) first.scrollIntoView({block:'center', behavior:'smooth'});
+    el.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},
+                {transform:'translateX(5px)'},{transform:'translateX(0)'}],
+               {duration:220});
+  }
+  function clearError(el){ if(!el) return;
+    [].forEach.call(el.querySelectorAll('.err'), function(e){ e.hidden=true; }); }
+
+  stage.addEventListener('input', function(e){
+    if(e.target.matches('input,select,textarea')) clearError(e.target.closest('.step'));
+  });
+
+  /* --------------------------------------------------- disqualification */
+  function disqualifies(el){
+    var reason=el.dataset.dq; if(!reason) return null;
+    var rule=el.dataset.dqOn;
+    if(rule){
+      var hit=rule.split(',').some(function(pair){
+        var p=pair.split(':'); return sel(p[0].trim()).indexOf(p[1].trim())>-1;
+      });
+      return hit?reason:null;
+    }
+    /* With no rule, anything but the exclusive "none" is a contraindication. */
+    var any=false;
+    [].forEach.call(el.querySelectorAll('.opts'), function(box){
+      if(box.closest('.reveal')) return;
+      [].forEach.call(box.querySelectorAll('.opt.selected'), function(o){
+        if(!o.dataset.exclusive) any=true;
+      });
+    });
+    return any?reason:null;
+  }
+
+  /* ------------------------------------------------------------- moving */
+  function shown(el){
+    var cond=el.dataset.if; if(!cond) return true;
+    var p=cond.split(':'); return sel(p[0]).indexOf(p[1])>-1;
+  }
+  function show(i){
+    loaderRun++;   /* cancel any dial still running on the screen we are leaving */
+    steps.forEach(function(s,j){ s.classList.toggle('on', j===i); });
+    idx=i;
+    var el=steps[i];
+    var q=el.dataset.q?+el.dataset.q:0;
+    prog.hidden=!q;
+    if(q){
+      prog.setAttribute('aria-valuenow', q);
+      prog.setAttribute('aria-valuetext','Question '+q+' of '+TOTAL_Q);
+      var per=TOTAL_Q/SEGMENTS, at=Math.floor((q-1)/per);
+      segs.forEach(function(sp,k){ sp.style.width = k<=at ? '100%' : '0%'; });
+    }
+    backBtn.hidden = el.hasAttribute('data-no-back') || history.length===0;
+    window.scrollTo({top:0, behavior:'auto'});
+    if(el.querySelector('[data-loader]')) runLoader(el);
+    if(el.querySelector('[data-name-echo]')) fillSummary(el);
+    echoState();
+  }
+  function advance(){
+    var el=steps[idx];
+    if(!stepValid(el)){ showError(el); return; }
+    var why=disqualifies(el);
+    if(why){ dqReason.textContent=why; dq.classList.add('on'); return; }
+    for(var j=idx+1;j<steps.length;j++){
+      if(shown(steps[j])){ history.push(idx); show(j); return; }
+    }
+  }
+  stage.addEventListener('click', function(e){
+    if(e.target.closest('.cta-next')) advance();
+  });
+  backBtn.addEventListener('click', function(){
+    if(!history.length) return;
+    show(history.pop());
+  });
+  document.getElementById('dqBack').addEventListener('click', function(){
+    dq.classList.remove('on');
+  });
+  document.getElementById('dqExit').addEventListener('click', function(){
+    dq.classList.remove('on'); history=[]; show(0);
+  });
+
+  /* --------------------------------------------------------------- echo */
+  function echoState(){
+    var s=document.getElementById('state');
+    var v=s&&s.value?s.value:'your state';
+    [].forEach.call(document.querySelectorAll('[data-state-echo]'), function(e){
+      e.textContent=v;
+    });
+  }
+  function label(group){
+    var box=stage.querySelector('.opts[data-group="'+group+'"]');
+    if(!box) return null;
+    var picked=[].map.call(box.querySelectorAll('.opt.selected'), function(o){
+      var l=o.querySelector('.lbl').cloneNode(true);
+      var sm=l.querySelector('small'); if(sm) sm.remove();
+      return l.textContent.trim();
+    });
+    return picked.length?picked.join(', '):null;
+  }
+  function fillSummary(el){
+    var fn=document.getElementById('firstName');
+    var n=el.querySelector('[data-name-echo]');
+    /* ", Marcus" or nothing — the sentence has to read either way, so the name
+       is an aside rather than the subject. */
+    if(n) n.textContent = (fn&&fn.value.trim()) ? ', '+fn.value.trim() : '';
+    [].forEach.call(el.querySelectorAll('[data-echo]'), function(e){
+      var k=e.dataset.echo;
+      if(k==='bp'){
+        e.textContent = (sysEl&&sysEl.value) ? sysEl.value+' / '+diaEl.value : '—';
+      } else {
+        e.textContent = label(k) || '—';
+      }
+    });
+  }
+
+  /* ------------------------------------------------------- the loaders */
+  var C=2*Math.PI*58;
+  var loaderRun=0;
+  function runLoader(el){
+    /* The processing screens carry no button: they run their dial and hand off
+       on their own, the way the reference does. `loaderRun` is the guard — if
+       the patient goes back mid-run, the old frame loop must not advance the
+       flow out from under the screen they are now on. */
+    var arc=el.querySelector('.dial-arc'), pct=el.querySelector('.pct');
+    var rows=[].slice.call(el.querySelectorAll('.checklist div'));
+    if(!arc) return;
+    var mine=++loaderRun, from=idx, DUR=2600;
+    rows.forEach(function(r){ r.classList.remove('done'); });
+    arc.setAttribute('stroke-dasharray', C);
+
+    /* The hand-off is on a timer, not on the animation frame. A background tab
+       stops serving requestAnimationFrame, and this screen has no button — so
+       driving the advance from the frame loop leaves anyone who switches tabs
+       mid-processing stranded on a dial that never finishes. The frames are
+       decoration; the timer is the flow. */
+    setTimeout(function(){
+      if(mine!==loaderRun || idx!==from) return;
+      arc.setAttribute('stroke-dashoffset', 0);
+      pct.textContent='100%';
+      rows.forEach(function(r){ r.classList.add('done'); });
+      setTimeout(function(){ if(mine===loaderRun && idx===from) advance(); }, 340);
+    }, DUR);
+
+    var t0=null;
+    function frame(t){
+      if(mine!==loaderRun) return;
+      if(!t0) t0=t;
+      var p=Math.min(1,(t-t0)/DUR);
+      arc.setAttribute('stroke-dashoffset', C*(1-p));
+      pct.textContent=Math.round(p*100)+'%';
+      rows.forEach(function(r,i){ r.classList.toggle('done', p > (i+1)/(rows.length+0.6)); });
+      if(p<1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* Two controls ship with an answer already chosen — sex on the eligibility
+     screen, and "Normal" on the blood-pressure screen. Nothing clicks them, so
+     without this pass the answer map starts out disagreeing with the markup and
+     the summary reads them as blank. */
+  [].forEach.call(stage.querySelectorAll('.opts'), function(box){
+    var picked=[].map.call(box.querySelectorAll('.opt.selected'),
+                           function(o){ return o.dataset.value; });
+    if(picked.length) answers[box.dataset.group]=picked;
+  });
+  var bpPre=stage.querySelector('.opts[data-group="bp"] .opt.selected');
+  if(bpPre && bpPre.dataset.sys) setBP(bpPre.dataset.sys, bpPre.dataset.dia, false);
+
+  syncReveals();
+  show(0);
+})();
+"""
+
+
+def page(title, body, body_class=''):
+    cls = ' class="%s"' % body_class if body_class else ''
+    return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8"/>\n'
+            '<title>%s</title>\n'
+            '<meta name="viewport" content="width=device-width, initial-scale=1"/>\n'
+            # unreleased prototype carrying placeholder testimonials and
+            # marketing claims — it should not be indexed if it is hosted
+            '<meta name="robots" content="noindex, nofollow"/>\n'
+            '<style>%s</style>\n</head>\n<body%s>\n%s\n</body>\n</html>\n'
+            % (title, CSS, cls, body))
+
+

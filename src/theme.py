@@ -429,6 +429,19 @@ img{max-width:100%;display:block}
 .qmeta span{font-size:11px;font-weight:600;color:var(--ink)}
 .quote .who{margin-top:14px;font-size:11px;font-weight:700;color:var(--muted)}
 
+/* The onset comparison on the "4-in-1 advantage" screen. A row per molecule,
+   its window drawn as a bar, with Braevon's own row picked out. */
+.cmp{display:grid;grid-template-columns:1fr 96px 44px;gap:10px;align-items:center;
+  padding:10px 0;border-top:1px solid var(--border)}
+.cmp:first-child{border-top:none}
+.cmp-l b{display:block;font-size:12px;font-weight:700;color:var(--ink)}
+.cmp-l span{display:block;font-size:10px;color:var(--muted)}
+.cmp-bar{height:8px;border-radius:4px;background:var(--track);overflow:hidden}
+.cmp-bar i{display:block;height:100%;border-radius:4px;background:var(--accent-tint)}
+.cmp-v{font-size:11px;font-weight:700;color:var(--muted);text-align:right}
+.cmp.on .cmp-l b,.cmp.on .cmp-v{color:var(--accent)}
+.cmp.on .cmp-bar i{background:var(--accent)}
+
 /* the processing screens */
 .loader{text-align:center;padding:24px 0}
 .dial{width:132px;height:132px;margin:0 auto;position:relative}

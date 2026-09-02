@@ -1,11 +1,10 @@
 # Braevon — Intake Assessment, v2
 
-A redesign of the Braevon intake, **not** a re-scope. The clinical content is
-v1's, unchanged: the same 24 numbered questions in the same order, the same
-conditional follow-ups, the same disqualification rules. What changes is the
-design — layout, spacing and surface treatment follow the MEDVi QUAD intake
-(`quad.medvi.org/intake-s?flow=org`), while the font, palette and button stay
-Braevon's.
+**The flow is the MEDVi QUAD intake, screen for screen** — same questions, same
+options, same branching, same safety rules, same order — rendered in Braevon's
+font, palette and button. The client asked for the reference's questions
+wholesale on 2026-09-02 and will say screen by screen which become Braevon's
+own.
 
 **This repo is deliberately separate from `braevon-intake` (v1), which is live.
 Nothing here touches it.**
@@ -59,18 +58,50 @@ python3 -m http.server 4173
 
 ## Where the questions come from
 
-`extract_v1.py` parses a v1 build and writes `questions.json`: per screen, an
-ordered list of blocks (eyebrow, title, subtitle, legend, option group,
-conditional reveal, field) plus the disqualification rule and the skip-unless
-condition. It is a parser rather than a retype, so the clinical copy cannot
-drift and a v1 correction comes across in one command.
+`extract_medvi.py` parses the reference's server-rendered HTML
+(`../reference/medvi/medvi.html`) into `medvi-flow.json`: 47 screens, each with
+its heading, its options, the note under each option, and the `name` attributes
+the reference uses as field ids. It is a parser rather than a retype, so the
+copy cannot drift and a change over there shows up as a diff:
 
-`build.py` renders those blocks into the reference's markup. It does not know
-what any question means — which is the point: the content is v1's, the design is
-`theme.py`'s.
+```bash
+cd src && python3 extract_medvi.py ../../reference/medvi/medvi.html
+```
 
-Verified 2026-09-02: all 24 questions here are **identical** to the live v1
-build at `braevon-intake@39f50e3`.
+Two things it derives rather than takes literally:
+
+- **The branching**, from the reference's own page names. "5.a.1" is the
+  follow-up to option 1 of question 5, "13.a.2" the one behind the alpha
+  blocker on 13. Six branches in all: one "how well did it work" and one
+  side-effect list per ED medication tried, the two blood-pressure readings,
+  the A1C screen behind diabetes, and the nitroglycerin and alpha-blocker
+  follow-ups.
+- **The safety rules**, from the notes under the options. The reference writes
+  them two ways — a note on one answer saying it disqualifies ("Never", "More
+  than 3 years ago"), or a note on the exclusive answer saying everything else
+  does ("Select this to continue. All other answers will make you ineligible").
+  Both flatten into one list of stopping answers per screen. Twelve screens
+  carry one.
+
+`build.py` renders that data. It does not know what any question means — which
+is the point: the content is the reference's, the design is `theme.py`'s.
+
+v1's question set is no longer rendered. `extract_v1.py` and `questions.json`
+stay in the repo so it can be pulled back a screen at a time.
+
+## What is not carried across
+
+- **Brand names.** QUAD becomes BRAEVON throughout, via `brandify()`.
+- **The two customer quotes** (screens 32 and 44) are MEDVi's named customers.
+  Presenting another company's reviews as Braevon's would be fabricating
+  testimonials, so the cards keep the reference's shape with copy written for
+  this concept — the same call v1 made about DirectMeds' reviews.
+- **The captions inside long safety lists** ("Serious Reactions", "Common Side
+  Effects"). The exclusive answer is hoisted to the top of every list here, so
+  a caption would end up against the wrong block. Worth restoring properly if
+  those screens stay.
+- **The 137% partner figure** on screen 33 is the reference's and has no
+  Braevon source. It is marked as such on the screen.
 
 ## The design
 
