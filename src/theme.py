@@ -107,7 +107,7 @@ img{max-width:100%;display:block}
 /* The reference has no back control; v1 shipped one on every screen at the
    client's request. With the wordmark on the left it cannot sit in the
    masthead, so it rides beside the progress bar — where v1 kept it too. */
-.navrow{display:flex;align-items:center;gap:12px;padding:16px var(--pad) 0}
+.navrow{display:flex;align-items:center;gap:12px;padding:16px var(--pad) 0;height:28px}
 .back-btn{
   width:32px;height:32px;flex:none;display:grid;place-items:center;
   background:none;border:none;padding:0;cursor:pointer;color:var(--muted);
@@ -294,19 +294,22 @@ img{max-width:100%;display:block}
    the reference's opening layout. The render is a transparent PNG, so its lift
    is a drop-shadow filter and never a box-shadow: a box-shadow follows the
    element box and would paint a rectangle behind the cut-out. */
-.hero{position:relative;margin-bottom:44px}
+.hero{position:relative;margin-bottom:21px}
 .hero-media{
   width:100%;aspect-ratio:432/241;object-fit:cover;display:block;
   border-radius:var(--radius-media);background:var(--neutral-tint);
+  /* The photograph is taller than 16:9 and its faces sit in the top half, so
+     the crop comes off the bottom. Never centre it — that cuts the foreheads. */
+  object-position:center top;
 }
 .hero-product{
-  position:absolute;right:-2%;bottom:-26%;width:40%;height:auto;
+  position:absolute;right:-2%;bottom:-18%;width:36%;height:auto;
   filter:drop-shadow(0 18px 26px rgba(16,20,34,.28)) drop-shadow(0 3px 6px rgba(16,20,34,.18));
   pointer-events:none;
 }
 
 .hero-h1{
-  margin:0;font-size:44px;line-height:1.08;font-weight:700;
+  margin:0;font-size:44px;line-height:1.1;font-weight:700;
   letter-spacing:-.02em;color:var(--title-ink);
 }
 .hero-h1 .hi{font-weight:700}
@@ -314,27 +317,29 @@ img{max-width:100%;display:block}
 /* The claim strip. The reference fades a blue through a violet; this is the one
    accent, faded out to the right, so it stays inside house rule 2. */
 .strip{
-  margin:18px 0 0;padding:9px 14px;border-radius:var(--radius-card);
+  margin:15px 0 0;padding:9px 14px;border-radius:var(--radius-card);
   font-size:13px;line-height:1.35;color:var(--ink);white-space:nowrap;
   background:linear-gradient(90deg,rgba(230,67,13,.16) 0%,rgba(230,67,13,.06) 55%,rgba(230,67,13,0) 100%);
 }
 .strip strong{font-weight:800;font-style:italic}
 
-.ask{margin:26px 0 0;font-size:20px;line-height:1.3;font-weight:400;color:var(--ink)}
+.ask{margin:24px 0 0;font-size:20px;line-height:1.3;font-weight:400;color:var(--ink)}
 .ask strong{font-weight:800}
-.ask-sub{margin:4px 0 0;font-size:16px;color:var(--muted)}
-.ask-sub + .opts{margin-top:18px}
+.ask-sub{margin:5px 0 0;font-size:16px;color:var(--muted)}
+.ask-sub + .opts{margin-top:24px}
 
 /* Goal rows are taller than an ordinary option and carry a bubble instead of a
    ring — there is nothing to compare them against yet, so the icon does the
    work the radio would. */
-.opt.goal{padding:15px 16px;gap:14px}
+.opt.goal{padding:14px 16px;gap:14px;min-height:67px}
 .opt.goal .bubble{
   flex:none;width:36px;height:36px;border-radius:50%;
-  background:var(--accent-soft);color:var(--accent);
+  background:var(--bub,var(--accent-soft));color:var(--gly,var(--accent));
   display:grid;place-items:center;
 }
 .opt.goal .bubble svg{width:19px;height:19px}
+/* The row's own selected tint would muddy the bubble, so it goes white and
+   the glyph keeps its hue. */
 .opt.goal.selected .bubble{background:#fff}
 
 /* ------------------------------------------------------------- markety */

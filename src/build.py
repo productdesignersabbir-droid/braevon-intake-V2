@@ -43,10 +43,26 @@ def _ic(paths):
             'stroke-linecap="round" stroke-linejoin="round">%s</svg>' % paths)
 
 
-# One icon per goal on the opening screen, keyed by the v1 option value. The
-# reference gives each goal a pastel bubble in its own hue; these are all
-# --accent on --accent-soft, because house rule 2 keeps colour on emphasis and
-# a five-hue rainbow is decoration. Same 36px bubble, same geometry.
+# One icon per goal on the opening screen, keyed by the v1 option value.
+#
+# The bubble and glyph colours are the reference's own, read out of its design
+# tokens rather than sampled off a screenshot — "Light Green 1"/"Green",
+# "light blue"/"blue 2", "Light red", "light purple"/"purple",
+# "Light Orange"/"Orange". This is a deliberate exception to house rule 2
+# (orange carries emphasis, not decoration): the client asked for these five
+# hues specifically on 2026-09-02. Nothing else in the flow takes them.
+#
+# value -> (bubble fill, glyph colour)
+GOAL_COLORS = {
+    'last-longer':      ('#DFF7E6', '#22C55E'),   # Light Green 1 / Green
+    'better-erections': ('#DBEAFE', '#31ABE8'),   # light blue / blue 2
+    # the reference draws this glyph with a gradient rather than a flat token,
+    # so the magenta is sampled from its render; the bubble is its own token
+    'more-arousal':     ('#FEE2E2', '#EC4899'),   # Light red / magenta
+    'rebound':          ('#F3EBFF', '#A855F7'),   # light purple / purple
+    'confidence':       ('#FFEDD5', '#F97316'),   # Light Orange / Orange
+}
+
 GOAL_ICONS = {
     'last-longer':      _ic('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/>'),
     'better-erections': _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>'),
@@ -451,8 +467,11 @@ def hero_screen(s):
     goals = next(b for b in s['blocks'] if b['t'] == 'options')
     rows = ''.join(
         '<button class="opt goal" data-value="%s">'
-        '<span class="bubble">%s</span><span class="lbl">%s</span></button>'
-        % (attr(o['value']), GOAL_ICONS.get(o['value'], ICON['shield']), esc(o['label']))
+        '<span class="bubble" style="--bub:%s;--gly:%s">%s</span>'
+        '<span class="lbl">%s</span></button>'
+        % ((attr(o['value']),)
+           + GOAL_COLORS.get(o['value'], ('#FDECE6', '#E6430D'))
+           + (GOAL_ICONS.get(o['value'], ICON['shield']), esc(o['label'])))
         for o in goals['options'])
 
     return (
@@ -462,8 +481,11 @@ def hero_screen(s):
         # screen is never broken — it just does not move. Drop the clip at
         # assets/video/hero.mp4 and it plays with no other change.
         '<div class="hero">'
+        # The poster is braevon.com's own hero photograph, so the frame shows
+        # the site's image today; drop a clip in at assets/video/hero.mp4 and
+        # the same element plays it instead. Neither ask cancels the other.
         '<video class="hero-media" autoplay muted loop playsinline preload="metadata" '
-        'poster="assets/images/stat-hero.jpg">'
+        'poster="assets/images/braevon-hero.jpg">'
         '<source src="assets/video/hero.mp4" type="video/mp4"/></video>'
         '<img class="hero-product" src="assets/images/product-tablet.png" '
         'alt="The BRAEVON 4-in-1 tablet"/>'
