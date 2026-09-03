@@ -337,5 +337,7 @@ privacy on and a commit with the real address is rejected at push time.
   question after it both say "12" but sit in different segments.
   `SEGMENT_STARTS` = [1, 7, 12, 16, 19]. Every boundary up to 12 is confirmed
   against the live page (steps 3, 5, 6 in segment 1; 7, 8, 11 in segment 2; 12
-  in segment 3); **16 and 19 are the remaining steps split evenly and are not
-  verified.**
+  in segment 3), and 16 is confirmed too - the reference's "any other
+  allergies?" screen (step 16) shows three solid segments and one current, and
+  so does ours. **Only 19 is unverified**, being the remaining steps split
+  evenly.

@@ -941,6 +941,16 @@ body.frames .dq{position:static;display:block}
     stop(false); show(idx);
   });
   document.getElementById('dqExit').addEventListener('click', function(){
+    /* Exit starts the assessment over, so it has to clear the answers too -
+       returning to screen 1 with the disqualifying answer still ticked is not
+       a restart, it is the same dead end one Continue away. */
+    [].forEach.call(stage.querySelectorAll('.opt.selected'), function(o){
+      o.classList.remove('selected'); });
+    [].forEach.call(stage.querySelectorAll('input,textarea'), function(f){
+      if(f.type==='checkbox'||f.type==='radio') f.checked=false; else f.value=''; });
+    [].forEach.call(stage.querySelectorAll('select'), function(f){ f.selectedIndex=0; });
+    answers={};
+    syncReveals();
     stop(false); history=[]; show(0);
   });
 
