@@ -366,7 +366,13 @@ img{max-width:100%;display:block}
 .reveal.on{display:block}
 .reveal label{display:block;margin:0 0 10px;font-size:17px;font-weight:700;color:var(--ink);line-height:1.3}
 .reveal-sub{margin:0 0 8px;font-size:11px;color:var(--muted)}
-.err{margin:8px 0 0;font-size:11px;color:var(--error);font-weight:600}
+.err{margin:8px 0 0;font-size:13px;color:var(--error);font-weight:600}
+.err[hidden]{display:none}
+/* A field that failed validation carries the message and the outline together,
+   so the eye lands on the same place twice. */
+.field.bad input,.field.bad select,.field.bad textarea{border-color:var(--error)}
+.field.bad input:focus,.field.bad select:focus,.field.bad textarea:focus{
+  border-color:var(--error);box-shadow:0 0 0 3px rgba(217,45,32,.14)}
 .err[hidden]{display:none}
 
 /* ----------------------------------------------------------------- note */

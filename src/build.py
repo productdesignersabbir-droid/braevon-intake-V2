@@ -538,7 +538,9 @@ def field_block(f, label=None):
         ctrl = ('<input id="%s" type="%s" placeholder="%s" autocomplete="off"%s/>'
                 % (fid, attr(f.get('input_type') or 'text'),
                    attr(f.get('placeholder') or ''), extra))
-    return ('<div class="field%s">%s%s</div>'
+    # Every field carries its own (hidden) error line, so a failed submit can
+    # say what is wrong under the field rather than only shaking the screen.
+    return ('<div class="field%s">%s%s<p class="err" hidden></p></div>'
             % (' half' if f.get('half') else '', lab, ctrl))
 
 

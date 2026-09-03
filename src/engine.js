@@ -161,6 +161,18 @@
   });
 
   /* --------------------------------------------------------- validation */
+  /* What is wrong with a field, in words, or null if nothing is. Shared by the
+     validity check and the error display so the two cannot disagree. */
+  function fieldProblem(f){
+    if(f.closest('[data-optional]')) return null;
+    if(!f.value.trim()) return 'This field is required.';
+    if(f.hasAttribute('data-us-phone') && !usValid(f.value))
+      return 'Enter a valid US phone number, e.g. (415) 555-1234.';
+    if(f.type==='email' && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(f.value.trim()))
+      return 'Enter a valid email address.';
+    return null;
+  }
+
   function stepValid(el){
     var ok=true;
     [].forEach.call(el.querySelectorAll('.opts'), function(box){
@@ -169,10 +181,7 @@
       if(!box.querySelector('.opt.selected')) ok=false;
     });
     [].forEach.call(el.querySelectorAll('.field input, .field select'), function(f){
-      if(f.closest('[data-optional]')) return;
-      if(!f.value.trim()) ok=false;
-      else if(f.hasAttribute('data-us-phone') && !usValid(f.value)) ok=false;
-      else if(f.type==='email' && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(f.value.trim())) ok=false;
+      if(fieldProblem(f)) ok=false;
     });
     [].forEach.call(el.querySelectorAll('.reveal.on:not([data-optional]) textarea'), function(t){
       if(!t.value.trim()) ok=false;
@@ -182,17 +191,34 @@
   function showError(el){
     var r=el.querySelector('.reveal.on .err');
     if(r) r.hidden=false;
-    var first=el.querySelector('.opts:not([data-optional]) , .field input, .field select');
+    /* Say what is wrong, under the field it is wrong in. */
+    var firstBad=null;
+    [].forEach.call(el.querySelectorAll('.field input, .field select'), function(f){
+      var why=fieldProblem(f), box=f.closest('.field'), msg=box&&box.querySelector('.err');
+      box.classList.toggle('bad', !!why);
+      if(msg){ msg.textContent = why || ''; msg.hidden = !why; }
+      if(why && !firstBad) firstBad=f;
+    });
+    var first=firstBad || el.querySelector('.opts:not([data-optional]) , .field input, .field select');
     if(first) first.scrollIntoView({block:'center', behavior:'smooth'});
+    if(firstBad) try{ firstBad.focus({preventScroll:true}); }catch(_){}
     el.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},
                 {transform:'translateX(5px)'},{transform:'translateX(0)'}],
                {duration:220});
   }
   function clearError(el){ if(!el) return;
-    [].forEach.call(el.querySelectorAll('.err'), function(e){ e.hidden=true; }); }
+    [].forEach.call(el.querySelectorAll('.err'), function(e){ e.hidden=true; });
+    [].forEach.call(el.querySelectorAll('.field.bad'), function(b){
+      b.classList.remove('bad'); }); }
 
   stage.addEventListener('input', function(e){
-    if(e.target.matches('input,select,textarea')) clearError(e.target.closest('.step'));
+    if(!e.target.matches('input,select,textarea')) return;
+    var box=e.target.closest('.field');
+    if(box && !fieldProblem(e.target)){
+      box.classList.remove('bad');
+      var m=box.querySelector('.err'); if(m) m.hidden=true;
+    }
+    clearError(e.target.closest('.step'));
   });
 
   /* --------------------------------------------------- disqualification */
