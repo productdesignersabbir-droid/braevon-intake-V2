@@ -142,29 +142,31 @@ def highlight(n, title):
     return title.replace(phrase, '<span class="hl">%s</span>' % phrase, 1)
 
 
+# Braevon's four, in the order braevon.com lists them. The dose column is not
+# rendered anywhere and the figures in it were never verified - see the README.
 MOLECULES = [
-    ('Apomorphine', 'Primes the brain&rsquo;s arousal pathways', '2 mg'),
-    ('L-Citrulline', 'Amplifies blood flow for speed', '&mdash;'),
-    ('Sildenafil', 'Supports a strong blood-flow response', '40 mg'),
-    ('Tadalafil', 'Extends the window', '4 mg'),
+    ('Sildenafil', 'For getting hard fast', '&mdash;'),
+    ('Tadalafil', 'For staying ready up to 36 hours', '&mdash;'),
+    ('Vardenafil', 'For a firmer, more reliable response', '&mdash;'),
+    ('Apomorphine', 'Ignites desire in the brain', '&mdash;'),
 ]
 
 # Screen 5 reads as a benefit list, not an ingredient table: the reference leads
 # each row with what the molecule does for you and names the molecule second.
 # Bubble hues follow the goal-icon tokens - purple, green, red, blue.
 MECHANISM = [
-    ('Spark Desire', 'Apomorphine primes the brain&rsquo;s arousal pathways.',
+    ('Spark Desire', 'Apomorphine ignites desire in the brain.',
      '#F3EBFF', '#A855F7',
      _ic('<path d="M12 6a3.2 3.2 0 0 0-6-1.1A2.7 2.7 0 0 0 4.2 9.4 2.8 2.8 0 0 0 6 14.4'
          'a3 3 0 0 0 3 2.6"/><path d="M12 6a3.2 3.2 0 0 1 6-1.1 2.7 2.7 0 0 1 1.8 4.5'
          'A2.8 2.8 0 0 1 18 14.4a3 3 0 0 1-3 2.6"/><path d="M12 6v15"/>')),
-    ('Start Fast', 'L-Citrulline amplifies blood flow for speed.',
+    ('Start Fast', 'Sildenafil gets you hard fast.',
      '#DFF7E6', '#22C55E',
      _ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>')),
-    ('Boost Performance', 'Sildenafil supports a strong blood-flow response.',
+    ('Boost Performance', 'Vardenafil gives a firmer, more reliable response.',
      '#FEE2E2', '#EF4444',
      _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5c0 5-7 9.5-7 9.5z"/>')),
-    ('Last Longer', 'Tadalafil extends the effect window (up to 36h reported).',
+    ('Last Longer', 'Tadalafil keeps you ready for up to 36 hours.',
      '#DBEAFE', '#3B82F6',
      _ic('<rect x="2.5" y="7.5" width="15" height="9" rx="2.6"/>'
          '<path d="M20.5 10.5v3"/><path d="M6 10.5v3"/>')),
@@ -214,14 +216,16 @@ def cta(label='Next', blocked=True):
             % (' data-blocked="1"' if blocked else '', esc(label), ICON['arrow']))
 
 
-def head(title=None, sub=None, eyebrow=None):
+def head(title=None, sub=None, eyebrow=None, lead=False):
+    """`lead` marks a sub-head that is carrying the claim rather than
+    captioning a question - the reference sets those as a second heading."""
     out = ''
     if eyebrow:
         out += '<p class="eyebrow">%s</p>' % eyebrow
     if title:
         out += '<h1 class="qhead">%s</h1>' % title
     if sub:
-        out += '<p class="sub">%s</p>' % sub
+        out += '<p class="sub%s">%s</p>' % (' lead' if lead else '', sub)
     return out
 
 
@@ -472,7 +476,7 @@ def screen_interstitial(p):
         return ('<div class="col">'
                 + head('How <span class="hl">BRAEVON&rsquo;s 4-in-1</span> Works for you',
                        'BRAEVON&rsquo;s 4-in-1 is engineered to hit both Desire (the brain) '
-                       'and Performance (the body) in one dose.')
+                       'and Performance (the body) in one dose.', lead=True)
                 + '<div class="reviewcard">%s</div>' % rows
                 + cta(blocked=False) + '</div>')
     if n == 8:
@@ -496,7 +500,7 @@ def screen_interstitial(p):
         # Brand, what it is fast at, the molecule that does it, and where the
         # bar sits on that axis. The three single-ingredient hues are the
         # reference's, and carry the same meaning its mechanism icons do.
-        rows = [('Levitra&reg;', 'Rapid Onset', 'L-Citrulline', '#12B76A', 22, 27),
+        rows = [('Levitra&reg;', 'Rapid Onset', 'Vardenafil', '#12B76A', 22, 27),
                 ('Viagra&reg;', 'Peak Strength', 'Sildenafil', '#3B82F6', 35, 15),
                 ('Cialis&reg;', 'Extended Window', 'Tadalafil', '#8B5CF6', 34, 66),
                 ('Other Stacks', 'Standard Combo',
@@ -530,8 +534,8 @@ def screen_interstitial(p):
                 + (chip % (bolt, 'Starts at 10m')) + (chip % (peak, 'Peak Power'))
                 + (chip % (clock, '36h Window'))
                 + '</div><div class="fp-rule"></div>'
-                  '<p class="fp-note">Contains L-Citrulline, Sildenafil, Tadalafil, '
-                  'and Apomorphine which primes the brain for desire.</p>'
+                  '<p class="fp-note">Contains Sildenafil, Tadalafil, Vardenafil '
+                  'and Apomorphine, which primes the brain for desire.</p>'
                   '</div></div>'
                 + cta(blocked=False) + '</div>')
     if n == 33:

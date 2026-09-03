@@ -181,7 +181,11 @@ img{max-width:100%;display:block}
   letter-spacing:-.01em; color:var(--title-ink);
 }
 .qhead.big{font-size:26px}
-.sub{margin:10px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
+.sub{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
+/* On an interstitial the line under the headline is carrying the claim, not
+   captioning a question, and the reference sets it as a second heading:
+   20px/600 in near-black, tighter. */
+.sub.lead{font-size:20px;line-height:1.3;font-weight:600;color:var(--ink)}
 .legend{margin:var(--gap-title) 0 10px;font-size:12px;font-weight:700;color:var(--ink)}
 .foot{margin:12px 0 0;font-size:10px;line-height:1.5;color:var(--faint)}
 .hi{color:var(--accent);font-weight:700}
@@ -277,7 +281,7 @@ img{max-width:100%;display:block}
 .opts.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-opt)}
 .opt.tile{flex-direction:column;justify-content:center;align-items:center;
   text-align:center;gap:14px;padding:24px 20px;min-height:170px}
-.opt.tile .lbl{flex:none;font-size:17px;font-weight:600}
+.opt.tile .lbl{flex:none;font-size:16px;font-weight:500}
 .opt.tile .lbl small{display:block;margin-top:8px;font-size:12px;font-weight:400;
   line-height:1.35;color:var(--muted)}
 
@@ -428,9 +432,9 @@ img{max-width:100%;display:block}
    but not the fixed height. */
 .opt.band{gap:14px}
 .opt.band .lbl{font-size:14px;font-weight:600}
-.bubble.big{width:64px;height:64px;border-radius:50%;flex:none;display:grid;
+.bubble.big{width:32px;height:32px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
-.bubble.big svg{width:30px;height:30px}
+.bubble.big svg{width:16px;height:16px}
 
 
 /* ------------------------------------------------------------- markety */
@@ -447,10 +451,6 @@ img{max-width:100%;display:block}
 .tcard .who{margin-top:10px;font-size:10px;font-weight:700;color:var(--faint)}
 .railnote{margin:0;font-size:10px;color:var(--faint);text-align:right}
 
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:var(--gap-title)}
-.tile{background:var(--surface);border-radius:var(--radius-card);box-shadow:var(--shadow);padding:14px}
-.tile b{display:block;font-size:12px;color:var(--ink)}
-.tile span{display:block;margin-top:3px;font-size:10px;color:var(--muted)}
 
 .factcard{background:var(--dark);color:#fff;border-radius:var(--radius-card);
   padding:26px 22px;text-align:center}

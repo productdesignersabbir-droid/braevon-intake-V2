@@ -292,7 +292,19 @@ privacy on and a commit with the real address is rejected at push time.
   judgement calls. Get a prescriber to confirm the list and the wording before
   this goes near a real patient.
 - **The 4.6 masthead rating is a placeholder**, carried from v1's header. It needs
-  a real figure or it should come out.
+  a real figure or it should come out. (braevon.com does show "Excellent 4.6 out
+  of 5", so this may now be the real figure - worth confirming.)
+- **The formula is Braevon's four**, taken from braevon.com on 2026-09-03:
+  Sildenafil, Tadalafil, Vardenafil, Apomorphine, with that site's own
+  descriptions. The reference's L-Citrulline is gone. Two things about the
+  product copy are still NOT reconciled with braevon.com:
+  - the **onset figure**. These screens carry the reference's "10-15 minutes";
+    braevon.com says "Starts in 15 Minutes" in one place and "8 min activation
+    time" in another. Someone has to say which is right.
+  - the **product name**. braevon.com calls it BRAEVON PRIME(TM); this build
+    calls it "BRAEVON 4-in-1" throughout, from the reference's "QUAD 4-in-1".
+  - the dose column in `MOLECULES` is not rendered and its figures were never
+    verified; it is em-dashes now rather than invented numbers.
 - **Every single-answer screen now opens on a pre-selected answer**, as the
   reference does, from the `DEFAULTS` table in `src/build.py`. On the safety
   screens (24, 25, 26, 31, 36, 37, 39, 40, 41) that means a patient who clicks
