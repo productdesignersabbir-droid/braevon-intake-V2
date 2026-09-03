@@ -393,8 +393,12 @@ QUOTES = {
           ('Benefits',
            [_GREEN2 + (_ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),), _HEART_RED + (_HEART,)],
            'Quick Effect and<br/>Lasting Performance')],
+         # Not the white-coat shot: this is a customer, not a clinician. Shares
+         # stat-hero.jpg with screen 41's banner - a 28px avatar and a 168px
+         # banner on different screens do not read as the same picture, but a
+         # portrait of its own would be better. See the README.
          'Ryan Mitchell &mdash; New York, NY', 'braevon-hero.jpg',
-         ('doctor.jpg', '50% 20%')),
+         ('stat-hero.jpg', '50% 20%')),
 }
 
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',

@@ -318,6 +318,13 @@ img{max-width:100%;display:block}
 .field{flex:1 1 100%;min-width:0}
 .field.half{flex:1 1 calc(50% - 6px)}
 .field label,.dob-label{display:block;margin:0 0 8px;font-size:17px;font-weight:500;color:var(--ink)}
+/* The placeholder state, in the reference's own treatment: a select still
+   showing its first option reads grey, and turns to ink once a real answer is
+   chosen. Without it "January / 01" looks like data the form filled in. */
+.field select[data-empty]{color:var(--faint)}
+.field input::placeholder,.field textarea::placeholder,
+.reveal textarea::placeholder{color:var(--faint);opacity:1}
+
 .field input,.field select,.field textarea,.reveal textarea,.reveal input{
   width:100%;font-family:inherit;font-size:16px;color:var(--ink);
   background:var(--surface);border:1px solid var(--border);

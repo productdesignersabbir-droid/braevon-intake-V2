@@ -124,6 +124,16 @@
     });
   });
 
+  /* --------------------------------------------------- empty select state */
+  /* A select whose placeholder option is showing has to read as a placeholder,
+     not as an answer already given - the reference greys its own the same way.
+     Marked as an attribute rather than a :has() rule so it works everywhere. */
+  function markEmpty(f){
+    if(f && f.tagName==='SELECT') f.toggleAttribute('data-empty', !f.value);
+  }
+  [].forEach.call(stage.querySelectorAll('select'), markEmpty);
+  stage.addEventListener('change', function(e){ markEmpty(e.target); });
+
   /* ------------------------------------------------------------ US phone */
   /* Ten digits, area code and exchange both starting 2-9, which is what a real
      US number does. A leading 1 or +1 is dropped rather than rejected - people

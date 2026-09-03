@@ -341,7 +341,9 @@ privacy on and a commit with the real address is rejected at push time.
   folder; the reference uses shot-for-purpose photography. Each testimonial's
   avatar is its own photograph cropped to the face, so the small circle and the
   picture above it are the same person - except screen 44, whose photograph is
-  a couple and cannot crop to one face, so its avatar borrows `doctor.jpg`.
+  a couple and cannot crop to one face, so its avatar borrows `stat-hero.jpg`
+  from screen 41's banner. `doctor.jpg` is now unused: a white coat and a
+  stethoscope read as a clinician, not as the customer giving the quote.
   The quotes and the names on them (Ethan Caldwell, Ryan Mitchell) are written
   for this concept and are not real people or real reviews - say so before
   showing anyone who might take them at face value.
