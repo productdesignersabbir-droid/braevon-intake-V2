@@ -338,12 +338,13 @@ privacy on and a commit with the real address is rejected at push time.
   otherwise unused. **A bathroom/medicine-cabinet shot is needed to match.**
 - **The testimonial photos and names are placeholders.** Screens 32 and 44
   point at `hero-benefits.jpg` and `braevon-hero.jpg` from the existing asset
-  folder; the reference uses shot-for-purpose photography. Screen 44's face
-  avatar reuses `doctor.jpg`; **screen 32 still has the generic icon because
-  there is no second portrait in the repo.** The quotes and the names on them
-  (David Brooks, Ryan Mitchell) are written for this concept and are not real
-  people or real reviews - say so before showing anyone who might take them at
-  face value.
+  folder; the reference uses shot-for-purpose photography. Each testimonial's
+  avatar is its own photograph cropped to the face, so the small circle and the
+  picture above it are the same person - except screen 44, whose photograph is
+  a couple and cannot crop to one face, so its avatar borrows `doctor.jpg`.
+  The quotes and the names on them (Ethan Caldwell, Ryan Mitchell) are written
+  for this concept and are not real people or real reviews - say so before
+  showing anyone who might take them at face value.
 - **Screen 43's "LAST STEP" is now the reference's gradient pill**, and its
   privacy panel uses the same tinted component as the blood-pressure screen,
   with the reference's own longer HIPAA wording.

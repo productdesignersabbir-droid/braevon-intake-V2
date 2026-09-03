@@ -382,7 +382,8 @@ QUOTES = {
           ('Benefits',
            [_PURPLE + (_BRAIN,), _HEART_RED + (_HEART,)],
            'Mental Mood and<br/>Lasting Effects')],
-         'David Brooks &mdash; Kansas City, MO', 'hero-benefits.jpg', None),
+         'Ethan Caldwell &mdash; Kansas City, MO', 'hero-benefits.jpg',
+         ('hero-benefits.jpg', '66% 12%')),
     44: ('&ldquo;The results were almost immediate &mdash; more energy, more desire, '
          'and a stronger performance every time.&rdquo;',
          [('Personal Goal',
@@ -392,7 +393,8 @@ QUOTES = {
           ('Benefits',
            [_GREEN2 + (_ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),), _HEART_RED + (_HEART,)],
            'Quick Effect and<br/>Lasting Performance')],
-         'Ryan Mitchell &mdash; New York, NY', 'braevon-hero.jpg', 'doctor.jpg'),
+         'Ryan Mitchell &mdash; New York, NY', 'braevon-hero.jpg',
+         ('doctor.jpg', '50% 20%')),
 }
 
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -830,7 +832,8 @@ def screen_interstitial(p):
             '<div class="qcards">%s</div>'
             '<div class="qwho">%s%s</div>'
             '</div>' % (photo, stars, quote, cards,
-                        ('<img class="qavatar" src="assets/images/%s" alt=""/>' % face)
+                        ('<img class="qavatar" src="assets/images/%s" alt="" '
+                         'style="object-position:%s"/>' % face)
                         if face else
                         ('<span class="qavatar">%s</span>' % ICON['person']),
                         who)
