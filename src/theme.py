@@ -269,7 +269,13 @@ img{max-width:100%;display:block}
 
 /* ------------------------------------------------ the fact interstitial */
 /* Screen 2, centred on white the way the reference sets it. */
-.col.fact{text-align:center}
+/* The reference drops the CTA to a consistent depth on its fact screens rather
+   than tucking it under the copy, so the shorter the screen the wider the gap:
+   its "137%" screen leaves about twice the space its "10-15 minutes" one does.
+   A min-height with the button pushed to the bottom reproduces that from one
+   rule instead of a per-screen margin. */
+.col.fact{text-align:center;min-height:525px}
+.col.fact .cta{margin-top:auto}
 .fact-name{margin:8px 0 0;font-size:14px;font-weight:500;color:var(--muted)}
 .fact-pill{
   align-self:center;margin:12px 0 0;padding:8px 20px;border-radius:999px;
