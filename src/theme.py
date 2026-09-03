@@ -275,7 +275,16 @@ img{max-width:100%;display:block}
    A min-height with the button pushed to the bottom reproduces that from one
    rule instead of a per-screen margin. */
 .col.fact{text-align:center;min-height:525px}
+/* Two auto margins - one above the content, one above the button - split the
+   free space in half, so the block sits centred between the top of the screen
+   and the button rather than bunched under the progress bar. */
+.col.fact > :first-child{margin-top:auto}
 .col.fact .cta{margin-top:auto}
+/* The one-figure screen carries a single statement rather than two stacked
+   ones, so it can breathe where the two-figure screen has to stay tight. */
+.col.fact.solo .fact-pill{margin-top:20px}
+.col.fact.solo .fact-k{margin-top:30px}
+.col.fact.solo .fact-u{margin-top:14px;line-height:1.35}
 .fact-name{margin:8px 0 0;font-size:14px;font-weight:500;color:var(--muted)}
 .fact-pill{
   align-self:center;margin:12px 0 0;padding:8px 20px;border-radius:999px;

@@ -809,7 +809,7 @@ def screen_interstitial(p):
         # white, the product name, a gradient pill, the figure, the read-out.
         # It is not a dark card; there is only one dark surface in the flow and
         # it is the stop.
-        return ('<div class="col fact">'
+        return ('<div class="col fact solo">'
                 '<p class="fact-name">BRAEVON 4-in-1</p>'
                 '<p class="fact-pill">Do It For Her</p>'
                 '<p class="fact-k accent">137%</p>'
