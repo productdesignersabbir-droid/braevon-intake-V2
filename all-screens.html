@@ -656,7 +656,8 @@ img{max-width:100%;display:block}
 .rv-head b{display:block;font-size:19px;font-weight:800;letter-spacing:.02em}
 .rv-head span{display:block;font-size:14px;color:#FDE0D4}
 .rv-head-r{text-align:right}
-.rv-ready{font-weight:700;color:#FFD9C7}
+/* Carries .rv-head so it beats the 14px set on that block's spans. */
+.rv-head .rv-ready{font-size:12px;font-weight:700;color:#FFD9C7}
 
 .rv-ok{display:flex;gap:10px;align-items:flex-start;background:#F0FDF4;
   padding:14px 16px;margin:0 calc(var(--pad) * -1)}
