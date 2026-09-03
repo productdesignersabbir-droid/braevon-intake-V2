@@ -11,6 +11,13 @@
     stage.hidden=on; prog.hidden=on||prog.hidden; backBtn.hidden=on||backBtn.hidden;
   }
   var TOTAL_Q=__TOTAL_Q__, SEGMENTS=__SEGMENTS__;
+  /* The bar is divided by section, not by question count - see build.py. */
+  var SEGMENT_STARTS=__SEGMENT_STARTS__;
+  function segmentOf(screen){
+    var at=0;
+    SEGMENT_STARTS.forEach(function(start,i){ if(screen>=start) at=i; });
+    return at;
+  }
   var answers={};      /* group -> array of selected values */
   var idx=0, history=[];
   /* progQ[j] is the question number the bar should show on step j - its own if
@@ -190,7 +197,7 @@
       prog.setAttribute('aria-valuenow', pq);
       if(q) prog.setAttribute('aria-valuetext','Question '+q+' of '+TOTAL_Q);
       else prog.removeAttribute('aria-valuetext');
-      var per=TOTAL_Q/SEGMENTS, at=Math.floor((pq-1)/per);
+      var at=segmentOf(+el.dataset.step);
       segs.forEach(function(sp,k){
         sp.style.width = k<=at ? '100%' : '0%';
         sp.parentNode.classList.toggle('now', k===at);

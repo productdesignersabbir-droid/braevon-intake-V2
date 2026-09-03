@@ -1,0 +1,94 @@
+{
+ "9": {
+  "exclusive_first": false,
+  "exclusive_note": null,
+  "captions": {}
+ },
+ "28": {
+  "exclusive_first": false,
+  "exclusive_note": null,
+  "captions": {}
+ },
+ "30": {
+  "exclusive_first": false,
+  "exclusive_note": null,
+  "captions": {}
+ },
+ "34": {
+  "exclusive_first": false,
+  "exclusive_note": null,
+  "captions": {}
+ },
+ "35": {
+  "exclusive_first": false,
+  "exclusive_note": null,
+  "captions": {}
+ },
+ "16": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {
+   "Severe allergic reaction": "Serious Reactions",
+   "Headache": "Common Side Effects"
+  }
+ },
+ "17": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {
+   "Severe allergic reaction": "Serious Reactions",
+   "Headache": "Common Side Effects"
+  }
+ },
+ "18": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {
+   "Severe allergic reaction": "Serious Reactions",
+   "Headache": "Common Side Effects"
+  }
+ },
+ "19": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {
+   "Severe allergic reaction": "Serious Reactions",
+   "Headache": "Common Side Effects"
+  }
+ },
+ "20": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {
+   "Severe allergic reaction": "Serious Reactions",
+   "Headache": "Common Side Effects"
+  }
+ },
+ "21": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {
+   "Severe allergic reaction": "Serious Reactions",
+   "Headache": "Common Side Effects"
+  }
+ },
+ "27": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {
+   "Advised by a doctor to avoid sexual activity": "Heart & Blood Pressure",
+   "Stroke": "Blood & Neurological",
+   "Severe depression, mania, or schizophrenia": "Other Conditions"
+  }
+ },
+ "29": {
+  "exclusive_first": true,
+  "exclusive_note": "Select this to continue. All other answers will make you ineligible.",
+  "captions": {}
+ },
+ "38": {
+  "exclusive_first": true,
+  "captions": {},
+  "exclusive_note": "Recreational drug use in the last 6 months will make you ineligible."
+ }
+}

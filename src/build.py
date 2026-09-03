@@ -34,6 +34,12 @@ from theme import CSS
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.dirname(HERE)
 FLOW = json.load(open(os.path.join(HERE, 'medvi-flow.json'), encoding='utf-8'))
+# Where the exclusive answer sits on each multi-answer screen, the line under it
+# when it has one, and the captions that break a long list into groups. Read off
+# the live reference on 2026-09-03, because the DOM extraction flattens all
+# three away. Keyed by screen; the caption is keyed by the label of the option
+# it sits above.
+GROUPS = json.load(open(os.path.join(HERE, 'groups.json'), encoding='utf-8'))
 
 BRAND = 'BRAEVON'
 STOP_SCREEN = 46          # the reference's "NO RX" page; here it is the overlay
@@ -44,6 +50,25 @@ INTERSTITIALS = {2, 5, 8, 32, 33, 44}
 TILE_SCREENS = {3, 7, 24, 39, 40, 41, 42}
 
 SEGMENTS = 5
+
+# The reference does not divide its bar evenly by question count - it divides it
+# by section. Measured on the live page: screens 1-23 sit in segment 1, and
+# screen 24 (where the flow turns from ED history to medical history) starts
+# segment 2. Dividing 40 questions into five equal blocks instead put screen 24
+# in segment 3, which is why our bar ran a segment ahead of theirs.
+#
+# The first two boundaries are confirmed. The last three are read off the flow's
+# own structure and are NOT verified against the reference - see the README.
+SEGMENT_STARTS = [1, 24, 32, 39, 44]
+
+
+def segment_of(screen):
+    """Which of the five segments a screen belongs to, zero-based."""
+    at = 0
+    for i, start in enumerate(SEGMENT_STARTS):
+        if screen >= start:
+            at = i
+    return at
 
 
 def _ic(paths):
@@ -58,6 +83,7 @@ ICON = {
     'warn': _ic('<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>'
                 '<path d="M12 9v4M12 17h.01"/>'),
     'shield': _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
+    'info': _ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
 }
 
 # Screen 1's goal icons, keyed by the reference's own option labels. The bubble
@@ -127,7 +153,30 @@ YESNO_ICONS = {
 # The reference picks out the word a question turns on and sets it in the
 # accent - the rest of the headline stays ink. One entry per screen that does
 # it; the phrase is matched against the escaped title, so write it as it reads.
+# A tinted panel under the options, where the reference puts one. Keyed by
+# screen so more can be added as they turn up.
+# Screens whose sub-head the reference sets as a second heading (H2 20/600 in
+# near-black) rather than a grey caption. Checked one by one against the live
+# page - the wording gives no clue which is which ("Select your primary goal:"
+# is grey, "When was your most recent physical exam?" is a heading).
+LEADS = {5, 23, 27}
+
+# The only screens whose second sub-head is a real legend over the list. The
+# extractor also files section captions and field labels under `subs`, and
+# those are carried by GROUPS and by the fields themselves.
+LEGENDS = {25, 26}
+
+FOOTNOTES = {
+    25: ('Don&rsquo;t know your blood pressure?',
+         'If you&rsquo;re unsure of your blood pressure, get it checked for free at '
+         'most pharmacies or contact your provider for your most recent reading.'),
+}
+
+
 HIGHLIGHTS = {
+    16: 'For your safety', 17: 'For your safety', 18: 'For your safety',
+    19: 'For your safety', 20: 'For your safety', 21: 'For your safety',
+    27: 'For your safety',
     24: 'diagnosed',
     25: 'last blood pressure reading?',
     26: 'last blood pressure reading?',
@@ -229,7 +278,8 @@ def head(title=None, sub=None, eyebrow=None, lead=False):
     return out
 
 
-def option(o, exclusive, goal=False, tile=False, screen=None):
+def option(o, exclusive, goal=False, tile=False, screen=None,
+           excl_first=False, excl_note=None):
     label = esc(brandify(o['label']))
     if tile:
         note = ('<small>%s</small>' % esc(brandify(o['note']))) if o.get('note') else ''
@@ -258,30 +308,46 @@ def option(o, exclusive, goal=False, tile=False, screen=None):
     if o.get('note'):
         inner += '<small>%s</small>' % esc(brandify(o['note']))
     excl = o['value'] == exclusive
+    if excl and excl_note:
+        inner = ('%s<small>%s</small>'
+                 % (label, esc(brandify(excl_note))))
+    # `last` draws the rule above a trailing exclusive; `safe` is the green
+    # card the reference gives it when it leads the list instead.
+    mark = (' safe' if excl and excl_first else (' last' if excl else ''))
     return ('<button class="opt%s%s" data-value="%s"%s>'
             '<span class="lbl">%s</span><span class="ring"></span></button>'
             % (' checkbox' if o['type'] == 'checkbox' else '',
-               ' last' if excl else '', attr(o['value']),
+               mark, attr(o['value']),
                ' data-exclusive="1"' if excl else '', inner))
 
 
 def options_block(p):
-    """The exclusive "None of these" sits last, split from the list by a rule,
-    where the reference puts it.
+    """Renders a screen's options in the reference's own order.
 
-    v1 hoisted it to the top instead: on a fifteen-item safety screen it
-    otherwise sits below the fold, so a patient who has none of them has to
-    read all fifteen to find that out, and every option scrolled past is one
-    they might tick by mistake. The reference's order wins here because
-    matching it is the brief, but that cost is real and is flagged in the
-    README."""
+    Where the exclusive answer goes is per screen, not a rule: the reference
+    puts "None of the above" last on the ED-treatments screen and first - green,
+    under a line telling you it is the answer that lets you continue - on the
+    safety screens where every other answer is disqualifying. GROUPS carries
+    that, along with the captions that break the long lists into sections."""
     goal = p['n'] == 1
     tile = p['n'] in TILE_SCREENS
-    opts = (p['options'] if tile
-            else sorted(p['options'], key=lambda o: o['value'] == p['exclusive']))
+    g = GROUPS.get(str(p['n']), {})
+    excl_first = g.get('exclusive_first', False)
+    if tile:
+        opts = p['options']
+    else:
+        opts = sorted(p['options'],
+                      key=lambda o: (o['value'] == p['exclusive']) != excl_first)
+    caps = g.get('captions') or {}
+    out = []
+    for o in opts:
+        cap = caps.get(o['label'])
+        if cap:
+            out.append('<p class="optcap">%s</p>' % esc(cap))
+        note = g.get('exclusive_note') if o['value'] == p['exclusive'] else None
+        out.append(option(o, p['exclusive'], goal, tile, p['n'], excl_first, note))
     return ('<div class="opts%s" data-group="%s" data-mode="%s">%s</div>'
-            % (' tilegrid' if tile else '', attr(p['group']), p['mode'],
-               ''.join(option(o, p['exclusive'], goal, tile, p['n']) for o in opts)))
+            % (' tilegrid' if tile else '', attr(p['group']), p['mode'], ''.join(out)))
 
 
 def field_block(f, label=None):
@@ -334,11 +400,16 @@ def screen_question(p):
     title = brandify(p['title'])
     sub = brandify(p['subs'][0]) if p['subs'] else None
     out = ['<div class="col">', head(highlight(p['n'], esc(title)) if title else None,
-                                     esc(sub) if sub else None)]
-    if len(p['subs']) > 1:
+                                     esc(sub) if sub else None,
+                                     lead=p['n'] in LEADS)]
+    if p['n'] in LEGENDS and len(p['subs']) > 1:
         out.append('<p class="legend">%s</p>' % esc(brandify(p['subs'][1])))
     if p['options']:
         out.append(options_block(p))
+    if p['n'] in FOOTNOTES:
+        title, body = FOOTNOTES[p['n']]
+        out.append('<div class="infonote">%s<div><b>%s</b><p>%s</p></div></div>'
+                   % (ICON['info'], title, body))
     # The extractor picks up a hidden catch-all input on every multi-answer
     # screen. The reference never renders it, so neither does this - the
     # answers are the options.
@@ -665,17 +736,18 @@ def emit_interactive():
             + '<main class="stage" id="stage">%s</main>' % '\n'.join(sections())
             + DQ + '</div>'
             + '<script>%s</script>' % SCRIPT.replace('__TOTAL_Q__', str(TOTAL_Q))
-                                            .replace('__SEGMENTS__', str(SEGMENTS)))
+                                            .replace('__SEGMENTS__', str(SEGMENTS))
+                                            .replace('__SEGMENT_STARTS__',
+                                                     json.dumps(SEGMENT_STARTS)))
     html = page('Braevon &mdash; Intake Assessment v2', body)
     for name in ('index.html', 'interactive.html'):
         open(os.path.join(OUT, name), 'w', encoding='utf-8').write(html)
 
 
-def static_progress(q):
-    """A frame carries no script, so its bar is drawn at the width that
-    question would have reached - otherwise every frame imports empty."""
-    per = TOTAL_Q / float(SEGMENTS)
-    at = int((q - 1) // per)
+def static_progress(q, screen):
+    """A frame carries no script, so its bar is drawn where that screen would
+    have reached - otherwise every frame prints empty."""
+    at = segment_of(screen)
     segs = ['<div class="seg%s"><span style="width:%d%%"></span></div>'
             % (' now' if k == at else '', 100 if k <= at else 0)
             for k in range(SEGMENTS)]
@@ -693,7 +765,7 @@ def emit_frames():
         inner = html.replace('<section class="step"', '<section class="step on"', 1)
         # ids are unique per document; 46 frames cannot each carry the
         # interactive build's element ids
-        chrome = (MASTHEAD + (static_progress(q) if q else nav(''))
+        chrome = (MASTHEAD + (static_progress(q, p['n']) if q else nav(''))
                   ).replace(' id="backBtn"', '')
         if p['n'] == 1:
             chrome = chrome.replace('<button class="back-btn"', '<button class="back-btn" hidden')

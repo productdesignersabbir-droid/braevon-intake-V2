@@ -96,8 +96,8 @@ stay in the repo so it can be pulled back a screen at a time.
   Presenting another company's reviews as Braevon's would be fabricating
   testimonials, so the cards keep the reference's shape with copy written for
   this concept — the same call v1 made about DirectMeds' reviews.
-- **The captions inside long safety lists** ("Serious Reactions", "Common Side
-  Effects"). Worth restoring properly if those screens stay.
+- ~~The captions inside long safety lists~~ - restored. `src/groups.json`
+  carries them, read off the live reference on 2026-09-03.
 - **The extractor's catch-all textarea.** Every multi-answer screen in the
   extraction carries a hidden `answer_*` free-text field. The reference never
   renders one, so neither does v2 — the options are the answer.
@@ -312,9 +312,17 @@ privacy on and a commit with the real address is rejected at push time.
   a patient clicking straight through submitted "no history, normal readings"
   without reading the question. They are gone. Do not reintroduce them without
   a prescriber signing off on each value.
-- **"None of these" now sits last**, split from the list by a rule, because
-  that is where the reference puts it. v1 hoisted it to the top for a reason
-  worth remembering: on a fifteen-item safety screen it otherwise falls below
-  the fold, so a patient who has none of them must read all fifteen to find
-  that out, and every option scrolled past is one they might tick by mistake.
-  Reference parity won here; the cost did not go away.
+- **Where "None of these" sits is per screen, not a rule.** The reference puts
+  it last on the ED-treatments, sex-organ, cardiovascular, heart-symptom and
+  medication screens, and first - on a green card, under "Select this to
+  continue. All other answers will make you ineligible." - on the six
+  side-effect screens and on 27, 29 and 38, where every other answer is
+  disqualifying. `src/groups.json` carries this per screen, along with the
+  section captions. Read off the live reference on 2026-09-03.
+- **The progress bar is divided by section, not by question count.** Screens
+  1-23 are segment 1; screen 24 starts segment 2. An even five-way split of the
+  40 questions put screen 24 in segment 3, a whole segment ahead of the
+  reference. `SEGMENT_STARTS` in `src/build.py` holds the boundaries: the first
+  two are confirmed against the live page, **the last three (32, 39, 44) are
+  read off our own flow's shape and are not verified.** Walking the reference
+  past its safety screens would settle them.

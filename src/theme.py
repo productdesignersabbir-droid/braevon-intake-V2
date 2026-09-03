@@ -247,11 +247,24 @@ img{max-width:100%;display:block}
 .opt:not(.checkbox).selected .ring::after{
   width:6px;height:6px;border:none;border-radius:50%;background:#fff;transform:none;
 }
-/* The exclusive answer is the list's last row and is split off from it, the
-   way the reference splits it - a rule in the gap above, not a heavier row. */
+/* Where the exclusive answer sits is per screen - see GROUPS. Trailing, it is
+   split off by a rule in the gap above. Leading, the reference gives it a green
+   card: this is the answer that lets you continue, and green says so where
+   orange would only say "brand". */
 .opt.last{margin-top:14px;position:relative}
 .opt.last::before{content:"";position:absolute;left:0;right:0;top:-8px;
   height:1px;background:var(--hairline)}
+.opt.safe{background:#F0FDF4;border-color:#BBF7D0}
+.opt.safe:hover{border-color:#86EFAC}
+.opt.safe .lbl{font-weight:700}
+.opt.safe .lbl small{color:#3F6B50}
+.opt.safe.selected{border-color:#4ADE80;box-shadow:0 4px 20px rgba(34,197,94,.18)}
+.opt.safe.selected .ring{border-color:#22C55E;background:#22C55E}
+
+/* A caption breaking a long safety list into sections. It is a list heading,
+   so it takes the gap above and none below - the row under it is its own. */
+.optcap{margin:18px 0 -2px;font-size:17px;font-weight:700;color:var(--ink)}
+.opts > .optcap:first-child{margin-top:0}
 .opt-note{margin:-4px 0 0;font-size:11px;color:var(--muted);font-weight:600}
 
 /* ------------------------------------------------ the fact interstitial */
@@ -322,6 +335,15 @@ img{max-width:100%;display:block}
   padding:14px;font-size:11px;line-height:1.5;color:var(--muted);
 }
 .note svg{flex:none;width:18px;height:18px;stroke:var(--muted);margin-top:1px}
+
+/* The reference's helper panel under a question - a tinted block in the accent,
+   an icon, a bold line and a body. Blue there, orange here; nothing else
+   differs. */
+.infonote{display:flex;gap:10px;align-items:flex-start;margin-top:var(--gap-title);
+  background:var(--accent-soft);border-radius:var(--radius-card);padding:14px 16px}
+.infonote svg{flex:none;width:18px;height:18px;stroke:var(--accent);margin-top:1px}
+.infonote b{display:block;font-size:14px;font-weight:700;color:var(--accent-hover)}
+.infonote p{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
 .note.warn{background:#FEF3F2;color:#912018}
 .note.warn svg{stroke:var(--error)}
 .note b{color:var(--ink)}
