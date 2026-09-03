@@ -682,7 +682,7 @@ def screen_review(p):
             '<div class="rv-prob-top"><span>Success Probability</span><b>94%%</b></div>'
             '<div class="rv-bar"><i style="width:94%%"></i></div></div>'
             '<div class="rv-card">%s</div>'
-            '<p class="rv-verdict"><b>You are a strong candidate</b> '
+            '<p class="rv-verdict"><b>You are a strong candidate</b><br/>'
             'for prescription ED treatment</p>'
             '</div>'
             '<div class="rv-help">'

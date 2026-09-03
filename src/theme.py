@@ -701,7 +701,7 @@ img{max-width:100%;display:block}
 .rv-ok b{display:block;font-size:14px;font-weight:600;color:#166534}
 .rv-ok p{margin:2px 0 0;font-size:12px;line-height:1.45;color:#16A34A}
 
-.rv-panel{background:var(--accent-soft);border-radius:var(--radius-card);
+.rv-panel{background:var(--neutral-tint);border-radius:var(--radius-card);
   padding:20px 16px;margin-top:var(--gap-block)}
 .rv-title{margin:0 0 16px;font-size:26px;line-height:1.2;font-weight:600;
   color:var(--ink);text-align:center}
