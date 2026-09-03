@@ -78,6 +78,8 @@ GOAL_STYLE = {
                                     _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>')),
 }
 
+_DROP = _ic('<path d="M12 3s6 6.5 6 10.5a6 6 0 0 1-12 0C6 9.5 12 3 12 3z"/>')
+
 # The sex screen's two cards carry a 64px icon bubble in the reference, in the
 # same two hues its goal icons use. The other tile screens carry a small mark
 # that reads as decoration, and are left plain.
@@ -86,6 +88,8 @@ TILE_ICONS = {
                     _ic('<circle cx="10" cy="14" r="6"/><path d="M15 9l6-6M15 3h6v6"/>')),
     (3, 'female'): ('#FCE7F3', '#EC4899',
                     _ic('<circle cx="12" cy="9" r="6"/><path d="M12 15v7M9 19h6"/>')),
+    (24, 'no'):    ('#DFF7E6', '#22C55E', _DROP),
+    (24, 'yes'):   ('#FEE2E2', '#EF4444', _DROP),
 }
 
 # Every other two-up screen is a yes/no, and the reference marks both the same
@@ -95,6 +99,22 @@ YESNO_ICONS = {
     'yes': ('#DFF7E6', '#22C55E', _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>')),
     'no':  ('#FEE2E2', '#EF4444', _ic('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>')),
 }
+
+# The reference picks out the word a question turns on and sets it in the
+# accent - the rest of the headline stays ink. One entry per screen that does
+# it; the phrase is matched against the escaped title, so write it as it reads.
+HIGHLIGHTS = {
+    24: 'diagnosed',
+}
+
+
+def highlight(n, title):
+    """Wrap this screen's accented phrase, if it has one."""
+    phrase = HIGHLIGHTS.get(n)
+    if not phrase or phrase not in title:
+        return title
+    return title.replace(phrase, '<span class="hl">%s</span>' % phrase, 1)
+
 
 MOLECULES = [
     ('Apomorphine', 'Primes the brain&rsquo;s arousal pathways', '2 mg'),
@@ -318,7 +338,7 @@ def screen_question(p):
     README."""
     title = brandify(p['title'])
     sub = brandify(p['subs'][0]) if p['subs'] else None
-    out = ['<div class="col">', head(esc(title) if title else None,
+    out = ['<div class="col">', head(highlight(p['n'], esc(title)) if title else None,
                                      esc(sub) if sub else None)]
     if p['options']:
         out.append(options_block(p))
