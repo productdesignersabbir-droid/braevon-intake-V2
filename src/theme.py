@@ -303,11 +303,11 @@ img{max-width:100%;display:block}
 .fields{display:flex;flex-wrap:wrap;gap:12px}
 .field{flex:1 1 100%;min-width:0}
 .field.half{flex:1 1 calc(50% - 6px)}
-.field label,.dob-label{display:block;margin:0 0 6px;font-size:11px;font-weight:600;color:var(--muted)}
+.field label,.dob-label{display:block;margin:0 0 8px;font-size:17px;font-weight:500;color:var(--ink)}
 .field input,.field select,.field textarea,.reveal textarea,.reveal input{
   width:100%;font-family:inherit;font-size:16px;color:var(--ink);
   background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:13px;min-height:50px;
+  border-radius:var(--radius-card);padding:13px 14px;min-height:52px;
   appearance:none;-webkit-appearance:none;
 }
 .field textarea,.reveal textarea{min-height:104px;resize:vertical;line-height:1.45}
@@ -319,7 +319,8 @@ img{max-width:100%;display:block}
 .field input:focus,.field select:focus,.field textarea:focus,.reveal textarea:focus{
   border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)
 }
-.dob{display:grid;grid-template-columns:1.3fr .8fr 1fr;gap:8px}
+/* Three boxes of equal width, as the reference sizes them. */
+.dob{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
 /* -------------------------------------------------------------- reveals */
 /* The one question screen the reference opens with a photograph. It sits above

@@ -513,16 +513,22 @@ def screen_question(p):
 
 
 def screen_birthdate(p):
+    """The reference labels each box above it and lets the closed select read
+    as its first real value - "January", "01", "1985" - rather than putting
+    "Month"/"Day"/"Year" inside as placeholder text. Its own labels are the
+    screen's remaining sub-heads, which the extraction already carries."""
     m = {f['name']: f for f in p['fields']}
-    month = dict(m['birth_month'], options=['Month'] + MONTHS)
-    day = dict(m['birth_day'], options=['Day'] + [str(i) for i in range(1, 32)])
-    year = dict(m['birth_year'], placeholder='Year')
+    labels = (p['subs'][1:4] + ['Month', 'Day', 'Year'])[:3]
+    month = dict(m['birth_month'], options=MONTHS)
+    day = dict(m['birth_day'], options=['%02d' % i for i in range(1, 32)])
+    year = dict(m['birth_year'], placeholder='1985')
     return ('<div class="col">'
             + head('What is your date of birth?',
                    'We need to verify your age for medical review purposes.',
                    eyebrow='Last step')
             + '<div class="dob">%s%s%s</div>'
-              % (field_block(month), field_block(day), field_block(year))
+              % (field_block(month, labels[0]), field_block(day, labels[1]),
+                 field_block(year, labels[2]))
             + '<div class="note" style="margin-top:20px">%s<p><b>Your privacy is '
               'protected.</b> This is required for your medical review and is not '
               'shared.</p></div>' % ICON['shield']
