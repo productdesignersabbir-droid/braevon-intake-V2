@@ -212,15 +212,49 @@ LEGENDS = {25, 26}
 # discarding the wordmark: the only other photographs are the hero and the two
 # testimonials. Braevon's own asset stands in; a medicine-cabinet shot like the
 # reference's would sit better, see the README.
-# The one screen that opens on an answer. The reference pre-selects nothing
-# anywhere - checked on the live page, its radios are all unchecked and its Next
-# stays disabled - so this is a deliberate Braevon divergence, asked for on
-# 2026-09-03. It is the opening marketing question, not a safety one, and it
-# does not stop the flow; do not extend this to the medical screens without a
-# prescriber signing off. See the README.
-DEFAULTS = {
-    1: 'Quicker recovery',
-}
+# Every single-answer screen opens on its FIRST option, which is what the
+# reference does. Established by walking it: its sex screen arrives with "Male"
+# already selected and Next enabled, without anything being clicked. Screen 1 is
+# the exception - the reference leaves it unanswered - and carries Braevon's own
+# choice instead, asked for on 2026-09-03.
+#
+# Multi-answer screens are NOT defaulted: "select all that apply" has no single
+# answer, and ticking the first item would put a real symptom in the patient's
+# mouth.
+#
+# CLINICAL NOTE: on 24 and 39-42 the first option is "No", so a patient clicking
+# straight through submits "no hypertension, no allergies, no medications"
+# without reading the question. That is the reference's own behaviour and it was
+# asked for explicitly, but it is the thing on this build most in need of a
+# prescriber's sign-off. See the README.
+DEFAULTS = {p['n']: p['options'][0]['value']
+            for p in FLOW if p['mode'] == 'single' and p['options']}
+DEFAULTS[1] = 'Quicker recovery'   # Braevon's choice; the reference has none
+
+
+def _none_of(p):
+    """The 'none of these' answer on a multi-answer screen.
+
+    Usually the screen's own exclusive value. Screen 28 has no exclusive
+    recorded, so its none-answer is found by label instead."""
+    if p['exclusive']:
+        return p['exclusive']
+    for o in p['options']:
+        if re.match(r'^(none\b|no[,\s])', (o['label'] or '').strip(), re.I):
+            return o['value']
+    return None
+
+
+# A multi-answer screen opens on its "none of these", which is what the
+# reference does - nothing else could be a default there, and ticking a real
+# symptom on the patient's behalf would be worse than useless.
+# The final terms checkbox is deliberately absent: agreement is something the
+# patient gives, not something the form assumes on their behalf.
+for _p in FLOW:
+    if _p['mode'] == 'multi' and _p['options'] and _p['n'] != 47:
+        _v = _none_of(_p)
+        if _v:
+            DEFAULTS[_p['n']] = _v
 
 SCREEN_IMAGE = {
     41: ('doctor.jpg', 'A clinician reviewing a prescription'),
@@ -385,9 +419,9 @@ def option(o, exclusive, goal=False, tile=False, screen=None,
                or YESNO_ICONS.get((o['value'] or '').lower()))
         bub = ('<span class="bubble big" style="--bub:%s;--gly:%s">%s</span>' % art
                ) if art else ''
-        return ('<button class="opt tile" data-value="%s">%s'
+        return ('<button class="opt tile%s" data-value="%s">%s'
                 '<span class="lbl">%s%s</span></button>'
-                % (attr(o['value']), bub, label, note))
+                % (on, attr(o['value']), bub, label, note))
     if goal:
         bub, gly, glyph = GOAL_STYLE.get(o['label'], ('#FDECE6', '#E6430D', ICON['shield']))
         return ('<button class="opt goal%s" data-value="%s"><span class="bubble" '
@@ -398,10 +432,10 @@ def option(o, exclusive, goal=False, tile=False, screen=None,
         glyph = _DROP if (screen, o['value']) in BAND_STYLE else _CROSS
         note = ('<small style="color:%s">%s</small>' % (gly, esc(brandify(o['note'])))
                 ) if o.get('note') else ''
-        return ('<button class="opt band" data-value="%s"><span class="bubble" '
+        return ('<button class="opt band%s" data-value="%s"><span class="bubble" '
                 'style="--bub:%s;--gly:%s">%s</span>'
                 '<span class="lbl">%s%s</span></button>'
-                % (attr(o['value']), bub, gly, glyph, label, note))
+                % (on, attr(o['value']), bub, gly, glyph, label, note))
     inner = label
     if o.get('note'):
         inner += '<small>%s</small>' % esc(brandify(o['note']))
@@ -412,10 +446,10 @@ def option(o, exclusive, goal=False, tile=False, screen=None,
     # `last` draws the rule above a trailing exclusive; `safe` is the green
     # card the reference gives it when it leads the list instead.
     mark = (' safe' if excl and excl_first else (' last' if excl else ''))
-    return ('<button class="opt%s%s" data-value="%s"%s>'
+    return ('<button class="opt%s%s%s" data-value="%s"%s>'
             '<span class="lbl">%s</span><span class="ring"></span></button>'
             % (' checkbox' if o['type'] == 'checkbox' else '',
-               mark, attr(o['value']),
+               mark, on, attr(o['value']),
                ' data-exclusive="1"' if excl else '', inner))
 
 
@@ -526,9 +560,15 @@ def screen_question(p):
         out.append('<div class="infonote">%s<div><b>%s</b><p>%s</p></div></div>'
                    % (ICON['info'], title, body))
     # The extractor picks up a hidden catch-all input on every multi-answer
-    # screen. The reference never renders it, so neither does this - the
-    # answers are the options.
-    out.append(cta())
+    # screen, named `answer_<group>`. The reference never renders those, so
+    # neither does this - the answers are the options. A field with any other
+    # name is a real question, though: screen 22 is nothing but its textarea,
+    # and dropping it left that screen asking for a list with nowhere to type.
+    for f in p['fields']:
+        if (f['name'] or '').startswith('answer_'):
+            continue
+        out.append(field_block(f, brandify(p['title']) and None))
+    out.append(cta(blocked=p['n'] not in DEFAULTS))
     out.append('</div>')
     return ''.join(out)
 
@@ -984,7 +1024,16 @@ def emit_frames():
     return len(frames)
 
 
+def _check_defaults():
+    for p in STEPS:
+        v = DEFAULTS.get(p['n'])
+        if v and v in dq_on(p):
+            raise SystemExit('screen %d opens on a disqualifying answer: %r'
+                             % (p['n'], v))
+
+
 if __name__ == '__main__':
+    _check_defaults()
     emit_interactive()
     n = emit_frames()
     print('index.html + interactive.html   %d screens, %d counted questions'

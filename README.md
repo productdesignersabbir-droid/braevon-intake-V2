@@ -291,6 +291,12 @@ privacy on and a commit with the real address is rejected at push time.
   on screen 17 is a genuine, well-established contraindication; the rest are
   judgement calls. Get a prescriber to confirm the list and the wording before
   this goes near a real patient.
+- **Buttons have no hover state and there is one orange.** Asked for on
+  2026-09-03: `--accent-hover` is gone, so `#E6430D` is the colour at rest, on
+  hover and while pressed. The only other oranges in the build are
+  `--accent-tint` (the in-progress progress segment) and `--accent-line` (the
+  selected row's outline), both of which are deliberate lighter shades rather
+  than a second primary.
 - **The 4.6 masthead rating is a placeholder**, carried from v1's header. It needs
   a real figure or it should come out. (braevon.com does show "Excellent 4.6 out
   of 5", so this may now be the real figure - worth confirming.)
@@ -335,15 +341,22 @@ privacy on and a commit with the real address is rejected at push time.
   `hero-benefits.jpg` and `braevon-hero.jpg` from the existing asset folder;
   the reference uses shot-for-purpose photography. The quotes themselves are
   written for this concept, as they were in v1.
-- **Only screen 1 is pre-selected**, on "Quicker recovery", asked for on
-  2026-09-03 and held in `DEFAULTS`. This is a deliberate divergence from the
-  reference, which pre-selects nothing anywhere: checked on the live page, its
-  radios are all unchecked and its Next stays disabled until you choose. Screen
-  1 is the opening marketing question and does not stop the flow, so the cost
-  is low. An earlier build defaulted EVERY single-answer screen; on the safety
-  screens that meant a patient clicking straight through submitted "no history,
-  normal readings" without reading the question. Do not extend `DEFAULTS` back
-  to the medical screens without a prescriber signing off on each value.
+- **Every question screen opens on an answer**, which is what the reference
+  does. Established by walking it: its sex screen arrives with "Male" already
+  selected and Next enabled without anything being clicked. `DEFAULTS` is
+  derived, not hand-written - a single-answer screen takes its FIRST option, a
+  multi-answer screen takes its "none of these". Two exceptions: screen 1,
+  which the reference leaves unanswered and which carries Braevon's own choice
+  ("Quicker recovery"), and the final terms checkbox, because agreement is
+  something the patient gives rather than something the form assumes.
+  A build-time check refuses any default that would itself stop the flow.
+
+  **CLINICAL NOTE.** On screens 24 and 39-42 the first option is "No", and on
+  every safety checklist the default is "none of these". So a patient who
+  clicks straight through submits "no hypertension, no allergies, no
+  medications, no conditions" without having read a single one. That is the
+  reference's own behaviour and it was asked for explicitly, but it is the
+  single thing in this build most in need of a prescriber's sign-off.
 - **Female stops the flow on screen 3.** The medication is male-only and that
   screen's own sub-head says so, so the reference does not carry on into
   questions that cannot apply. The DOM extraction does not carry the rule; it

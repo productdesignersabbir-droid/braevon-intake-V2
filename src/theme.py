@@ -37,7 +37,6 @@ CSS = r"""
 :root{
   /* Braevon palette, unchanged from v1 ------------------------------- */
   --accent:#E6430D;        /* CTA, progress fill, selection, key emphasis */
-  --accent-hover:#7C0E0C;  /* button hover + focus ring                  */
   --accent-soft:#FDECE6;   /* selected-option fill                       */
   --accent-tint:#FF8B5E;   /* the accent on a dark surface               */
   --ink:#171D2C;
@@ -86,7 +85,7 @@ body{
 }
 button{font-family:inherit}
 img{max-width:100%;display:block}
-:focus-visible{outline:2px solid var(--accent-hover);outline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ---------------------------------------------------------------- shell */
 .shell{max-width:var(--col);margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
@@ -135,7 +134,6 @@ img{max-width:100%;display:block}
    glyph instead of growing the target. */
 .back-btn::after{content:"";position:absolute;inset:-10px}
 .back-btn svg{width:18px;height:18px}
-.back-btn:hover{background:var(--neutral-tint);color:var(--ink)}
 /* Hidden, not removed: the bar must not shift sideways between a screen with a
    back button and one without. */
 .back-btn[hidden]{display:grid;visibility:hidden}
@@ -356,7 +354,7 @@ img{max-width:100%;display:block}
 .infonote{display:flex;gap:10px;align-items:flex-start;margin-top:var(--gap-title);
   background:var(--accent-soft);border-radius:var(--radius-card);padding:14px 16px}
 .infonote svg{flex:none;width:18px;height:18px;stroke:var(--accent);margin-top:1px}
-.infonote b{display:block;font-size:14px;font-weight:700;color:var(--accent-hover)}
+.infonote b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
 .infonote p{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
 .note.warn{background:#FEF3F2;color:#912018}
 .note.warn svg{stroke:var(--error)}
@@ -369,6 +367,7 @@ img{max-width:100%;display:block}
 /* ------------------------------------------------------------------ cta */
 /* Braevon's button, unchanged from v1 — orange, 10px radius, weight 800,
    arrow glyph — at the reference's full-width placement. */
+/* One orange, at rest and on hover - no second shade anywhere. */
 .cta{
   width:100%;border:none;border-radius:var(--radius);
   background:var(--accent);color:#fff;
@@ -379,7 +378,6 @@ img{max-width:100%;display:block}
   box-shadow:0 4px 16px rgba(230,67,13,.22);
   margin-top:var(--gap-block);
 }
-.cta:hover{background:var(--accent-hover)}
 .cta svg{width:18px;height:18px}
 /* The client asked that the button never grey out: it stays orange while the
    step is unanswered and refuses the advance instead, so the affordance reads
@@ -526,7 +524,7 @@ img{max-width:100%;display:block}
 
 /* the result screen */
 .result-badge{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;background:var(--accent-soft);
-  color:var(--accent-hover);border-radius:999px;padding:7px 13px;
+  color:var(--accent);border-radius:999px;padding:7px 13px;
   font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .reviewcard{background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:18px;margin-top:var(--gap-title)}
@@ -725,9 +723,7 @@ img{max-width:100%;display:block}
   padding:0 20px;border-radius:var(--radius);font-family:inherit;
   font-size:14px;font-weight:700;cursor:pointer}
 .dq-back{border:none;background:var(--accent);color:#fff}
-.dq-back:hover{background:var(--accent-hover)}
 .dq-ghost{border:none;background:var(--wash);color:var(--muted)}
-.dq-ghost:hover{background:#E7EAF0}
 
 /* ------------------------------------------------------------- narrow */
 @media (max-width:420px){ .hero-h1{font-size:31px} .strip{font-size:11px} }
