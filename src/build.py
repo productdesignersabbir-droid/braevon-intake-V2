@@ -197,6 +197,29 @@ LEADS = {5, 23, 27}
 # those are carried by GROUPS and by the fields themselves.
 LEGENDS = {25, 26}
 
+# Answering "Yes" on these opens a box to list the detail, as the reference
+# does. The reference renders them only once Yes is picked, so they are not in
+# the DOM extraction - screen 40's wording is its own, taken from the live
+# screen; 39, 41 and 42 follow the same pattern and are ours. Like the
+# reference's, the box does not gate the step.
+# The reference carries a photograph above the headline on exactly one question
+# screen - the medications one. Checked by listing every <img> in its DOM and
+# discarding the wordmark: the only other photographs are the hero and the two
+# testimonials. Braevon's own asset stands in; a medicine-cabinet shot like the
+# reference's would sit better, see the README.
+SCREEN_IMAGE = {
+    41: ('doctor.jpg', 'A clinician reviewing a prescription'),
+}
+
+REVEALS = {
+    39: ('List the ED medications you are allergic to.', 'Q_ed_allergy_detail'),
+    40: ('List your allergies to medications, foods, dyes, etc.',
+         'Q_other_allergy_detail'),
+    41: ('List the medications you are currently taking.', 'Q_medication_detail'),
+    42: ('Tell the doctor anything else you would like them to know.',
+         'Q_doctor_note_detail'),
+}
+
 FOOTNOTES = {
     25: ('Don&rsquo;t know your blood pressure?',
          'If you&rsquo;re unsure of your blood pressure, get it checked for free at '
@@ -458,13 +481,25 @@ def screen_question(p):
     README."""
     title = brandify(p['title'])
     sub = brandify(p['subs'][0]) if p['subs'] else None
-    out = ['<div class="col">', head(highlight(p['n'], esc(title)) if title else None,
-                                     esc(sub) if sub else None,
-                                     lead=p['n'] in LEADS)]
+    out = ['<div class="col">']
+    if p['n'] in SCREEN_IMAGE:
+        src, alt = SCREEN_IMAGE[p['n']]
+        out.append('<div class="qshot-top"><img src="assets/images/%s" alt="%s"/></div>'
+                   % (src, attr(alt)))
+    out += [head(highlight(p['n'], esc(title)) if title else None,
+                 esc(sub) if sub else None,
+                 lead=p['n'] in LEADS)]
     if p['n'] in LEGENDS and len(p['subs']) > 1:
         out.append('<p class="legend">%s</p>' % esc(brandify(p['subs'][1])))
     if p['options']:
         out.append(options_block(p))
+    if p['n'] in REVEALS:
+        legend, name = REVEALS[p['n']]
+        out.append('<div class="reveal" data-optional="1" data-reveal-for="%s" '
+                   'data-reveal-on="yes">%s</div>'
+                   % (attr(p['group']),
+                      field_block({'tag': 'textarea', 'name': name,
+                                   'placeholder': 'Write here...'}, legend)))
     if p['n'] in FOOTNOTES:
         title, body = FOOTNOTES[p['n']]
         out.append('<div class="infonote">%s<div><b>%s</b><p>%s</p></div></div>'

@@ -310,6 +310,19 @@ privacy on and a commit with the real address is rejected at push time.
   before this is shown to a patient. The on-screen asterisk that used to flag
   this was removed to match the reference's layout, so this note is now the
   only record of it.
+- **Three of the four "Yes" detail boxes are our wording.** Screens 39-42 open a
+  box to list the detail when you answer Yes, as the reference does. The
+  reference renders those only after Yes is picked, so they are not in the DOM
+  extraction: screen 40's label is its own, read off the live screen; 39, 41 and
+  42 follow the same pattern and are ours. Like the reference's, the box does
+  not gate the step - worth asking a prescriber whether it should.
+- **Screen 41's photograph is a stand-in.** The reference opens that one
+  question screen with a photo (the only question screen that has one - checked
+  by listing every image in its DOM). It uses a medicine-cabinet shot; this
+  build points at Braevon's existing `doctor.jpg`. A matching photo would sit
+  better.
+- **Screen 43's "LAST STEP" is an eyebrow, not the reference's pill.** The
+  reference sets it as a centred gradient pill with an icon. Not changed.
 - **The testimonial photos are placeholders.** Screens 32 and 44 point at
   `hero-benefits.jpg` and `braevon-hero.jpg` from the existing asset folder;
   the reference uses shot-for-purpose photography. The quotes themselves are

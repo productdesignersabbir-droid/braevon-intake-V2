@@ -182,6 +182,7 @@ img{max-width:100%;display:block}
 }
 .qhead.big{font-size:26px}
 .sub{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
+.qhead + .sub{margin-top:12px}
 /* On an interstitial the line under the headline is carrying the claim, not
    captioning a question, and the reference sets it as a second heading:
    20px/600 in near-black, tighter. */
@@ -321,20 +322,31 @@ img{max-width:100%;display:block}
 .dob{display:grid;grid-template-columns:1.3fr .8fr 1fr;gap:8px}
 
 /* -------------------------------------------------------------- reveals */
-.reveal{display:none;margin-top:var(--gap-opt)}
+/* The one question screen the reference opens with a photograph. It sits above
+   the headline, full column width, at the card radius. */
+.qshot-top{margin-bottom:var(--gap-title);border-radius:var(--radius-card);
+  overflow:hidden;background:var(--neutral-tint)}
+.qshot-top img{display:block;width:100%;height:168px;object-fit:cover}
+
+.reveal{display:none;margin-top:var(--gap-block)}
 .reveal.on{display:block}
-.reveal label{display:block;margin:0 0 8px;font-size:12px;font-weight:600;color:var(--ink)}
+.reveal label{display:block;margin:0 0 10px;font-size:17px;font-weight:700;color:var(--ink);line-height:1.3}
 .reveal-sub{margin:0 0 8px;font-size:11px;color:var(--muted)}
 .err{margin:8px 0 0;font-size:11px;color:var(--error);font-weight:600}
 .err[hidden]{display:none}
 
 /* ----------------------------------------------------------------- note */
 .note{
-  display:flex;gap:10px;align-items:flex-start;
+  display:flex;gap:12px;align-items:flex-start;
   background:var(--neutral-tint);border-radius:var(--radius-card);
-  padding:14px;font-size:11px;line-height:1.5;color:var(--muted);
+  padding:14px 16px;font-size:14px;line-height:1.45;color:var(--ink);
 }
-.note svg{flex:none;width:18px;height:18px;stroke:var(--muted);margin-top:1px}
+/* The mark sits on the first line of the text, not on the middle of the block:
+   centring it against two wrapped lines is what read as misaligned. The offset
+   is half the difference between the line box and the icon. */
+.note svg{flex:none;width:18px;height:18px;stroke:var(--muted);margin-top:1.5px}
+.note p{margin:0}
+.note b{font-weight:700;color:var(--ink)}
 
 /* The reference's helper panel under a question - a tinted block in the accent,
    an icon, a bold line and a body. Blue there, orange here; nothing else
