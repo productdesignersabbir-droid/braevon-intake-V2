@@ -178,12 +178,19 @@ BAND_STYLE = {
 _NOBAND = ('#E9ECF1', '#94A3B8')
 _CROSS = _ic('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>')
 
-# Every other two-up screen is a yes/no, and the reference marks both the same
-# way wherever it asks one: a green tick and a red cross. Keyed by value, so a
-# screen added later gets them without a new entry.
-YESNO_ICONS = {
-    'yes': ('#DFF7E6', '#22C55E', _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>')),
-    'no':  ('#FEE2E2', '#EF4444', _ic('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>')),
+# The reference marks a yes/no screen with a green tick and a red cross - but
+# on the answer, not on the word. "Do you still wake up with an erection?" puts
+# the tick on Yes; "Are you allergic to any of these?" puts it on No, because
+# there No is the good news. So the tick follows the favourable answer, which
+# is per screen.
+_TICK_ART  = ('#DFF7E6', '#22C55E', _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>'))
+_CROSS_ART = ('#FEE2E2', '#EF4444', _ic('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'))
+GOOD_ANSWER = {
+    7:  'yes',   # waking with an erection is the reassuring answer
+    39: 'no',    # no allergy, no other allergy, no medication, nothing to add
+    40: 'no',
+    41: 'no',
+    42: 'no',
 }
 
 # The reference picks out the word a question turns on and sets it in the
@@ -257,7 +264,12 @@ for _p in FLOW:
             DEFAULTS[_p['n']] = _v
 
 SCREEN_IMAGE = {
-    41: ('doctor.jpg', 'A clinician reviewing a prescription'),
+    # The reference uses a man at his bathroom cabinet - an ordinary moment,
+    # not a clinician. There is no such photograph in the repo, so this is the
+    # nearest register available (an unused portrait of a man rather than the
+    # white-coat doctor shot that was here). A cabinet/bathroom photo would
+    # match properly - see the README.
+    41: ('stat-hero.jpg', 'A man at home'),
 }
 
 REVEALS = {
@@ -267,6 +279,19 @@ REVEALS = {
     41: ('List the medications you are currently taking.', 'Q_medication_detail'),
     42: ('Tell the doctor anything else you would like them to know.',
          'Q_doctor_note_detail'),
+}
+
+# The reference lists the four molecules under this headline, in two columns,
+# before the Yes/No cards. Column-major, as it reads them out.
+MEDLISTS = {
+    39: ['sildenafil (Viagra)', 'tadalafil (Cialis)',
+         'vardenafil (Levitra)', 'avanafil (Stendra)'],
+}
+
+# Where the reference's headline wraps and ours does not. The break goes in
+# after this text, so the phrase that follows stays together on its own line.
+BREAKS = {
+    39: 'Are you allergic to any of the',
 }
 
 FOOTNOTES = {
@@ -295,7 +320,10 @@ HIGHLIGHTS = {
 
 
 def highlight(n, title):
-    """Wrap this screen's accented phrase, if it has one."""
+    """Wrap this screen's accented phrase and put in its line break."""
+    at = BREAKS.get(n)
+    if at and at in title:
+        title = title.replace(at, at + '<br/>', 1)
     phrase = HIGHLIGHTS.get(n)
     if not phrase or phrase not in title:
         return title
@@ -415,8 +443,11 @@ def option(o, exclusive, goal=False, tile=False, screen=None,
     on = ' selected' if DEFAULTS.get(screen) == o['value'] else ''
     if tile:
         note = ('<small>%s</small>' % esc(brandify(o['note']))) if o.get('note') else ''
-        art = (TILE_ICONS.get((screen, (o['value'] or '').lower()))
-               or YESNO_ICONS.get((o['value'] or '').lower()))
+        val = (o['value'] or '').lower()
+        art = TILE_ICONS.get((screen, val))
+        good = GOOD_ANSWER.get(screen)
+        if not art and good and val in ('yes', 'no'):
+            art = _TICK_ART if val == good else _CROSS_ART
         bub = ('<span class="bubble big" style="--bub:%s;--gly:%s">%s</span>' % art
                ) if art else ''
         return ('<button class="opt tile%s" data-value="%s">%s'
@@ -544,6 +575,9 @@ def screen_question(p):
     out += [head(highlight(p['n'], esc(title)) if title else None,
                  esc(sub) if sub else None,
                  lead=p['n'] in LEADS)]
+    if p['n'] in MEDLISTS:
+        out.append('<ul class="medlist">%s</ul>'
+                   % ''.join('<li>%s</li>' % esc(t) for t in MEDLISTS[p['n']]))
     if p['n'] in LEGENDS and len(p['subs']) > 1:
         out.append('<p class="legend">%s</p>' % esc(brandify(p['subs'][1])))
     if p['options']:

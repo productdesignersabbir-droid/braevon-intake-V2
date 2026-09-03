@@ -330,9 +330,21 @@ img{max-width:100%;display:block}
 /* -------------------------------------------------------------- reveals */
 /* The one question screen the reference opens with a photograph. It sits above
    the headline, full column width, at the card radius. */
+/* The molecules named under a headline: two columns, bulleted, in the caption
+   grey the reference uses. Column-major, so the pairs read down then across. */
+.medlist{margin:14px 0 0;padding:0 0 0 18px;list-style:disc;
+  columns:2;column-gap:20px;font-size:14px;line-height:1.7;color:var(--muted)}
+.medlist li{break-inside:avoid}
+/* The list is part of the question, so what follows it takes the block gap
+   rather than sitting straight against the last bullet. */
+.medlist + *{margin-top:var(--gap-title)}
+
 .qshot-top{margin-bottom:var(--gap-title);border-radius:var(--radius-card);
   overflow:hidden;background:var(--neutral-tint)}
-.qshot-top img{display:block;width:100%;height:168px;object-fit:cover}
+/* A square portrait cropped to this band would cut the face; bias the crop
+   towards the top so the subject stays in frame. */
+.qshot-top img{display:block;width:100%;height:168px;object-fit:cover;
+  object-position:50% 28%}
 
 .reveal{display:none;margin-top:var(--gap-block)}
 .reveal.on{display:block}

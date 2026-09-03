@@ -332,9 +332,10 @@ privacy on and a commit with the real address is rejected at push time.
   deliberately out of v2 scope.
 - **Screen 41's photograph is a stand-in.** The reference opens that one
   question screen with a photo (the only question screen that has one - checked
-  by listing every image in its DOM). It uses a medicine-cabinet shot; this
-  build points at Braevon's existing `doctor.jpg`. A matching photo would sit
-  better.
+  by listing every image in its DOM). It uses a man at his bathroom cabinet: an
+  ordinary moment, not a clinician. There is no such photograph in this repo,
+  so the screen points at `stat-hero.jpg` - the nearest register available, and
+  otherwise unused. **A bathroom/medicine-cabinet shot is needed to match.**
 - **Screen 43's "LAST STEP" is an eyebrow, not the reference's pill.** The
   reference sets it as a centred gradient pill with an icon. Not changed.
 - **The testimonial photos are placeholders.** Screens 32 and 44 point at
