@@ -229,83 +229,39 @@ def head(title=None, sub=None, eyebrow=None, lead=False):
     return out
 
 
-# Every single-answer screen opens on an answer, as the reference does. The
-# value is written out per screen rather than computed: a rule that picks "the
-# middle option" lands on "140-149" for blood pressure and "2 or more times"
-# for nitroglycerin, which is not a default anyone would choose. The rule
-# actually applied here is - the ordinary case for a screening question ("no"),
-# the healthy band for a reading, the mid-point for a severity scale, and never
-# an answer that would stop the flow.
-#
-# CLINICAL NOTE: on the safety screens (24, 25, 26, 31, 36, 37, 39, 40, 41) a
-# pre-filled benign answer means a patient who clicks straight through submits
-# "no history, normal readings" without ever reading the question. That is the
-# reference's own behaviour, and it is the reason these defaults need a
-# prescriber's sign-off before this goes near a real patient. See the README.
-#
-# Multi-answer screens are deliberately absent: "select all that apply" has no
-# single default, and pre-ticking "None of these" would answer a safety
-# checklist on the patient's behalf.
-DEFAULTS = {
-    1:  'Increase erection strength',
-    3:  'Male',            # the medication is male-only and the subtitle says so
-    4:  'Rarely',          # mid-scale, as the reference sets it
-    6:  'Sometimes',       # mid-scale, as the reference sets it
-    7:  'no',
-    10: "It worked, but I'm looking for something better",
-    11: "It worked, but I'm looking for something better",
-    12: "It worked, but I'm looking for something better",
-    13: "It worked, but I'm looking for something better",
-    14: "It worked, but I'm looking for something better",
-    15: "It worked, but I'm looking for something better",
-    23: 'yes',             # "within the last 3 years" - the other answer stops the flow
-    24: 'no',
-    25: '110 - 139',       # the normal systolic band
-    26: '61 - 80',         # the normal diastolic band
-    31: 'Less than 7%',
-    36: 'zero times',
-    37: 'Less than 4 weeks ago',
-    39: 'no',
-    40: 'no',
-    41: 'no',
-    42: 'no',
-}
-
-
 def option(o, exclusive, goal=False, tile=False, screen=None):
     label = esc(brandify(o['label']))
-    on = ' selected' if DEFAULTS.get(screen) == o['value'] else ''
     if tile:
         note = ('<small>%s</small>' % esc(brandify(o['note']))) if o.get('note') else ''
         art = (TILE_ICONS.get((screen, (o['value'] or '').lower()))
                or YESNO_ICONS.get((o['value'] or '').lower()))
         bub = ('<span class="bubble big" style="--bub:%s;--gly:%s">%s</span>' % art
                ) if art else ''
-        return ('<button class="opt tile%s" data-value="%s">%s'
+        return ('<button class="opt tile" data-value="%s">%s'
                 '<span class="lbl">%s%s</span></button>'
-                % (on, attr(o['value']), bub, label, note))
+                % (attr(o['value']), bub, label, note))
     if goal:
         bub, gly, glyph = GOAL_STYLE.get(o['label'], ('#FDECE6', '#E6430D', ICON['shield']))
-        return ('<button class="opt goal%s" data-value="%s"><span class="bubble" '
+        return ('<button class="opt goal" data-value="%s"><span class="bubble" '
                 'style="--bub:%s;--gly:%s">%s</span><span class="lbl">%s</span></button>'
-                % (on, attr(o['value']), bub, gly, glyph, label))
+                % (attr(o['value']), bub, gly, glyph, label))
     if screen in BAND_SCREENS:
         bub, gly = BAND_STYLE.get((screen, o['value']), _NOBAND)
         glyph = _DROP if (screen, o['value']) in BAND_STYLE else _CROSS
         note = ('<small style="color:%s">%s</small>' % (gly, esc(brandify(o['note'])))
                 ) if o.get('note') else ''
-        return ('<button class="opt band%s" data-value="%s"><span class="bubble" '
+        return ('<button class="opt band" data-value="%s"><span class="bubble" '
                 'style="--bub:%s;--gly:%s">%s</span>'
                 '<span class="lbl">%s%s</span></button>'
-                % (on, attr(o['value']), bub, gly, glyph, label, note))
+                % (attr(o['value']), bub, gly, glyph, label, note))
     inner = label
     if o.get('note'):
         inner += '<small>%s</small>' % esc(brandify(o['note']))
     excl = o['value'] == exclusive
-    return ('<button class="opt%s%s%s" data-value="%s"%s>'
+    return ('<button class="opt%s%s" data-value="%s"%s>'
             '<span class="lbl">%s</span><span class="ring"></span></button>'
             % (' checkbox' if o['type'] == 'checkbox' else '',
-               ' last' if excl else '', on, attr(o['value']),
+               ' last' if excl else '', attr(o['value']),
                ' data-exclusive="1"' if excl else '', inner))
 
 
@@ -363,7 +319,7 @@ def screen_hero(p):
             '<strong>In minutes</strong></p>'
             '<p class="ask">See if <strong>BRAEVON</strong> is right for you.</p>'
             '<p class="ask-sub">Select your primary goal:</p>'
-            + options_block(p) + cta(blocked=p['n'] not in DEFAULTS) + '</div>')
+            + options_block(p) + cta() + '</div>')
 
 
 def screen_question(p):
@@ -386,7 +342,7 @@ def screen_question(p):
     # The extractor picks up a hidden catch-all input on every multi-answer
     # screen. The reference never renders it, so neither does this - the
     # answers are the options.
-    out.append(cta(blocked=p['n'] not in DEFAULTS))
+    out.append(cta())
     out.append('</div>')
     return ''.join(out)
 
@@ -755,16 +711,7 @@ def emit_frames():
     return len(frames)
 
 
-def _check_defaults():
-    for p in STEPS:
-        v = DEFAULTS.get(p['n'])
-        if v and v in dq_on(p):
-            raise SystemExit('screen %d opens on a disqualifying answer: %r'
-                             % (p['n'], v))
-
-
 if __name__ == '__main__':
-    _check_defaults()
     emit_interactive()
     n = emit_frames()
     print('index.html + interactive.html   %d screens, %d counted questions'

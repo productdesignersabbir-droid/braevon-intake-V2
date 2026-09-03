@@ -305,17 +305,13 @@ privacy on and a commit with the real address is rejected at push time.
     calls it "BRAEVON 4-in-1" throughout, from the reference's "QUAD 4-in-1".
   - the dose column in `MOLECULES` is not rendered and its figures were never
     verified; it is em-dashes now rather than invented numbers.
-- **Every single-answer screen now opens on a pre-selected answer**, as the
-  reference does, from the `DEFAULTS` table in `src/build.py`. On the safety
-  screens (24, 25, 26, 31, 36, 37, 39, 40, 41) that means a patient who clicks
-  straight through submits "no history, normal readings" without having read
-  the question. The values chosen are the ordinary case for a screening
-  question, the healthy band for a reading, and the mid-point for a severity
-  scale; none of them stops the flow. This is the reference's own behaviour and
-  it was asked for explicitly — but it needs the same prescriber sign-off as
-  the disqualification rules, and it is the single most consequential thing on
-  this list. Multi-answer screens are deliberately left blank: pre-ticking
-  "None of these" would answer a safety checklist on the patient's behalf.
+- **Nothing is pre-selected.** A previous build opened every single-answer
+  screen on a default. Checked against the live reference on 2026-09-03: its
+  radios are all unchecked and its Next stays disabled until you choose, so the
+  defaults were a divergence, not parity - and on the safety screens they meant
+  a patient clicking straight through submitted "no history, normal readings"
+  without reading the question. They are gone. Do not reintroduce them without
+  a prescriber signing off on each value.
 - **"None of these" now sits last**, split from the list by a rule, because
   that is where the reference puts it. v1 hoisted it to the top for a reason
   worth remembering: on a fifteen-item safety screen it otherwise falls below
