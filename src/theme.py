@@ -684,18 +684,21 @@ img{max-width:100%;display:block}
 .rv-ok b{display:block;font-size:14px;font-weight:600;color:#166534}
 .rv-ok p{margin:2px 0 0;font-size:12px;line-height:1.45;color:#16A34A}
 
-.rv-panel{background:var(--neutral-tint);border-radius:var(--radius-card);
+.rv-panel{background:var(--accent-soft);border-radius:var(--radius-card);
   padding:20px 16px;margin-top:var(--gap-block)}
 .rv-title{margin:0 0 16px;font-size:26px;line-height:1.2;font-weight:600;
   color:var(--ink);text-align:center}
 .rv-card{background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:16px}
 .rv-card + .rv-card{margin-top:12px}
-.rv-prob{display:flex;align-items:center;gap:12px}
-.rv-prob > span{flex:none;font-size:16px;color:var(--muted)}
-.rv-bar{flex:1;height:8px;border-radius:999px;background:var(--wash);overflow:hidden}
+/* The reference puts the label and the figure on one line and runs the bar the
+   full width underneath, rather than squeezing all three into a row. */
+.rv-prob-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rv-prob-top span{font-size:16px;color:var(--muted)}
+.rv-prob-top b{font-size:26px;font-weight:800;color:#16A34A;line-height:1}
+.rv-bar{height:10px;border-radius:999px;background:var(--wash);overflow:hidden;
+  margin-top:14px}
 .rv-bar i{display:block;height:100%;border-radius:999px;background:#22C55E}
-.rv-prob b{flex:none;font-size:26px;font-weight:800;color:#16A34A}
 
 .rvrow{display:flex;align-items:flex-start;gap:12px;padding:12px 0;
   border-top:1px solid var(--border)}
