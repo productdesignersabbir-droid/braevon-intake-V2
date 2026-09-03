@@ -5,10 +5,19 @@
   var prog=document.getElementById('prog');
   var segs=[].slice.call(prog.querySelectorAll('.seg span'));
   var backBtn=document.getElementById('backBtn');
-  var dq=document.getElementById('dq'), dqReason=document.getElementById('dqReason');
+  var dq=document.getElementById('dq');
+  function stop(on){
+    dq.classList.toggle('on', on);
+    stage.hidden=on; prog.hidden=on||prog.hidden; backBtn.hidden=on||backBtn.hidden;
+  }
   var TOTAL_Q=__TOTAL_Q__, SEGMENTS=__SEGMENTS__;
   var answers={};      /* group -> array of selected values */
   var idx=0, history=[];
+  /* progQ[j] is the question number the bar should show on step j - its own if
+     it is a question, otherwise the last one before it. */
+  var progQ=(function(){ var out=[], last=0;
+    steps.forEach(function(s,j){ var v=s.dataset.q?+s.dataset.q:0; if(v) last=v; out[j]=last; });
+    return out; })();
 
   /* ---------------------------------------------------------- selection */
   function sel(group){ return answers[group]||[]; }
@@ -175,12 +184,13 @@
     steps.forEach(function(s,j){ s.classList.toggle('on', j===i); });
     idx=i;
     var el=steps[i];
-    var q=el.dataset.q?+el.dataset.q:0;
-    prog.hidden=!q;
-    if(q){
-      prog.setAttribute('aria-valuenow', q);
-      prog.setAttribute('aria-valuetext','Question '+q+' of '+TOTAL_Q);
-      var per=TOTAL_Q/SEGMENTS, at=Math.floor((q-1)/per);
+    var q=el.dataset.q?+el.dataset.q:0, pq=progQ[i];
+    prog.hidden=!pq;
+    if(pq){
+      prog.setAttribute('aria-valuenow', pq);
+      if(q) prog.setAttribute('aria-valuetext','Question '+q+' of '+TOTAL_Q);
+      else prog.removeAttribute('aria-valuetext');
+      var per=TOTAL_Q/SEGMENTS, at=Math.floor((pq-1)/per);
       segs.forEach(function(sp,k){ sp.style.width = k<=at ? '100%' : '0%'; });
     }
     backBtn.hidden = el.hasAttribute('data-no-back') || history.length===0;
@@ -193,7 +203,7 @@
     var el=steps[idx];
     if(!stepValid(el)){ showError(el); return; }
     var why=disqualifies(el);
-    if(why){ dqReason.textContent=why; dq.classList.add('on'); return; }
+    if(why){ stop(true); return; }
     for(var j=idx+1;j<steps.length;j++){
       if(shown(steps[j])){ history.push(idx); show(j); return; }
     }
@@ -206,10 +216,10 @@
     show(history.pop());
   });
   document.getElementById('dqBack').addEventListener('click', function(){
-    dq.classList.remove('on');
+    stop(false); show(idx);
   });
   document.getElementById('dqExit').addEventListener('click', function(){
-    dq.classList.remove('on'); history=[]; show(0);
+    stop(false); history=[]; show(0);
   });
 
   /* --------------------------------------------------------------- echo */

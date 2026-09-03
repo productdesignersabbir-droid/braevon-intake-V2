@@ -88,6 +88,14 @@ TILE_ICONS = {
                     _ic('<circle cx="12" cy="9" r="6"/><path d="M12 15v7M9 19h6"/>')),
 }
 
+# Every other two-up screen is a yes/no, and the reference marks both the same
+# way wherever it asks one: a green tick and a red cross. Keyed by value, so a
+# screen added later gets them without a new entry.
+YESNO_ICONS = {
+    'yes': ('#DFF7E6', '#22C55E', _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>')),
+    'no':  ('#FEE2E2', '#EF4444', _ic('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>')),
+}
+
 MOLECULES = [
     ('Apomorphine', 'Primes the brain&rsquo;s arousal pathways', '2 mg'),
     ('L-Citrulline', 'Amplifies blood flow for speed', '&mdash;'),
@@ -171,41 +179,91 @@ def head(title=None, sub=None, eyebrow=None):
     return out
 
 
+# Every single-answer screen opens on an answer, as the reference does. The
+# value is written out per screen rather than computed: a rule that picks "the
+# middle option" lands on "140-149" for blood pressure and "2 or more times"
+# for nitroglycerin, which is not a default anyone would choose. The rule
+# actually applied here is - the ordinary case for a screening question ("no"),
+# the healthy band for a reading, the mid-point for a severity scale, and never
+# an answer that would stop the flow.
+#
+# CLINICAL NOTE: on the safety screens (24, 25, 26, 31, 36, 37, 39, 40, 41) a
+# pre-filled benign answer means a patient who clicks straight through submits
+# "no history, normal readings" without ever reading the question. That is the
+# reference's own behaviour, and it is the reason these defaults need a
+# prescriber's sign-off before this goes near a real patient. See the README.
+#
+# Multi-answer screens are deliberately absent: "select all that apply" has no
+# single default, and pre-ticking "None of these" would answer a safety
+# checklist on the patient's behalf.
+DEFAULTS = {
+    1:  'Increase erection strength',
+    3:  'Male',            # the medication is male-only and the subtitle says so
+    4:  'Rarely',          # mid-scale, as the reference sets it
+    6:  'Sometimes',       # mid-scale, as the reference sets it
+    7:  'no',
+    10: "It worked, but I'm looking for something better",
+    11: "It worked, but I'm looking for something better",
+    12: "It worked, but I'm looking for something better",
+    13: "It worked, but I'm looking for something better",
+    14: "It worked, but I'm looking for something better",
+    15: "It worked, but I'm looking for something better",
+    23: 'yes',             # "within the last 3 years" - the other answer stops the flow
+    24: 'no',
+    25: '110 - 139',       # the normal systolic band
+    26: '61 - 80',         # the normal diastolic band
+    31: 'Less than 7%',
+    36: 'zero times',
+    37: 'Less than 4 weeks ago',
+    39: 'no',
+    40: 'no',
+    41: 'no',
+    42: 'no',
+}
+
+
 def option(o, exclusive, goal=False, tile=False, screen=None):
     label = esc(brandify(o['label']))
+    on = ' selected' if DEFAULTS.get(screen) == o['value'] else ''
     if tile:
         note = ('<small>%s</small>' % esc(brandify(o['note']))) if o.get('note') else ''
-        art = TILE_ICONS.get((screen, (o['value'] or '').lower()))
+        art = (TILE_ICONS.get((screen, (o['value'] or '').lower()))
+               or YESNO_ICONS.get((o['value'] or '').lower()))
         bub = ('<span class="bubble big" style="--bub:%s;--gly:%s">%s</span>' % art
                ) if art else ''
-        return ('<button class="opt tile" data-value="%s">%s'
+        return ('<button class="opt tile%s" data-value="%s">%s'
                 '<span class="lbl">%s%s</span></button>'
-                % (attr(o['value']), bub, label, note))
+                % (on, attr(o['value']), bub, label, note))
     if goal:
         bub, gly, glyph = GOAL_STYLE.get(o['label'], ('#FDECE6', '#E6430D', ICON['shield']))
-        return ('<button class="opt goal" data-value="%s"><span class="bubble" '
+        return ('<button class="opt goal%s" data-value="%s"><span class="bubble" '
                 'style="--bub:%s;--gly:%s">%s</span><span class="lbl">%s</span></button>'
-                % (attr(o['value']), bub, gly, glyph, label))
+                % (on, attr(o['value']), bub, gly, glyph, label))
     inner = label
     if o.get('note'):
         inner += '<small>%s</small>' % esc(brandify(o['note']))
-    return ('<button class="opt%s" data-value="%s"%s>'
+    excl = o['value'] == exclusive
+    return ('<button class="opt%s%s%s" data-value="%s"%s>'
             '<span class="lbl">%s</span><span class="ring"></span></button>'
-            % (' checkbox' if o['type'] == 'checkbox' else '', attr(o['value']),
-               ' data-exclusive="1"' if o['value'] == exclusive else '', inner))
+            % (' checkbox' if o['type'] == 'checkbox' else '',
+               ' last' if excl else '', on, attr(o['value']),
+               ' data-exclusive="1"' if excl else '', inner))
 
 
 def options_block(p):
-    """The exclusive "None of these" is hoisted to the top of every list.
+    """The exclusive "None of these" sits last, split from the list by a rule,
+    where the reference puts it.
 
-    On a fifteen-item safety screen it otherwise sits below the fold, so a
-    patient who has none of them has to read all fifteen to find that out - and
-    every option scrolled past is one they might tick by mistake. The reference
-    puts it first for the same reason."""
+    v1 hoisted it to the top instead: on a fifteen-item safety screen it
+    otherwise sits below the fold, so a patient who has none of them has to
+    read all fifteen to find that out, and every option scrolled past is one
+    they might tick by mistake. The reference's order wins here because
+    matching it is the brief, but that cost is real and is flagged in the
+    README."""
     goal = p['n'] == 1
     tile = p['n'] in TILE_SCREENS
     opts = (p['options'] if tile
-            else sorted(p['options'], key=lambda o: o['value'] != p['exclusive']))
+            else sorted(p['options'], key=lambda o: o['value'] == p['exclusive']))
     return ('<div class="opts%s" data-group="%s" data-mode="%s">%s</div>'
             % (' tilegrid' if tile else '', attr(p['group']), p['mode'],
                ''.join(option(o, p['exclusive'], goal, tile, p['n']) for o in opts)))
@@ -246,7 +304,7 @@ def screen_hero(p):
             '<strong>In minutes</strong></p>'
             '<p class="ask">See if <strong>BRAEVON</strong> is right for you.</p>'
             '<p class="ask-sub">Select your primary goal:</p>'
-            + options_block(p) + cta() + '</div>')
+            + options_block(p) + cta(blocked=p['n'] not in DEFAULTS) + '</div>')
 
 
 def screen_question(p):
@@ -264,12 +322,10 @@ def screen_question(p):
                                      esc(sub) if sub else None)]
     if p['options']:
         out.append(options_block(p))
-    for f in p['fields']:
-        # the free-text box under a safety list is the reference's catch-all;
-        # it never gates the screen
-        out.append('<div class="reveal on" data-optional="1">%s</div>'
-                   % field_block(f, 'Anything you would like to add'))
-    out.append(cta())
+    # The extractor picks up a hidden catch-all input on every multi-answer
+    # screen. The reference never renders it, so neither does this - the
+    # answers are the options.
+    out.append(cta(blocked=p['n'] not in DEFAULTS))
     out.append('</div>')
     return ''.join(out)
 
@@ -357,26 +413,69 @@ def screen_interstitial(p):
             '<div><b>%s</b><span>%s</span></div></div>' % (bub, gly, svg, a, b)
             for a, b, bub, gly, svg in MECHANISM)
         return ('<div class="col">'
-                + head('How BRAEVON&rsquo;s 4-in-1 Works for you',
+                + head('How <span class="hl">BRAEVON&rsquo;s 4-in-1</span> Works for you',
                        'BRAEVON&rsquo;s 4-in-1 is engineered to hit both Desire (the brain) '
                        'and Performance (the body) in one dose.')
                 + '<div class="reviewcard">%s</div>' % rows
                 + cta(blocked=False) + '</div>')
     if n == 8:
-        bars = [('L-Citrulline', 'Rapid onset', '10m', 12),
-                ('Sildenafil', 'Peak strength', '4 hr', 34),
-                ('Tadalafil', 'Extended window', '36 hr', 100),
-                ('BRAEVON 4-in-1', 'All of it, one dose', '36 hr', 100)]
+        clock = _ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>')
+        bolt = _ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>')
+        peak = _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>')
+        brain = _ic('<path d="M12 6a3.2 3.2 0 0 0-6-1.1A2.7 2.7 0 0 0 4.2 9.4 2.8 2.8 0 0 0 6 14.4'
+                    'a3 3 0 0 0 3 2.6"/><path d="M12 6a3.2 3.2 0 0 1 6-1.1 2.7 2.7 0 0 1 1.8 4.5'
+                    'A2.8 2.8 0 0 1 18 14.4a3 3 0 0 1-3 2.6"/><path d="M12 6v15"/>')
+
+        # The reference's own axis: four marks on one line, spaced the way it
+        # spaces them - 10m and 15m crowded at the left, 36hr hard against the
+        # right end. It is not a linear scale and is not drawn as one.
+        def axis():
+            marks = [('10M', 4), ('15M', 19), ('4HR', 48), ('36HR', 99)]
+            return ('<div class="axis"><span class="axis-ic">%s</span>'
+                    '<div class="axis-line">%s</div></div>'
+                    % (clock, ''.join('<i style="left:%d%%"><b>%s</b></i>' % (x, t)
+                                      for t, x in marks)))
+
+        # Brand, what it is fast at, the molecule that does it, and where the
+        # bar sits on that axis. The three single-ingredient hues are the
+        # reference's, and carry the same meaning its mechanism icons do.
+        rows = [('Levitra&reg;', 'Rapid Onset', 'L-Citrulline', '#12B76A', 22, 27),
+                ('Viagra&reg;', 'Peak Strength', 'Sildenafil', '#3B82F6', 35, 15),
+                ('Cialis&reg;', 'Extended Window', 'Tadalafil', '#8B5CF6', 34, 66),
+                ('Other Stacks', 'Standard Combo',
+                 'Sildenafil, Tadalafil, Apomorphine', '#D5D9E2', 27, 73)]
         rail = ''.join(
-            '<div class="cmp%s"><div class="cmp-l"><b>%s</b><span>%s</span></div>'
-            '<div class="cmp-bar"><i style="width:%d%%"></i></div>'
-            '<div class="cmp-v">%s</div></div>'
-            % (' on' if a.startswith(BRAND) else '', a, b, w, v)
-            for a, b, v, w in bars)
+            '<div class="advrow"><div class="advrow-t">'
+            '<b>%s <span>(%s)</span></b><span class="advrow-m">%s</span></div>'
+            '<div class="track"><i style="left:%d%%;width:%d%%;background:%s"></i></div>'
+            '</div>' % (a, b, mol, x, w, col)
+            for a, b, mol, col, x, w in rows)
+
+        chip = '<span class="chip">%s%s</span>'
         return ('<div class="col">'
-                + head('A solution that starts in minutes and lasts as long as you need '
-                       'it to', eyebrow='The 4-in-1 advantage')
-                + '<div class="reviewcard">%s</div>' % rail
+                + head('You deserve a solution <span class="hl">that starts in '
+                       'minutes</span> and lasts as long as you need it to')
+                + '<div class="reviewcard adv">'
+                  '<p class="adv-h">THE 4-IN-1 ADVANTAGE</p>'
+                  '<p class="adv-sub">See how the BRAEVON 4-in-1 stack compares to '
+                  'single-ingredient pills.</p>'
+                + axis() + rail
+                # The brand block the comparison builds to. It is the one part
+                # of this screen drawn in Braevon orange rather than the
+                # reference's three molecule hues - it is Braevon's own claim.
+                + '<div class="fullpot">'
+                  '<div class="fp-head"><div class="fp-name"><b>BRAEVON 4-in-1</b>'
+                  '<span>FULL POTENTIAL</span></div>'
+                + (chip % (brain, 'Arousal + Performance'))
+                + '</div>' + axis()
+                + '<div class="track"><i class="grad" style="left:10%;width:90%"></i></div>'
+                  '<div class="chips">'
+                + (chip % (bolt, 'Starts at 10m')) + (chip % (peak, 'Peak Power'))
+                + (chip % (clock, '36h Window'))
+                + '</div><div class="fp-rule"></div>'
+                  '<p class="fp-note">Contains L-Citrulline, Sildenafil, Tadalafil, '
+                  'and Apomorphine which primes the brain for desire.</p>'
+                  '</div></div>'
                 + cta(blocked=False) + '</div>')
     if n == 33:
         return ('<div class="col">'
@@ -492,17 +591,22 @@ PROGRESS = nav('<div class="progress" id="prog" role="progressbar" '
                   ''.join('<div class="seg"><span></span></div>' for _ in range(SEGMENTS))))
 
 DQ = ('<div class="dq" id="dq" role="dialog" aria-modal="true" aria-labelledby="dqTitle">'
-      '<div class="dq-inner"><div class="dq-mark">%s</div>'
-      '<h1 id="dqTitle">Eligibility status</h1>'
-      '<p class="dq-sub">Based on your last answer, we cannot complete your assessment. '
-      'Your safety is our priority: this treatment has specific medical criteria, and '
-      'your response prevents our clinicians from safely determining your eligibility.</p>'
-      '<div class="dq-reason" id="dqReason"></div>'
-      '<p class="dq-note">Made a mistake? Review your answer. If it was correct, please '
-      'speak with your own doctor about other options.</p>'
-      '<button class="dq-back" id="dqBack">Review my answer</button>'
-      '<button class="dq-ghost" id="dqExit">Exit the assessment</button>'
-      '</div></div>' % ICON['warn'])
+      '<div class="dq-inner">'
+      '<div class="dq-card">'
+      '<div class="dq-mark">%s</div>'
+      '<h1 id="dqTitle">Eligibility Status</h1>'
+      '<p>Based on your last answer, we cannot complete your assessment.</p>'
+      '<p>Your safety is our priority. This treatment has specific medical criteria, '
+      'and your response prevents our clinicians from safely determining your '
+      'eligibility.</p>'
+      '</div>'
+      '<p class="dq-lead">Made a mistake? Review your answer</p>'
+      '<button class="dq-back" id="dqBack">Review Your Answer</button>'
+      '<div class="dq-rule"></div>'
+      '<p class="dq-lead soft">If your answer was correct, we cannot continue '
+      'this assessment.</p>'
+      '<button class="dq-ghost" id="dqExit">Exit Assessment</button>'
+      '</div></div>' % ICON['shield'])
 
 SCRIPT = open(os.path.join(HERE, 'engine.js'), encoding='utf-8').read()
 
@@ -521,7 +625,7 @@ def page(title, body, body_class=''):
 def emit_interactive():
     body = ('<div class="shell">' + MASTHEAD + PROGRESS
             + '<main class="stage" id="stage">%s</main>' % '\n'.join(sections())
-            + '</div>' + DQ
+            + DQ + '</div>'
             + '<script>%s</script>' % SCRIPT.replace('__TOTAL_Q__', str(TOTAL_Q))
                                             .replace('__SEGMENTS__', str(SEGMENTS)))
     html = page('Braevon &mdash; Intake Assessment v2', body)
@@ -550,15 +654,19 @@ def emit_frames():
         inner = html.replace('<section class="step"', '<section class="step on"', 1)
         # ids are unique per document; 46 frames cannot each carry the
         # interactive build's element ids
-        chrome = (MASTHEAD + (static_progress(q) if counted else nav(''))
+        chrome = (MASTHEAD + (static_progress(q) if q else nav(''))
                   ).replace(' id="backBtn"', '')
         if p['n'] == 1:
             chrome = chrome.replace('<button class="back-btn"', '<button class="back-btn" hidden')
         frames.append('<div class="frame-label">%s</div><div class="frame"><div class="shell">'
                       '%s<main class="stage">%s</main></div></div>' % (lbl, chrome, inner))
     frames.append('<div class="frame-label">Screen %02d &mdash; NO RX (eligibility stop)</div>'
-                  '<div class="frame">%s</div>'
-                  % (STOP_SCREEN, DQ.replace('class="dq"', 'class="dq on"')))
+                  '<div class="frame"><div class="shell">%s%s</div></div>'
+                  % (STOP_SCREEN, MASTHEAD,
+                     DQ.replace('class="dq"', 'class="dq on"')
+                       .replace(' id="dqBack"', '').replace(' id="dqExit"', '')
+                       .replace(' id="dq"', '').replace(' id="dqTitle"', '')
+                       .replace(' aria-labelledby="dqTitle"', '')))
     open(os.path.join(OUT, 'all-screens.html'), 'w', encoding='utf-8').write(
         page('Braevon &mdash; Intake v2, all screens', '\n'.join(frames), 'frames'))
     return len(frames)

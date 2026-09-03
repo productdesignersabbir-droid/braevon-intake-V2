@@ -97,9 +97,10 @@ stay in the repo so it can be pulled back a screen at a time.
   testimonials, so the cards keep the reference's shape with copy written for
   this concept — the same call v1 made about DirectMeds' reviews.
 - **The captions inside long safety lists** ("Serious Reactions", "Common Side
-  Effects"). The exclusive answer is hoisted to the top of every list here, so
-  a caption would end up against the wrong block. Worth restoring properly if
-  those screens stay.
+  Effects"). Worth restoring properly if those screens stay.
+- **The extractor's catch-all textarea.** Every multi-answer screen in the
+  extraction carries a hidden `answer_*` free-text field. The reference never
+  renders one, so neither does v2 — the options are the answer.
 
 ## Control shapes
 
@@ -292,3 +293,20 @@ privacy on and a commit with the real address is rejected at push time.
   this goes near a real patient.
 - **The 4.6 masthead rating is a placeholder**, carried from v1's header. It needs
   a real figure or it should come out.
+- **Every single-answer screen now opens on a pre-selected answer**, as the
+  reference does, from the `DEFAULTS` table in `src/build.py`. On the safety
+  screens (24, 25, 26, 31, 36, 37, 39, 40, 41) that means a patient who clicks
+  straight through submits "no history, normal readings" without having read
+  the question. The values chosen are the ordinary case for a screening
+  question, the healthy band for a reading, and the mid-point for a severity
+  scale; none of them stops the flow. This is the reference's own behaviour and
+  it was asked for explicitly — but it needs the same prescriber sign-off as
+  the disqualification rules, and it is the single most consequential thing on
+  this list. Multi-answer screens are deliberately left blank: pre-ticking
+  "None of these" would answer a safety checklist on the patient's behalf.
+- **"None of these" now sits last**, split from the list by a rule, because
+  that is where the reference puts it. v1 hoisted it to the top for a reason
+  worth remembering: on a fifteen-item safety screen it otherwise falls below
+  the fold, so a patient who has none of them must read all fifteen to find
+  that out, and every option scrolled past is one they might tick by mistake.
+  Reference parity won here; the cost did not go away.

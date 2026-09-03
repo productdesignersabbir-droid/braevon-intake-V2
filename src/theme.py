@@ -54,6 +54,7 @@ CSS = r"""
   --page:#FFFFFF;          /* the reference page is white, not v1's grey */
   --surface:#FFFFFF;
   --track:#E7EAED;         /* progress segment, unfilled                 */
+  --wash:#EFF1F5;         /* an unfilled track, a secondary button      */
   --hairline:#EDEFF3;      /* the resting outline on an option row       */
   --glow:rgba(230,67,13,.22);   /* the selected row's halo — the resting
                                    shadow, tinted; no second stroke        */
@@ -205,7 +206,7 @@ img{max-width:100%;display:block}
    3px. That contrast is what tells one-answer from many-answers apart, and it
    is the one place the single-radius rule is deliberately broken. */
 .opt .ring{
-  order:-1; flex:none; width:20px;height:20px;border-radius:50%;
+  order:-1; flex:none; width:16px;height:16px;border-radius:50%;
   border:1.5px solid #C9CFDA; background:#fff; position:relative;
 }
 .opt.checkbox .ring{border-radius:3px}
@@ -232,12 +233,17 @@ img{max-width:100%;display:block}
 .opt.selected .ring{border-color:var(--accent);background:var(--accent)}
 .opt.selected .ring::after{
   content:"";position:absolute;inset:0;margin:auto;
-  width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;
+  width:4px;height:7.5px;border:solid #fff;border-width:0 1.8px 1.8px 0;
   transform:translateY(-1px) rotate(45deg);
 }
 .opt:not(.checkbox).selected .ring::after{
-  width:7px;height:7px;border:none;border-radius:50%;background:#fff;transform:none;
+  width:6px;height:6px;border:none;border-radius:50%;background:#fff;transform:none;
 }
+/* The exclusive answer is the list's last row and is split off from it, the
+   way the reference splits it - a rule in the gap above, not a heavier row. */
+.opt.last{margin-top:14px;position:relative}
+.opt.last::before{content:"";position:absolute;left:0;right:0;top:-8px;
+  height:1px;background:var(--hairline)}
 .opt-note{margin:-4px 0 0;font-size:11px;color:var(--muted);font-weight:600}
 
 /* ------------------------------------------------ the fact interstitial */
@@ -249,16 +255,17 @@ img{max-width:100%;display:block}
   font-size:17px;font-weight:500;color:#fff;
   background:linear-gradient(90deg,var(--accent) 0%,var(--accent-tint) 100%);
 }
-.fact-k{margin:26px 0 0;font-size:50px;line-height:1;font-weight:600;color:var(--ink)}
+.fact-k{margin:16px 0 0;font-size:50px;line-height:1;font-weight:600;color:var(--ink)}
 /* "10-15" is a whole accented line; "36 HRS" is a coloured number against ink
    units, so there the span carries it. nth-of-type would count every <p> in
    the column, not just the figures, so the first one is marked explicitly. */
+.qhead .hl{color:var(--accent)}
 .fact-k.accent{color:var(--accent)}
 .fact-k span{color:var(--accent)}
-.fact-u{margin:4px 0 0;font-size:24px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
-.fact-cap{margin:10px 0 0;font-size:17px;line-height:1.4;color:var(--ink)}
+.fact-u{margin:3px 0 0;font-size:24px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.fact-cap{margin:7px 0 0;font-size:17px;line-height:1.4;color:var(--ink)}
 .fact-cap b{font-weight:700;font-style:italic}
-.fact-rule{width:34px;height:2px;background:var(--border);margin:26px auto 0;border-radius:2px}
+.fact-rule{width:34px;height:2px;background:var(--border);margin:16px auto 0;border-radius:2px}
 
 /* Two-up cards — the sex question. No ring: with only two choices side by side
    the fill and border carry the state on their own, and the reference draws its
@@ -511,28 +518,86 @@ img{max-width:100%;display:block}
 .mech span:not(.bubble){font-size:12px;line-height:1.5;color:var(--muted);
   display:block;font-weight:400;margin-top:3px}
 
+/* ------------------------------------------------ the 4-in-1 advantage */
+/* The reference's comparison, rebuilt: a card headed by its own title and
+   lead-in, one shared time axis, a row per single-ingredient pill, and the
+   brand block the whole thing builds to. */
+.adv{padding:18px 16px}
+.adv-h{margin:0;font-size:14px;font-weight:800;letter-spacing:.01em;color:var(--ink)}
+.adv-sub{margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+
+/* The axis is drawn, not measured — 10m and 15m sit crowded at the left and
+   36hr hard against the right, exactly as the reference spaces them. Its marks
+   are absolute, so the row bars below can use the same percentages. */
+.axis{display:flex;align-items:flex-end;gap:8px;margin-top:20px}
+.axis-ic{flex:none;width:20px;height:20px;border-radius:50%;border:1px solid var(--accent);
+  display:grid;place-items:center;color:var(--accent)}
+.axis-ic svg{width:12px;height:12px}
+.axis-line{position:relative;flex:1;height:26px;
+  border-bottom:1px solid var(--border)}
+.axis-line i{position:absolute;bottom:0;width:1px;height:6px;background:var(--border);
+  transform:translateX(-50%)}
+.axis-line i b{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+
+.advrow{margin-top:16px}
+.advrow-t{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  font-size:12px}
+.advrow-t b{font-weight:700;color:var(--ink)}
+.advrow-t b span{font-weight:500;color:var(--muted)}
+.advrow-m{font-size:11px;color:var(--muted);text-align:right}
+.track{position:relative;height:12px;border-radius:999px;background:var(--wash);
+  margin-top:7px;overflow:hidden}
+.track i{position:absolute;top:0;bottom:0;border-radius:999px}
+.track i.grad{background:linear-gradient(90deg,var(--accent-tint) 0%,var(--accent) 100%)}
+
+/* The brand block: the only part of this screen in Braevon orange, because it
+   is the only part making Braevon's claim. */
+.fullpot{margin-top:22px;border:1px solid var(--accent-soft);background:#FFF9F6;
+  border-radius:var(--radius-card);padding:16px}
+.fp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.fp-name b{display:block;font-size:15px;font-weight:800;color:var(--accent)}
+.fp-name span{display:block;margin-top:2px;font-size:9px;font-weight:800;
+  letter-spacing:.12em;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface);
+  border:1px solid var(--hairline);border-radius:999px;padding:5px 10px;
+  font-size:10px;font-weight:700;color:var(--ink);white-space:nowrap}
+.chip svg{width:12px;height:12px;stroke:var(--accent);flex:none}
+.fullpot .axis{margin-top:16px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.fp-rule{height:1px;background:var(--hairline);margin:14px 0 0}
+.fp-note{margin:12px 0 0;font-size:11px;line-height:1.5;color:var(--muted)}
+
 /* ---------------------------------------------------- disqualification */
-/* The one full-bleed dark surface in the flow, because it is a stop and not a
-   step. Same call as v1, and the reference's own "NO RX" screen agrees. */
-.dq{position:fixed;inset:0;background:var(--dark);color:#fff;z-index:40;
-  display:none;overflow-y:auto}
+/* The eligibility stop, laid out as the reference lays it out: on white, under
+   the masthead, everything centred. A card carries the mark, the title and the
+   two lines; the two ways out sit under it on the page, split by a rule. It is
+   not an overlay - it takes the stage's place inside the shell, so the
+   masthead stays where it was and nothing slides. */
+.dq{display:none;flex:1;padding:0 var(--pad) 40px}
 .dq.on{display:block}
-.dq-inner{max-width:var(--col);margin:0 auto;padding:56px var(--pad) 40px}
-.dq-mark{width:52px;height:52px;border-radius:50%;background:rgba(230,67,13,.16);
-  display:grid;place-items:center;margin-bottom:22px}
-.dq-mark svg{width:26px;height:26px;stroke:var(--accent-tint)}
-.dq h1{margin:0;font-size:24px;line-height:1.2;font-weight:700}
-.dq-sub{margin:12px 0 0;font-size:13px;line-height:1.55;color:#AEB5C4}
-.dq-reason{margin:22px 0 0;background:rgba(255,255,255,.06);border-radius:var(--radius-card);
-  padding:16px;font-size:12px;line-height:1.55;color:#E4E7EE}
-.dq-note{margin:22px 0 0;font-size:11px;color:#8C94A6;line-height:1.55}
-.dq-back{margin-top:26px;width:100%;min-height:56px;border-radius:var(--radius);
-  border:none;background:var(--accent);color:#fff;font-weight:800;font-size:13px;
-  cursor:pointer;font-family:inherit}
+.dq-inner{max-width:var(--col);margin:0 auto;text-align:center}
+.dq-card{background:var(--surface);border:1px solid var(--hairline);
+  border-radius:var(--radius-card);box-shadow:var(--shadow);
+  padding:28px 22px 30px;margin-top:var(--gap-block)}
+.dq-mark{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);
+  display:grid;place-items:center;margin:0 auto 16px}
+.dq-mark svg{width:22px;height:22px;stroke:var(--accent)}
+.dq h1{margin:0;font-size:22px;line-height:1.25;font-weight:700;color:var(--accent)}
+.dq-card p{margin:16px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
+/* The two exits. Each is a lead-in line and a button, sized to its label the
+   way the reference sizes them - not full-bleed, or they would read as the
+   flow's Next and invite a click. */
+.dq-lead{margin:28px 0 0;font-size:15px;font-weight:700;color:var(--ink)}
+.dq-lead.soft{font-weight:500;color:var(--ink);line-height:1.5}
+.dq-rule{height:1px;background:var(--hairline);margin:30px 0 0}
+.dq-back,.dq-ghost{margin:14px auto 0;display:block;min-height:44px;
+  padding:0 20px;border-radius:var(--radius);font-family:inherit;
+  font-size:14px;font-weight:700;cursor:pointer}
+.dq-back{border:none;background:var(--accent);color:#fff}
 .dq-back:hover{background:var(--accent-hover)}
-.dq-ghost{margin-top:12px;width:100%;min-height:52px;border-radius:var(--radius);
-  background:none;border:1px solid rgba(255,255,255,.22);color:#fff;
-  font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+.dq-ghost{border:none;background:var(--wash);color:var(--muted)}
+.dq-ghost:hover{background:#E7EAF0}
 
 /* ------------------------------------------------------------- narrow */
 @media (max-width:420px){ .hero-h1{font-size:31px} .strip{font-size:11px} }
