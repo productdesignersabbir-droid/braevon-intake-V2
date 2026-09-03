@@ -316,6 +316,14 @@ privacy on and a commit with the real address is rejected at push time.
   extraction: screen 40's label is its own, read off the live screen; 39, 41 and
   42 follow the same pattern and are ours. Like the reference's, the box does
   not gate the step - worth asking a prescriber whether it should.
+- **The 94% success probability is the reference's number, not Braevon's** -
+  same problem as the 137%. Screen 45 presents it as a result of this
+  assessment; nothing computes it. It needs a source or it should come out.
+- **Submit ends at a confirmation, not a checkout.** The reference posts to its
+  own backend; this build has none, so Submit now shows an "Assessment
+  Received" state instead of doing nothing, which is what it did before. Where
+  the flow goes after that - approval, checkout - is the v1 work that is
+  deliberately out of v2 scope.
 - **Screen 41's photograph is a stand-in.** The reference opens that one
   question screen with a photo (the only question screen that has one - checked
   by listing every image in its DOM). It uses a medicine-cabinet shot; this

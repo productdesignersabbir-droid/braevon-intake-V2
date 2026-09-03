@@ -50,6 +50,9 @@ INTERSTITIALS = {2, 5, 8, 32, 33, 44}
 TILE_SCREENS = {3, 7, 24, 39, 40, 41, 42}
 
 SEGMENTS = 5
+# The medical review replaces the masthead and the bar with its own result
+# header, as the reference does.
+BARE_SCREEN = 45
 
 # The reference numbers its own steps - every screen name ends in one ("A2 - 03",
 # "Blood Pressure 2 - 07.a", "Birth Date - 20"), running 1 to 21. Its bar is
@@ -115,6 +118,8 @@ ICON = {
     'star': ('<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6'
              '-5 4.4 1.5 6.5L10 15.2 4.2 18.6l1.5-6.5-5-4.4 6.6-.6z"/></svg>'),
     'person': _ic('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+    'tick': _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+    'check': _ic('<path d="M4 12.5l5 5L20 6.5"/>'),
 }
 
 # Screen 1's goal icons, keyed by the reference's own option labels. The bubble
@@ -443,8 +448,13 @@ def field_block(f, label=None):
         ctrl = ('<textarea id="%s" rows="3" placeholder="%s"></textarea>'
                 % (fid, attr(f.get('placeholder') or '')))
     else:
-        ctrl = ('<input id="%s" type="%s" placeholder="%s" autocomplete="off"/>'
-                % (fid, attr(f.get('input_type') or 'text'), attr(f.get('placeholder') or '')))
+        # A US number and nothing else: ten digits, formatted as they are typed,
+        # with the numeric keypad on a phone.
+        extra = (' data-us-phone="1" inputmode="tel" maxlength="14"'
+                 if f.get('us_phone') else '')
+        ctrl = ('<input id="%s" type="%s" placeholder="%s" autocomplete="off"%s/>'
+                % (fid, attr(f.get('input_type') or 'text'),
+                   attr(f.get('placeholder') or ''), extra))
     return ('<div class="field%s">%s%s</div>'
             % (' half' if f.get('half') else '', lab, ctrl))
 
@@ -536,28 +546,62 @@ def screen_birthdate(p):
 
 
 def screen_review(p):
+    """The reference drops its own masthead and bar here and puts a result
+    header in their place, so this screen carries its own chrome - see the
+    `data-bare` handling in sections()/emit_frames().
+
+    Every figure and read-back below is the reference's, with the echoes wired
+    to the patient's real answers. The 94% is NOT ours - see the README."""
     m = {f['name']: f for f in p['fields']}
-    mols = ''.join('<div class="mol"><div><b>%s</b><span>%s</span></div>'
-                   '<div class="dose">%s</div></div>' % t for t in MOLECULES)
-    return ('<div class="col">'
-            '<span class="result-badge">Assessment complete</span>'
-            '<h1 class="qhead" style="margin-top:16px">You are a strong candidate for '
-            'prescription ED treatment.</h1>'
-            '<p class="sub">A licensed clinician reviews your answers and confirms your '
-            'plan. Nothing ships until they do.</p>'
-            '<div class="reviewcard"><h3>Your medical review</h3>'
-            '<div class="rrow"><span>Primary goal</span>'
-            '<b data-echo="Q1_primary_goal">&mdash;</b></div>'
-            '<div class="rrow"><span>Difficulty</span>'
-            '<b data-echo="Q3_problem_getting_or_maintaining_erection">&mdash;</b></div>'
-            '<div class="rrow"><span>Reviewed by</span><b>Braevon clinical team</b></div>'
+    rows = [('Your Primary Goal:', 'Q1_primary_goal',
+             ('#DBEAFE', '#3B82F6',
+              _ic('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>'
+                  '<path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>'))),
+            ('Performance Issues:', 'Q3_problem_getting_or_maintaining_erection',
+             ('#F3EBFF', '#A855F7',
+              _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>'))),
+            ('Duration Satisfaction:', 'Q4_erection_last_as_long_as_desired',
+             ('#FFEDD5', '#F97316',
+              _ic('<rect x="2.5" y="7.5" width="15" height="9" rx="2.6"/>'
+                  '<path d="M20.5 10.5v3"/><path d="M6 10.5v3"/>'))),
+            ]
+    readback = ''.join(
+        '<div class="rvrow"><span class="bubble" style="--bub:%s;--gly:%s">%s</span>'
+        '<div><b>%s</b><span data-echo="%s">&mdash;</span></div></div>'
+        % (art[0], art[1], art[2], label, group)
+        for label, group, art in rows)
+    helps = ''.join('<li>%s%s</li>' % (ICON['check'], t) for t in
+                    ('Effects in 10&ndash;15 minutes', 'Boosted Desire',
+                     'Long-Lasting Results'))
+    return ('<div class="col rv">'
+            '<div class="rv-head"><div><b>BRAEVON</b><span>ED Treatment</span></div>'
+            '<div class="rv-head-r"><span>Assessment Complete</span>'
+            '<span class="rv-ready">Ready for Review</span></div></div>'
+            '<div class="rv-ok">%s<div><b>Assessment Complete</b>'
+            '<p>Congratulations! You&rsquo;re a strong candidate for a prescription '
+            'ED treatment.</p></div></div>'
+            '<div class="rv-panel">'
+            '<h1 class="rv-title">Your Medical Review</h1>'
+            '<div class="rv-card rv-prob"><span>Success Probability</span>'
+            '<div class="rv-bar"><i style="width:94%%"></i></div><b>94%%</b></div>'
+            '<div class="rv-card">%s</div>'
+            '<p class="rv-verdict"><b>You are a strong candidate</b> '
+            'for prescription ED treatment</p>'
             '</div>'
-            '<div class="reviewcard"><h3>How BRAEVON 4-in-1 can help</h3>%s</div>' % mols
-            + '<p class="legend">Let&rsquo;s check your eligibility.</p>'
+            '<div class="rv-help">'
+            '<img src="assets/images/product-tablet.png" alt="The BRAEVON 4-in-1 tablet"/>'
+            '<div><b>How BRAEVON 4-in-1 Can Help</b>'
+            '<p>Our 4-in-1 formula helps you by targeting both desire (the brain) '
+            'and performance (the body).</p><ul>%s</ul></div></div>'
+            % (ICON['tick'], readback, helps)
+            + '<p class="sub lead" style="margin-top:var(--gap-block)">'
+              'Let&rsquo;s proceed to check your eligibility.</p>'
             + '<div class="fields">%s%s</div>'
-              % (field_block(dict(m['first_name'], half=True), 'First name'),
-                 field_block(dict(m['last_name'], half=True), 'Last name'))
+              % (field_block(dict(m['first_name'], half=True), 'First Name'),
+                 field_block(dict(m['last_name'], half=True), 'Last Name'))
             + field_block(m['state'], 'What state will your medication be shipped to?')
+            + '<p class="foot">Your information is never shared and is protected '
+              'by HIPAA.</p>'
             + cta() + '</div>')
 
 
@@ -568,8 +612,10 @@ def screen_submission(p):
                    'Our medical team and pharmacy use email and text for patient '
                    'communication.')
             + '<div class="fields">%s%s</div>'
-              % (field_block(m['email'], 'Email'),
-                 field_block(m['phone_number'], 'Phone number'))
+              % (field_block(dict(m['email'], input_type='email'), 'Email'),
+                 field_block(dict(m['phone_number'], input_type='tel',
+                                  placeholder='(555) 123-4567', us_phone=True),
+                             'Phone Number'))
             + '<div class="opts" data-group="final_submission_terms_agreement" '
               'data-mode="multi" style="margin-top:16px">'
               '<button class="opt checkbox" data-value="yes"><span class="lbl">'
@@ -776,6 +822,8 @@ def sections():
             a += ' data-q="%d"' % q
         if p['n'] == 1:
             a += ' data-no-back'
+        if p['n'] == BARE_SCREEN:
+            a += ' data-bare'
         if p['cond']:
             a += (' data-if="%s" data-if-any="%s"'
                   % (attr(p['cond']['group']), attr('|'.join(p['cond']['any']))))
@@ -832,6 +880,16 @@ DQ = ('<div class="dq" id="dq" role="dialog" aria-modal="true" aria-labelledby="
       '<button class="dq-ghost" id="dqExit">Exit Assessment</button>'
       '</div></div>' % ICON['shield'])
 
+DONE = ('<div class="dq done" id="done" role="status">'
+        '<div class="dq-inner">'
+        '<div class="dq-card">'
+        '<div class="dq-mark done-mark">%s</div>'
+        '<h1>Assessment Received</h1>'
+        '<p>Thank you. Your answers are with our clinical team.</p>'
+        '<p>A licensed clinician reviews every assessment before anything is '
+        'prescribed or shipped. We will email you as soon as they have.</p>'
+        '</div></div></div>' % ICON['tick'])
+
 SCRIPT = open(os.path.join(HERE, 'engine.js'), encoding='utf-8').read()
 
 
@@ -849,7 +907,7 @@ def page(title, body, body_class=''):
 def emit_interactive():
     body = ('<div class="shell">' + MASTHEAD + PROGRESS
             + '<main class="stage" id="stage">%s</main>' % '\n'.join(sections())
-            + DQ + '</div>'
+            + DQ + DONE + '</div>'
             + '<script>%s</script>' % SCRIPT.replace('__TOTAL_Q__', str(TOTAL_Q))
                                             .replace('__SEGMENTS__', str(SEGMENTS))
                                             .replace('__SEGMENT_STARTS__',
@@ -882,12 +940,18 @@ def emit_frames():
         inner = html.replace('<section class="step"', '<section class="step on"', 1)
         # ids are unique per document; 46 frames cannot each carry the
         # interactive build's element ids
-        chrome = (MASTHEAD + (static_progress(q, p['n']) if q else nav(''))
-                  ).replace(' id="backBtn"', '')
+        chrome = '' if p['n'] == BARE_SCREEN else (
+            MASTHEAD + (static_progress(q, p['n']) if q else nav(''))
+        ).replace(' id="backBtn"', '')
         if p['n'] == 1:
             chrome = chrome.replace('<button class="back-btn"', '<button class="back-btn" hidden')
         frames.append('<div class="frame-label">%s</div><div class="frame"><div class="shell">'
                       '%s<main class="stage">%s</main></div></div>' % (lbl, chrome, inner))
+    frames.append('<div class="frame-label">Screen %02d &mdash; Assessment received</div>'
+                  '<div class="frame"><div class="shell">%s%s</div></div>'
+                  % (len(STEPS) + 2, MASTHEAD,
+                     DONE.replace('class="dq done"', 'class="dq done on"')
+                         .replace(' id="done"', '')))
     frames.append('<div class="frame-label">Screen %02d &mdash; NO RX (eligibility stop)</div>'
                   '<div class="frame"><div class="shell">%s%s</div></div>'
                   % (STOP_SCREEN, MASTHEAD,

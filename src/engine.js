@@ -5,7 +5,7 @@
   var prog=document.getElementById('prog');
   var segs=[].slice.call(prog.querySelectorAll('.seg span'));
   var backBtn=document.getElementById('backBtn');
-  var dq=document.getElementById('dq');
+  var dq=document.getElementById('dq'), done=document.getElementById('done');
   function stop(on){
     dq.classList.toggle('on', on);
     stage.hidden=on; prog.hidden=on||prog.hidden; backBtn.hidden=on||backBtn.hidden;
@@ -124,6 +124,32 @@
     });
   });
 
+  /* ------------------------------------------------------------ US phone */
+  /* Ten digits, area code and exchange both starting 2-9, which is what a real
+     US number does. A leading 1 or +1 is dropped rather than rejected - people
+     type it out of habit. */
+  function usDigits(v){
+    var d=(v||'').replace(/\D/g,'');
+    if(d.length===11 && d.charAt(0)==='1') d=d.slice(1);
+    return d.slice(0,10);
+  }
+  function usFormat(d){
+    if(d.length<4) return d;
+    if(d.length<7) return '('+d.slice(0,3)+') '+d.slice(3);
+    return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+  }
+  function usValid(v){
+    var d=usDigits(v);
+    return d.length===10 && /^[2-9]/.test(d) && /^[2-9]/.test(d.charAt(3));
+  }
+  stage.addEventListener('input', function(e){
+    var f=e.target;
+    if(!f.matches || !f.matches('[data-us-phone]')) return;
+    var end = f.selectionStart===f.value.length;
+    f.value = usFormat(usDigits(f.value));
+    if(end) try{ f.setSelectionRange(f.value.length, f.value.length); }catch(_){}
+  });
+
   /* --------------------------------------------------------- validation */
   function stepValid(el){
     var ok=true;
@@ -135,6 +161,8 @@
     [].forEach.call(el.querySelectorAll('.field input, .field select'), function(f){
       if(f.closest('[data-optional]')) return;
       if(!f.value.trim()) ok=false;
+      else if(f.hasAttribute('data-us-phone') && !usValid(f.value)) ok=false;
+      else if(f.type==='email' && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(f.value.trim())) ok=false;
     });
     [].forEach.call(el.querySelectorAll('.reveal.on:not([data-optional]) textarea'), function(t){
       if(!t.value.trim()) ok=false;
@@ -203,7 +231,12 @@
         sp.parentNode.classList.toggle('now', k===at);
       });
     }
-    backBtn.hidden = el.hasAttribute('data-no-back') || history.length===0;
+    /* The review screen carries its own result header, so the shell's masthead
+       and bar step aside for it - as they do on the reference. */
+    var bare = el.hasAttribute('data-bare');
+    document.querySelector('.masthead').hidden = bare;
+    if(bare) prog.hidden = true;
+    backBtn.hidden = bare || el.hasAttribute('data-no-back') || history.length===0;
     window.scrollTo({top:0, behavior:'auto'});
     if(el.querySelector('[data-loader]')) runLoader(el);
     if(el.querySelector('[data-name-echo],[data-echo]')) fillSummary(el);
@@ -217,6 +250,14 @@
     for(var j=idx+1;j<steps.length;j++){
       if(shown(steps[j])){ history.push(idx); show(j); return; }
     }
+    /* Nothing left to show: the assessment is submitted. Without this the
+       final Submit did nothing at all. */
+    finish();
+  }
+  function finish(){
+    done.classList.add('on');
+    stage.hidden=true; prog.hidden=true; backBtn.hidden=true;
+    window.scrollTo({top:0, behavior:'auto'});
   }
   stage.addEventListener('click', function(e){
     if(e.target.closest('.cta-next')) advance();

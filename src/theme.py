@@ -95,6 +95,7 @@ img{max-width:100%;display:block}
 /* Two columns. The back control is absolutely positioned in the gutter rather
    than taking a slot here, so the wordmark, the progress bar and every screen's
    content share one left edge at --pad. Giving it a column indented all three. */
+.masthead[hidden]{display:none}
 .masthead{
   display:grid;grid-template-columns:1fr auto;align-items:center;
   gap:12px;padding:16px var(--pad);min-height:46px;
@@ -636,6 +637,60 @@ img{max-width:100%;display:block}
   place-items:center;background:#DBEAFE;color:#3B82F6}
 .qavatar svg{width:16px;height:16px}
 
+/* ------------------------------------------------------ medical review */
+/* The one screen that replaces the masthead and the bar with a header of its
+   own, as the reference does: a brand bar, a green confirmation, the review
+   panel, then the "how it helps" block. */
+.rv{gap:0}
+.rv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  background:var(--accent);color:#fff;border-radius:var(--radius-card) var(--radius-card) 0 0;
+  padding:16px;margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0}
+.rv-head b{display:block;font-size:19px;font-weight:800;letter-spacing:.02em}
+.rv-head span{display:block;font-size:14px;color:#FDE0D4}
+.rv-head-r{text-align:right}
+.rv-ready{font-weight:700;color:#FFD9C7}
+
+.rv-ok{display:flex;gap:10px;align-items:flex-start;background:#F0FDF4;
+  padding:14px 16px;margin:0 calc(var(--pad) * -1)}
+.rv-ok svg{flex:none;width:20px;height:20px;stroke:#16A34A;margin-top:1px}
+.rv-ok b{display:block;font-size:14px;font-weight:600;color:#166534}
+.rv-ok p{margin:2px 0 0;font-size:12px;line-height:1.45;color:#16A34A}
+
+.rv-panel{background:var(--neutral-tint);border-radius:var(--radius-card);
+  padding:20px 16px;margin-top:var(--gap-block)}
+.rv-title{margin:0 0 16px;font-size:26px;line-height:1.2;font-weight:600;
+  color:var(--ink);text-align:center}
+.rv-card{background:var(--surface);border-radius:var(--radius-card);
+  box-shadow:var(--shadow);padding:16px}
+.rv-card + .rv-card{margin-top:12px}
+.rv-prob{display:flex;align-items:center;gap:12px}
+.rv-prob > span{flex:none;font-size:16px;color:var(--muted)}
+.rv-bar{flex:1;height:8px;border-radius:999px;background:var(--wash);overflow:hidden}
+.rv-bar i{display:block;height:100%;border-radius:999px;background:#22C55E}
+.rv-prob b{flex:none;font-size:26px;font-weight:800;color:#16A34A}
+
+.rvrow{display:flex;align-items:flex-start;gap:12px;padding:12px 0;
+  border-top:1px solid var(--border)}
+.rvrow:first-child{border-top:none;padding-top:0}
+.rvrow:last-child{padding-bottom:0}
+.rvrow .bubble{flex:none;width:36px;height:36px;border-radius:50%;display:grid;
+  place-items:center;background:var(--bub);color:var(--gly)}
+.rvrow .bubble svg{width:19px;height:19px}
+.rvrow b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.rvrow > div > span{display:block;margin-top:2px;font-size:14px;color:var(--ink)}
+.rv-verdict{margin:16px 0 0;text-align:center;font-size:17px;font-weight:500;
+  line-height:1.4;color:var(--ink)}
+.rv-verdict b{font-weight:700;color:var(--accent)}
+
+.rv-help{display:flex;gap:14px;align-items:flex-start;background:#F0FDF4;
+  border-radius:var(--radius-card);padding:16px;margin-top:12px}
+.rv-help img{flex:none;width:64px;height:auto;object-fit:contain}
+.rv-help b{display:block;font-size:17px;font-weight:700;color:var(--title-ink)}
+.rv-help p{margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
+.rv-help ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.rv-help li{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink)}
+.rv-help li svg{flex:none;width:16px;height:16px;stroke:#16A34A}
+
 /* ---------------------------------------------------- disqualification */
 /* The eligibility stop, laid out as the reference lays it out: on white, under
    the masthead, everything centred. A card carries the mark, the title and the
@@ -644,6 +699,13 @@ img{max-width:100%;display:block}
    masthead stays where it was and nothing slides. */
 .dq{display:none;flex:1;padding:0 var(--pad) 40px}
 .dq.on{display:block}
+/* The completion state reuses the stop's layout - same card, green mark. The
+   selectors carry .dq as well so they beat the stop's own rules, which come
+   later in this block. */
+.dq.done .dq-mark{background:#DCFCE7}
+.dq.done .dq-mark svg{stroke:#16A34A}
+.dq.done h1{color:#16A34A}
+.dq.done .dq-card p + p{margin-top:12px}
 .dq-inner{max-width:var(--col);margin:0 auto;text-align:center}
 .dq-card{background:var(--surface);border:1px solid var(--hairline);
   border-radius:var(--radius-card);box-shadow:var(--shadow);
