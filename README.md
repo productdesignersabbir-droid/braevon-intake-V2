@@ -335,13 +335,19 @@ privacy on and a commit with the real address is rejected at push time.
   `hero-benefits.jpg` and `braevon-hero.jpg` from the existing asset folder;
   the reference uses shot-for-purpose photography. The quotes themselves are
   written for this concept, as they were in v1.
-- **Nothing is pre-selected.** A previous build opened every single-answer
-  screen on a default. Checked against the live reference on 2026-09-03: its
-  radios are all unchecked and its Next stays disabled until you choose, so the
-  defaults were a divergence, not parity - and on the safety screens they meant
-  a patient clicking straight through submitted "no history, normal readings"
-  without reading the question. They are gone. Do not reintroduce them without
-  a prescriber signing off on each value.
+- **Only screen 1 is pre-selected**, on "Quicker recovery", asked for on
+  2026-09-03 and held in `DEFAULTS`. This is a deliberate divergence from the
+  reference, which pre-selects nothing anywhere: checked on the live page, its
+  radios are all unchecked and its Next stays disabled until you choose. Screen
+  1 is the opening marketing question and does not stop the flow, so the cost
+  is low. An earlier build defaulted EVERY single-answer screen; on the safety
+  screens that meant a patient clicking straight through submitted "no history,
+  normal readings" without reading the question. Do not extend `DEFAULTS` back
+  to the medical screens without a prescriber signing off on each value.
+- **Female stops the flow on screen 3.** The medication is male-only and that
+  screen's own sub-head says so, so the reference does not carry on into
+  questions that cannot apply. The DOM extraction does not carry the rule; it
+  is in `DQ_EXTRA` with the blood-pressure one.
 - **Where "None of these" sits is per screen, not a rule.** The reference puts
   it last on the ED-treatments, sex-organ, cardiovascular, heart-symptom and
   medication screens, and first - on a green card, under "Select this to

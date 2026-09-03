@@ -212,6 +212,16 @@ LEGENDS = {25, 26}
 # discarding the wordmark: the only other photographs are the hero and the two
 # testimonials. Braevon's own asset stands in; a medicine-cabinet shot like the
 # reference's would sit better, see the README.
+# The one screen that opens on an answer. The reference pre-selects nothing
+# anywhere - checked on the live page, its radios are all unchecked and its Next
+# stays disabled - so this is a deliberate Braevon divergence, asked for on
+# 2026-09-03. It is the opening marketing question, not a safety one, and it
+# does not stop the flow; do not extend this to the medical screens without a
+# prescriber signing off. See the README.
+DEFAULTS = {
+    1: 'Quicker recovery',
+}
+
 SCREEN_IMAGE = {
     41: ('doctor.jpg', 'A clinician reviewing a prescription'),
 }
@@ -368,6 +378,7 @@ def head(title=None, sub=None, eyebrow=None, lead=False):
 def option(o, exclusive, goal=False, tile=False, screen=None,
            excl_first=False, excl_note=None):
     label = esc(brandify(o['label']))
+    on = ' selected' if DEFAULTS.get(screen) == o['value'] else ''
     if tile:
         note = ('<small>%s</small>' % esc(brandify(o['note']))) if o.get('note') else ''
         art = (TILE_ICONS.get((screen, (o['value'] or '').lower()))
@@ -379,9 +390,9 @@ def option(o, exclusive, goal=False, tile=False, screen=None,
                 % (attr(o['value']), bub, label, note))
     if goal:
         bub, gly, glyph = GOAL_STYLE.get(o['label'], ('#FDECE6', '#E6430D', ICON['shield']))
-        return ('<button class="opt goal" data-value="%s"><span class="bubble" '
+        return ('<button class="opt goal%s" data-value="%s"><span class="bubble" '
                 'style="--bub:%s;--gly:%s">%s</span><span class="lbl">%s</span></button>'
-                % (attr(o['value']), bub, gly, glyph, label))
+                % (on, attr(o['value']), bub, gly, glyph, label))
     if screen in BAND_SCREENS:
         bub, gly = BAND_STYLE.get((screen, o['value']), _NOBAND)
         glyph = _DROP if (screen, o['value']) in BAND_STYLE else _CROSS
@@ -477,7 +488,7 @@ def screen_hero(p):
             '<strong>In minutes</strong></p>'
             '<p class="ask">See if <strong>BRAEVON</strong> is right for you.</p>'
             '<p class="ask-sub">Select your primary goal:</p>'
-            + options_block(p) + cta() + '</div>')
+            + options_block(p) + cta(blocked=p['n'] not in DEFAULTS) + '</div>')
 
 
 def screen_question(p):
@@ -761,6 +772,10 @@ def dq_reason(p):
     """Per-screen copy: "you selected a nitrate" and "your last physical was
     over three years ago" are not the same message."""
     n = p['n']
+    if n == 3:
+        return ('This medication is prescribed for men only, which is why the question '
+                'is asked before anything else. We are not able to continue this '
+                'assessment.')
     if n == 25:
         return ('A current blood pressure reading is required before this treatment '
                 'can be prescribed. Please have it measured and come back.')
@@ -800,10 +815,15 @@ TOTAL_Q = len(QUESTIONS)
 # reference keeps some of its rules in script the DOM does not expose. These
 # are the ones observed on the live reference and added back by hand.
 #
+# Screen 3: the medication is male-only and the screen's own sub-head says so,
+# so "Female" stops the flow rather than carrying on to questions that cannot
+# apply. Confirmed against the reference's behaviour.
+#
 # NOT AUDITED: screens 31, 36 and 37 each carry an "I don't know" answer too,
 # and the same reasoning would apply to them. They are left alone until
 # someone confirms them against the reference - see the README.
 DQ_EXTRA = {
+    3:  ['Female'],
     25: ["I Don't Know"],
 }
 
