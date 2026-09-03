@@ -119,6 +119,7 @@ ICON = {
              '-5 4.4 1.5 6.5L10 15.2 4.2 18.6l1.5-6.5-5-4.4 6.6-.6z"/></svg>'),
     'person': _ic('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
     'tick': _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+    'clock': _ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>'),
     'check': _ic('<path d="M4 12.5l5 5L20 6.5"/>'),
 }
 
@@ -381,7 +382,7 @@ QUOTES = {
           ('Benefits',
            [_PURPLE + (_BRAIN,), _HEART_RED + (_HEART,)],
            'Mental Mood and<br/>Lasting Effects')],
-         'David B. &mdash; Kansas City, MO', 'hero-benefits.jpg'),
+         'David Brooks &mdash; Kansas City, MO', 'hero-benefits.jpg', None),
     44: ('&ldquo;The results were almost immediate &mdash; more energy, more desire, '
          'and a stronger performance every time.&rdquo;',
          [('Personal Goal',
@@ -391,7 +392,7 @@ QUOTES = {
           ('Benefits',
            [_GREEN2 + (_ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),), _HEART_RED + (_HEART,)],
            'Quick Effect and<br/>Lasting Performance')],
-         'Bryan G. &mdash; New York, NY', 'braevon-hero.jpg'),
+         'Ryan Mitchell &mdash; New York, NY', 'braevon-hero.jpg', 'doctor.jpg'),
 }
 
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -618,15 +619,19 @@ def screen_birthdate(p):
     day = dict(m['birth_day'], options=['%02d' % i for i in range(1, 32)])
     year = dict(m['birth_year'], placeholder='1985')
     return ('<div class="col">'
+            + '<p class="steppill">%s LAST STEP</p>' % ICON['clock']
             + head('What is your date of birth?',
-                   'We need to verify your age for medical review purposes.',
-                   eyebrow='Last step')
+                   'We need to verify your age for medical review purposes.')
             + '<div class="dob">%s%s%s</div>'
               % (field_block(month, labels[0]), field_block(day, labels[1]),
                  field_block(year, labels[2]))
-            + '<div class="note" style="margin-top:20px">%s<p><b>Your privacy is '
-              'protected.</b> This is required for your medical review and is not '
-              'shared.</p></div>' % ICON['shield']
+            # The reference uses the same tinted panel here that it uses on the
+            # blood-pressure screen, in its accent rather than a grey box, and
+            # its own longer wording.
+            + '<div class="infonote">%s<div><b>Your privacy is protected</b>'
+              '<p>This information is required for medical review and is kept '
+              'strictly confidential in accordance with HIPAA regulations.</p>'
+              '</div></div>' % ICON['shield']
             + cta() + '</div>')
 
 
@@ -810,7 +815,7 @@ def screen_interstitial(p):
     # The reference's testimonial: a photo carrying five stars and the quote in
     # white, two cards under it, then the person on a row of their own - all
     # inside one tinted panel.
-    quote, meta, who, photo = QUOTES[n]
+    quote, meta, who, photo, face = QUOTES[n]
     stars = ''.join('<i>%s</i>' % ICON['star'] for _ in range(5))
     cards = ''.join(
         '<div class="qcard"><b>%s</b><div class="qbubs">%s</div><p>%s</p></div>'
@@ -822,8 +827,12 @@ def screen_interstitial(p):
             '<figcaption><span class="qstars">%s</span>'
             '<blockquote>%s</blockquote></figcaption></figure>'
             '<div class="qcards">%s</div>'
-            '<div class="qwho"><span class="qavatar">%s</span>%s</div>'
-            '</div>' % (photo, stars, quote, cards, ICON['person'], who)
+            '<div class="qwho">%s%s</div>'
+            '</div>' % (photo, stars, quote, cards,
+                        ('<img class="qavatar" src="assets/images/%s" alt=""/>' % face)
+                        if face else
+                        ('<span class="qavatar">%s</span>' % ICON['person']),
+                        who)
             + cta(blocked=False) + '</div>')
 
 

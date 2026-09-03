@@ -336,12 +336,17 @@ privacy on and a commit with the real address is rejected at push time.
   ordinary moment, not a clinician. There is no such photograph in this repo,
   so the screen points at `stat-hero.jpg` - the nearest register available, and
   otherwise unused. **A bathroom/medicine-cabinet shot is needed to match.**
-- **Screen 43's "LAST STEP" is an eyebrow, not the reference's pill.** The
-  reference sets it as a centred gradient pill with an icon. Not changed.
-- **The testimonial photos are placeholders.** Screens 32 and 44 point at
-  `hero-benefits.jpg` and `braevon-hero.jpg` from the existing asset folder;
-  the reference uses shot-for-purpose photography. The quotes themselves are
-  written for this concept, as they were in v1.
+- **The testimonial photos and names are placeholders.** Screens 32 and 44
+  point at `hero-benefits.jpg` and `braevon-hero.jpg` from the existing asset
+  folder; the reference uses shot-for-purpose photography. Screen 44's face
+  avatar reuses `doctor.jpg`; **screen 32 still has the generic icon because
+  there is no second portrait in the repo.** The quotes and the names on them
+  (David Brooks, Ryan Mitchell) are written for this concept and are not real
+  people or real reviews - say so before showing anyone who might take them at
+  face value.
+- **Screen 43's "LAST STEP" is now the reference's gradient pill**, and its
+  privacy panel uses the same tinted component as the blood-pressure screen,
+  with the reference's own longer HIPAA wording.
 - **Every question screen opens on an answer**, which is what the reference
   does. Established by walking it: its sex screen arrives with "Male" already
   selected and Next enabled without anything being clicked. `DEFAULTS` is

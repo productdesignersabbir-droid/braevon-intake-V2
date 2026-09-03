@@ -235,6 +235,11 @@
        and bar step aside for it - as they do on the reference. */
     var bare = el.hasAttribute('data-bare');
     document.querySelector('.masthead').hidden = bare;
+    /* The whole nav row goes, not just its contents - hiding the bar and the
+       back arrow individually left the row's own height behind, which is the
+       gap that showed above the review header. */
+    var navrow = document.querySelector('.navrow');
+    if(navrow) navrow.hidden = bare;
     if(bare) prog.hidden = true;
     backBtn.hidden = bare || el.hasAttribute('data-no-back') || history.length===0;
     window.scrollTo({top:0, behavior:'auto'});

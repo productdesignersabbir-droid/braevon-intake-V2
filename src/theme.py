@@ -94,7 +94,7 @@ img{max-width:100%;display:block}
 /* Two columns. The back control is absolutely positioned in the gutter rather
    than taking a slot here, so the wordmark, the progress bar and every screen's
    content share one left edge at --pad. Giving it a column indented all three. */
-.masthead[hidden]{display:none}
+.masthead[hidden],.navrow[hidden]{display:none}
 .masthead{
   display:grid;grid-template-columns:1fr auto;align-items:center;
   gap:12px;padding:16px var(--pad);min-height:46px;
@@ -369,11 +369,22 @@ img{max-width:100%;display:block}
 /* The reference's helper panel under a question - a tinted block in the accent,
    an icon, a bold line and a body. Blue there, orange here; nothing else
    differs. */
+/* The reference sets "LAST STEP" as a centred gradient pill, not a caption. */
+.steppill{align-self:center;margin:0 0 var(--gap-title);padding:9px 22px;
+  border-radius:999px;display:inline-flex;align-items:center;gap:8px;
+  font-size:17px;font-weight:700;letter-spacing:.02em;color:#fff;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent-tint) 100%)}
+.steppill svg{width:17px;height:17px;stroke:#fff}
+
 .infonote{display:flex;gap:10px;align-items:flex-start;margin-top:var(--gap-title);
   background:var(--accent-soft);border-radius:var(--radius-card);padding:14px 16px}
 .infonote svg{flex:none;width:18px;height:18px;stroke:var(--accent);margin-top:1px}
 .infonote b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
-.infonote p{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
+.infonote p{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--accent-hover-ink,#8A2F12)}
+.infonote b{color:#8A2F12}
+/* The reference gives the button noticeably more air after one of these than
+   after an ordinary block. */
+.infonote + .cta{margin-top:56px}
 .note.warn{background:#FEF3F2;color:#912018}
 .note.warn svg{stroke:var(--error)}
 .note b{color:var(--ink)}
@@ -650,7 +661,8 @@ img{max-width:100%;display:block}
   margin-top:10px;background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:12px;font-size:12px;color:var(--ink)}
 .qavatar{width:28px;height:28px;border-radius:50%;flex:none;display:grid;
-  place-items:center;background:#DBEAFE;color:#3B82F6}
+  place-items:center;background:#DBEAFE;color:#3B82F6;
+  object-fit:cover;object-position:50% 22%}
 .qavatar svg{width:16px;height:16px}
 
 /* ------------------------------------------------------ medical review */
@@ -659,7 +671,7 @@ img{max-width:100%;display:block}
    panel, then the "how it helps" block. */
 .rv{gap:0}
 .rv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
-  background:var(--accent);color:#fff;border-radius:var(--radius-card) var(--radius-card) 0 0;
+  background:var(--accent);color:#fff;
   padding:16px;margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0}
 .rv-head b{display:block;font-size:19px;font-weight:800;letter-spacing:.02em}
 .rv-head span{display:block;font-size:14px;color:#FDE0D4}
