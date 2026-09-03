@@ -36,7 +36,9 @@
   --track:#E7EAED;         /* progress segment, unfilled                 */
   --wash:#EFF1F5;         /* an unfilled track, a secondary button      */
   --hairline:#EDEFF3;      /* the resting outline on an option row       */
-  --glow:rgba(230,67,13,.22);   /* the selected row's halo — the resting
+  --accent-line:#F3A184;   /* the selected row's outline — the accent,
+                              softened; never the accent at full strength  */
+  --glow:rgba(230,67,13,.15);   /* the selected row's halo — the resting
                                    shadow, tinted; no second stroke        */
   --col:480px;             /* the column, at every width                 */
   --pad:24px;              /* its side padding                           */
@@ -203,19 +205,15 @@ img{max-width:100%;display:block}
    (measured: `1px solid #31ABE8` + `0 4px 20px rgba(49,171,232,.3)`). A spread
    ring on top of that is what read as a hard second stroke, so there isn't one
    — the selected row is the same row, in colour. */
+/* So: the resting hairline turns a softened accent and the resting shadow
+   turns accent-tinted, and nothing else changes. Same 1px, same 0 4px 20px
+   geometry, same padding - which is why there is no per-variant padding
+   compensation here any more. A thicker stroke or a hotter colour is what made
+   the chosen row shout at the four white ones beside it. */
 .opt.selected{
-  border-color:var(--accent-tint);
-  /* Half again as thick as the resting hairline, so the chosen row carries
-     weight without becoming a second, harder stroke. The half-pixel comes out
-     of the padding, or a chosen row would stand 1px taller than its
-     neighbours and the list would shift as you move down it. */
-  border-width:1.5px;
-  padding:12.5px 15.5px;
-  box-shadow:0 3px 16px var(--glow);
+  border-color:var(--accent-line);
+  box-shadow:0 4px 20px var(--glow);
 }
-.opt.goal.selected{padding:10.5px 15.5px}
-.opt.tile.selected{padding:17.5px 15.5px}
-.opt.band.selected{padding:12.5px 15.5px}
 .opt.selected .ring{border-color:var(--accent);background:var(--accent)}
 .opt.selected .ring::after{
   content:"";position:absolute;inset:0;margin:auto;
