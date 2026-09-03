@@ -191,7 +191,10 @@
       if(q) prog.setAttribute('aria-valuetext','Question '+q+' of '+TOTAL_Q);
       else prog.removeAttribute('aria-valuetext');
       var per=TOTAL_Q/SEGMENTS, at=Math.floor((pq-1)/per);
-      segs.forEach(function(sp,k){ sp.style.width = k<=at ? '100%' : '0%'; });
+      segs.forEach(function(sp,k){
+        sp.style.width = k<=at ? '100%' : '0%';
+        sp.parentNode.classList.toggle('now', k===at);
+      });
     }
     backBtn.hidden = el.hasAttribute('data-no-back') || history.length===0;
     window.scrollTo({top:0, behavior:'auto'});

@@ -149,8 +149,13 @@ img{max-width:100%;display:block}
    it flush on 2026-09-02. */
 .progress{display:flex;gap:24px;width:100%;min-width:0}
 .seg{flex:1;height:12px;border-radius:6px;background:var(--track);overflow:hidden}
-.seg span{display:block;height:100%;width:0;border-radius:6px;background:var(--accent-tint);
-  transition:width .32s cubic-bezier(.4,0,.2,1)}
+/* The reference reads its bar in two tones: a segment already behind you is
+   the full accent, the one you are inside is the same hue lightened, and the
+   rest are track. So "how far" and "where exactly" are both legible at a
+   glance, which one flat colour cannot do. */
+.seg span{display:block;height:100%;width:0;border-radius:6px;background:var(--accent);
+  transition:width .32s cubic-bezier(.4,0,.2,1),background-color .32s ease}
+.seg.now span{background:var(--accent-tint)}
 .progress[hidden]{display:none}
 
 /* ---------------------------------------------------------------- stage */
@@ -225,11 +230,12 @@ img{max-width:100%;display:block}
      of the padding, or a chosen row would stand 1px taller than its
      neighbours and the list would shift as you move down it. */
   border-width:1.5px;
-  padding:15.5px;
+  padding:12.5px 15.5px;
   box-shadow:0 3px 16px var(--glow);
 }
 .opt.goal.selected{padding:10.5px 15.5px}
 .opt.tile.selected{padding:17.5px 15.5px}
+.opt.band.selected{padding:12.5px 15.5px}
 .opt.selected .ring{border-color:var(--accent);background:var(--accent)}
 .opt.selected .ring::after{
   content:"";position:absolute;inset:0;margin:auto;
@@ -414,12 +420,16 @@ img{max-width:100%;display:block}
    ring — there is nothing to compare them against yet, so the icon does the
    work the radio would. */
 .opt.goal{padding:11px 16px;gap:14px;min-height:58px}
-.opt.goal .bubble{
+.opt.goal .bubble,.opt.band .bubble{
   flex:none;width:36px;height:36px;border-radius:50%;
   background:var(--bub,var(--accent-soft));color:var(--gly,var(--accent));
   display:grid;place-items:center;
 }
-.opt.goal .bubble svg{width:19px;height:19px}
+.opt.goal .bubble svg,.opt.band .bubble svg{width:19px;height:19px}
+/* A band row is a goal row that also carries a caption, so it keeps the gap
+   but not the fixed height. */
+.opt.band{gap:14px}
+.opt.band .lbl{font-size:14px;font-weight:600}
 .bubble.big{width:64px;height:64px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
 .bubble.big svg{width:30px;height:30px}

@@ -92,6 +92,30 @@ TILE_ICONS = {
     (24, 'yes'):   ('#FEE2E2', '#EF4444', _DROP),
 }
 
+# The blood-pressure screens read as a scale, and the reference colours them as
+# one: a droplet per band, running blue (low) through green (normal) to red,
+# with the band's own caption in the same hue. "I don't know" steps out of the
+# scale and takes a grey cross.
+BAND_SCREENS = {25, 26}
+_BLUE, _CYAN = ('#DBEAFE', '#3B82F6'), ('#CFFAFE', '#06B6D4')
+_GREEN, _AMBER = ('#DCFCE7', '#22C55E'), ('#FEF3C7', '#EAB308')
+_ORANGE, _RED = ('#FFEDD5', '#F97316'), ('#FEE2E2', '#EF4444')
+BAND_STYLE = {
+    (25, 'Under 90'):     _BLUE,
+    (25, '91 - 109'):     _CYAN,
+    (25, '110 - 139'):    _GREEN,
+    (25, '140 - 149'):    _AMBER,
+    (25, '91 - 119'):     _ORANGE,   # the reference's value for its "150-159"
+    (25, 'Over 160'):     _RED,
+    (26, 'Under 50'):     _BLUE,
+    (26, '51 - 60'):      _CYAN,
+    (26, '61 - 80'):      _GREEN,
+    (26, '81 - 90'):      _ORANGE,
+    (26, 'Over 90'):      _RED,
+}
+_NOBAND = ('#E9ECF1', '#94A3B8')
+_CROSS = _ic('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>')
+
 # Every other two-up screen is a yes/no, and the reference marks both the same
 # way wherever it asks one: a green tick and a red cross. Keyed by value, so a
 # screen added later gets them without a new entry.
@@ -105,6 +129,8 @@ YESNO_ICONS = {
 # it; the phrase is matched against the escaped title, so write it as it reads.
 HIGHLIGHTS = {
     24: 'diagnosed',
+    25: 'last blood pressure reading?',
+    26: 'last blood pressure reading?',
 }
 
 
@@ -259,6 +285,15 @@ def option(o, exclusive, goal=False, tile=False, screen=None):
         return ('<button class="opt goal%s" data-value="%s"><span class="bubble" '
                 'style="--bub:%s;--gly:%s">%s</span><span class="lbl">%s</span></button>'
                 % (on, attr(o['value']), bub, gly, glyph, label))
+    if screen in BAND_SCREENS:
+        bub, gly = BAND_STYLE.get((screen, o['value']), _NOBAND)
+        glyph = _DROP if (screen, o['value']) in BAND_STYLE else _CROSS
+        note = ('<small style="color:%s">%s</small>' % (gly, esc(brandify(o['note'])))
+                ) if o.get('note') else ''
+        return ('<button class="opt band%s" data-value="%s"><span class="bubble" '
+                'style="--bub:%s;--gly:%s">%s</span>'
+                '<span class="lbl">%s%s</span></button>'
+                % (on, attr(o['value']), bub, gly, glyph, label, note))
     inner = label
     if o.get('note'):
         inner += '<small>%s</small>' % esc(brandify(o['note']))
@@ -340,6 +375,8 @@ def screen_question(p):
     sub = brandify(p['subs'][0]) if p['subs'] else None
     out = ['<div class="col">', head(highlight(p['n'], esc(title)) if title else None,
                                      esc(sub) if sub else None)]
+    if len(p['subs']) > 1:
+        out.append('<p class="legend">%s</p>' % esc(brandify(p['subs'][1])))
     if p['options']:
         out.append(options_block(p))
     # The extractor picks up a hidden catch-all input on every multi-answer
@@ -532,6 +569,9 @@ def dq_reason(p):
     """Per-screen copy: "you selected a nitrate" and "your last physical was
     over three years ago" are not the same message."""
     n = p['n']
+    if n == 25:
+        return ('A current blood pressure reading is required before this treatment '
+                'can be prescribed. Please have it measured and come back.')
     if n == 4:
         return ('This treatment is prescribed for erectile difficulty. Based on your '
                 'answer, this assessment is not the right route for you.')
@@ -564,6 +604,23 @@ QUESTIONS = [p for p in STEPS if p['options'] or p['fields']]
 TOTAL_Q = len(QUESTIONS)
 
 
+# The extractor reads each screen's stopping answers out of the DOM, and the
+# reference keeps some of its rules in script the DOM does not expose. These
+# are the ones observed on the live reference and added back by hand.
+#
+# NOT AUDITED: screens 31, 36 and 37 each carry an "I don't know" answer too,
+# and the same reasoning would apply to them. They are left alone until
+# someone confirms them against the reference - see the README.
+DQ_EXTRA = {
+    25: ["I Don't Know"],
+}
+
+
+def dq_on(p):
+    return list(p['dq_on']) + [v for v in DQ_EXTRA.get(p['n'], [])
+                               if v not in p['dq_on']]
+
+
 def sections():
     out, q = [], 0
     for p in STEPS:
@@ -576,9 +633,10 @@ def sections():
         if p['cond']:
             a += (' data-if="%s" data-if-any="%s"'
                   % (attr(p['cond']['group']), attr('|'.join(p['cond']['any']))))
-        if p['dq_on']:
+        stop = dq_on(p)
+        if stop:
             a += (' data-dq-on="%s" data-dq="%s"'
-                  % (attr('|'.join(p['dq_on'])), attr(dq_reason(p))))
+                  % (attr('|'.join(stop)), attr(dq_reason(p))))
         out.append('<section class="step"%s>%s</section>' % (a, render(p)))
     return out
 
@@ -658,7 +716,8 @@ def static_progress(q):
     question would have reached - otherwise every frame imports empty."""
     per = TOTAL_Q / float(SEGMENTS)
     at = int((q - 1) // per)
-    segs = ['<div class="seg"><span style="width:%d%%"></span></div>' % (100 if k <= at else 0)
+    segs = ['<div class="seg%s"><span style="width:%d%%"></span></div>'
+            % (' now' if k == at else '', 100 if k <= at else 0)
             for k in range(SEGMENTS)]
     return nav('<div class="progress" role="progressbar" aria-valuenow="%d">%s</div>'
                % (q, ''.join(segs)))
@@ -692,7 +751,16 @@ def emit_frames():
     return len(frames)
 
 
+def _check_defaults():
+    for p in STEPS:
+        v = DEFAULTS.get(p['n'])
+        if v and v in dq_on(p):
+            raise SystemExit('screen %d opens on a disqualifying answer: %r'
+                             % (p['n'], v))
+
+
 if __name__ == '__main__':
+    _check_defaults()
     emit_interactive()
     n = emit_frames()
     print('index.html + interactive.html   %d screens, %d counted questions'
