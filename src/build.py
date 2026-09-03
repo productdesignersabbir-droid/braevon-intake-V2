@@ -51,24 +51,52 @@ TILE_SCREENS = {3, 7, 24, 39, 40, 41, 42}
 
 SEGMENTS = 5
 
-# The reference does not divide its bar evenly by question count - it divides it
-# by section. Measured on the live page: screens 1-23 sit in segment 1, and
-# screen 24 (where the flow turns from ED history to medical history) starts
-# segment 2. Dividing 40 questions into five equal blocks instead put screen 24
-# in segment 3, which is why our bar ran a segment ahead of theirs.
+# The reference numbers its own steps - every screen name ends in one ("A2 - 03",
+# "Blood Pressure 2 - 07.a", "Birth Date - 20"), running 1 to 21. Its bar is
+# divided over those steps, not over our question count, which is why an even
+# five-way split of 40 questions ran a segment ahead of it.
 #
-# The first two boundaries are confirmed. The last three are read off the flow's
-# own structure and are NOT verified against the reference - see the README.
-SEGMENT_STARTS = [1, 24, 32, 39, 44]
+# Boundaries below are the step each segment starts at. Confirmed against the
+# live page: step 5 and step 6 sit in segment 1, step 7 through 11 in segment 2,
+# step 12 in segment 3. The last two (16, 19) are the remaining steps split
+# evenly and are NOT confirmed - see the README.
+SEGMENT_STARTS = [1, 7, 12, 16, 19]
+
+_STEP_RE = re.compile(r'-\s*(\d+)')
 
 
-def segment_of(screen):
-    """Which of the five segments a screen belongs to, zero-based."""
+def step_of(p):
+    """The reference's own step number for a screen, from its name.
+
+    The LAST number in the name is the step: "FACT-2 - 12" is step 12, not 2.
+    An interstitial is not a step even when its name carries one - the
+    reference holds the bar at the step before it, which is why its "137%"
+    screen and the question after it both say "12" but sit in different
+    segments. The stop and the submission have no step at all."""
+    if p['n'] in INTERSTITIALS:
+        return None
+    found = _STEP_RE.findall(p.get('name') or '')
+    return int(found[-1]) if found else None
+
+
+def segment_of(step):
+    """Which of the five segments a step falls in, zero-based."""
     at = 0
     for i, start in enumerate(SEGMENT_STARTS):
-        if screen >= start:
+        if step >= start:
             at = i
     return at
+
+
+# Every screen's step, with the interstitials holding the step before them -
+# which is what the reference's own bar does as you pass through one.
+STEP_AT = {}
+_last = 1
+for _p in FLOW:
+    _s = step_of(_p)
+    if _s:
+        _last = _s
+    STEP_AT[_p['n']] = _last
 
 
 def _ic(paths):
@@ -84,6 +112,9 @@ ICON = {
                 '<path d="M12 9v4M12 17h.01"/>'),
     'shield': _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
     'info': _ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+    'star': ('<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6'
+             '-5 4.4 1.5 6.5L10 15.2 4.2 18.6l1.5-6.5-5-4.4 6.6-.6z"/></svg>'),
+    'person': _ic('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
 }
 
 # Screen 1's goal icons, keyed by the reference's own option labels. The bubble
@@ -174,12 +205,20 @@ FOOTNOTES = {
 
 
 HIGHLIGHTS = {
+    5:  'BRAEVON&rsquo;s 4-in-1',          # set in the screen's own markup
     16: 'For your safety', 17: 'For your safety', 18: 'For your safety',
     19: 'For your safety', 20: 'For your safety', 21: 'For your safety',
-    27: 'For your safety',
+    23: 'So far so good!',
     24: 'diagnosed',
     25: 'last blood pressure reading?',
     26: 'last blood pressure reading?',
+    27: 'For your safety',
+    28: 'Thank you',
+    34: 'early sign',
+    35: 'even if only occasionally.',
+    39: 'ED medications',
+    40: 'any other allergies?',
+    41: 'medications',
 }
 
 
@@ -193,6 +232,12 @@ def highlight(n, title):
 
 # Braevon's four, in the order braevon.com lists them. The dose column is not
 # rendered anywhere and the figures in it were never verified - see the README.
+_BRAIN = _ic('<path d="M12 6a3.2 3.2 0 0 0-6-1.1A2.7 2.7 0 0 0 4.2 9.4 2.8 2.8 0 0 0 6 14.4'
+             'a3 3 0 0 0 3 2.6"/><path d="M12 6a3.2 3.2 0 0 1 6-1.1 2.7 2.7 0 0 1 1.8 4.5'
+             'A2.8 2.8 0 0 1 18 14.4a3 3 0 0 1-3 2.6"/><path d="M12 6v15"/>')
+_HEART = _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5'
+             'c0 5-7 9.5-7 9.5z"/>')
+
 MOLECULES = [
     ('Sildenafil', 'For getting hard fast', '&mdash;'),
     ('Tadalafil', 'For staying ready up to 36 hours', '&mdash;'),
@@ -223,16 +268,30 @@ MECHANISM = [
 
 # Placeholder copy written for this concept, not real reviews - see the module
 # docstring. Structure and slot are the reference's.
+_PINK = ('#FCE7F3', '#EC4899')
+_PURPLE = ('#F3EBFF', '#A855F7')
+_HEART_RED = ('#FEE2E2', '#EF4444')
+_GREEN2 = ('#DFF7E6', '#22C55E')
+
 QUOTES = {
     32: ('&ldquo;It probably saved my marriage.&rdquo;',
-         [('Personal goal', 'Boost sex drive and desire'),
-          ('Benefits', 'Mood, and effects that last')],
-         'David B. &mdash; Kansas City, MO'),
+         [('Personal Goal',
+           [_PINK + (_ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>'),)],
+           'Boost Sex Drive and Desire'),
+          ('Benefits',
+           [_PURPLE + (_BRAIN,), _HEART_RED + (_HEART,)],
+           'Mental Mood and<br/>Lasting Effects')],
+         'David B. &mdash; Kansas City, MO', 'hero-benefits.jpg'),
     44: ('&ldquo;The results were almost immediate &mdash; more energy, more desire, '
          'and a stronger performance every time.&rdquo;',
-         [('Personal goal', 'Improve stamina and endurance'),
-          ('Benefits', 'Quick effect, lasting performance')],
-         'Bryan G. &mdash; New York, NY'),
+         [('Personal Goal',
+           [_GREEN2 + (_ic('<circle cx="12" cy="13" r="8"/>'
+                           '<path d="M12 9v4l2.5 2.5M9 2h6"/>'),)],
+           'Improve Stamina and Endurance'),
+          ('Benefits',
+           [_GREEN2 + (_ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),), _HEART_RED + (_HEART,)],
+           'Quick Effect and<br/>Lasting Performance')],
+         'Bryan G. &mdash; New York, NY', 'braevon-hero.jpg'),
 }
 
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -566,19 +625,34 @@ def screen_interstitial(p):
                   '</div></div>'
                 + cta(blocked=False) + '</div>')
     if n == 33:
-        return ('<div class="col">'
-                + head('Her experience improves too.', eyebrow='Do it for her')
-                + '<div class="factcard" style="margin-top:20px">'
-                  '<div class="k">137%</div><div class="u">improvement</div>'
-                  '<p>Reported improvement in sex, for partners.*</p></div>'
-                + '<p class="foot">*Figure carried from the reference flow. Replace with '
-                  'a Braevon source before this is shown to patients.</p>'
+        # The reference sets this exactly as its other fact screen - centred on
+        # white, the product name, a gradient pill, the figure, the read-out.
+        # It is not a dark card; there is only one dark surface in the flow and
+        # it is the stop.
+        return ('<div class="col fact">'
+                '<p class="fact-name">BRAEVON 4-in-1</p>'
+                '<p class="fact-pill">Do It For Her</p>'
+                '<p class="fact-k accent">137%</p>'
+                '<p class="fact-u">improvement in sex<br/>for partner</p>'
                 + cta(blocked=False) + '</div>')
-    quote, meta, who = QUOTES[n]
-    chips = ''.join('<div class="qmeta"><b>%s</b><span>%s</span></div>' % kv for kv in meta)
-    return ('<div class="col"><div class="quote"><blockquote>%s</blockquote>'
-            '<div class="meta">%s</div><div class="who">%s</div></div>'
-            % (quote, chips, who) + cta(blocked=False) + '</div>')
+    # The reference's testimonial: a photo carrying five stars and the quote in
+    # white, two cards under it, then the person on a row of their own - all
+    # inside one tinted panel.
+    quote, meta, who, photo = QUOTES[n]
+    stars = ''.join('<i>%s</i>' % ICON['star'] for _ in range(5))
+    cards = ''.join(
+        '<div class="qcard"><b>%s</b><div class="qbubs">%s</div><p>%s</p></div>'
+        % (title, ''.join('<span class="bubble" style="--bub:%s;--gly:%s">%s</span>'
+                          % art for art in arts), body)
+        for title, arts, body in meta)
+    return ('<div class="col"><div class="quotepanel">'
+            '<figure class="qshot"><img src="assets/images/%s" alt=""/>'
+            '<figcaption><span class="qstars">%s</span>'
+            '<blockquote>%s</blockquote></figcaption></figure>'
+            '<div class="qcards">%s</div>'
+            '<div class="qwho"><span class="qavatar">%s</span>%s</div>'
+            '</div>' % (photo, stars, quote, cards, ICON['person'], who)
+            + cta(blocked=False) + '</div>')
 
 
 def render(p):
@@ -738,7 +812,9 @@ def emit_interactive():
             + '<script>%s</script>' % SCRIPT.replace('__TOTAL_Q__', str(TOTAL_Q))
                                             .replace('__SEGMENTS__', str(SEGMENTS))
                                             .replace('__SEGMENT_STARTS__',
-                                                     json.dumps(SEGMENT_STARTS)))
+                                                     json.dumps(SEGMENT_STARTS))
+                                            .replace('__STEP_AT__',
+                                                     json.dumps(STEP_AT)))
     html = page('Braevon &mdash; Intake Assessment v2', body)
     for name in ('index.html', 'interactive.html'):
         open(os.path.join(OUT, name), 'w', encoding='utf-8').write(html)
@@ -747,7 +823,7 @@ def emit_interactive():
 def static_progress(q, screen):
     """A frame carries no script, so its bar is drawn where that screen would
     have reached - otherwise every frame prints empty."""
-    at = segment_of(screen)
+    at = segment_of(STEP_AT.get(screen, 1))
     segs = ['<div class="seg%s"><span style="width:%d%%"></span></div>'
             % (' now' if k == at else '', 100 if k <= at else 0)
             for k in range(SEGMENTS)]

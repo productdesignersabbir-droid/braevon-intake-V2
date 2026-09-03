@@ -480,14 +480,6 @@ img{max-width:100%;display:block}
 .factcard .u{margin-top:6px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#98A0B4}
 .factcard p{margin:10px 0 0;font-size:12px;color:#D7DBE4;line-height:1.5}
 
-.quote{background:var(--surface);border-radius:var(--radius-card);
-  box-shadow:var(--shadow);padding:22px}
-.quote blockquote{margin:10px 0 0;font-size:16px;line-height:1.35;font-weight:600;color:var(--title-ink)}
-.quote .meta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-.qmeta{flex:1 1 calc(50% - 5px);background:var(--neutral-tint);border-radius:6px;padding:10px}
-.qmeta b{display:block;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
-.qmeta span{font-size:11px;font-weight:600;color:var(--ink)}
-.quote .who{margin-top:14px;font-size:11px;font-weight:700;color:var(--muted)}
 
 /* The onset comparison on the "4-in-1 advantage" screen. A row per molecule,
    its window drawn as a bar, with Braevon's own row picked out. */
@@ -597,6 +589,39 @@ img{max-width:100%;display:block}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .fp-rule{height:1px;background:var(--hairline);margin:14px 0 0}
 .fp-note{margin:12px 0 0;font-size:11px;line-height:1.5;color:var(--muted)}
+
+/* ------------------------------------------------------- testimonials */
+/* The reference's testimonial: one tinted panel holding a photo with the stars
+   and the quote over it, two cards, and the person on a row of their own. */
+.quotepanel{background:var(--neutral-tint);border-radius:12px;padding:10px;
+  margin-top:var(--gap-block)}
+.qshot{position:relative;margin:0;border-radius:var(--radius-card);overflow:hidden;
+  background:linear-gradient(150deg,#3B2F2A,#1B1512)}
+.qshot img{display:block;width:100%;height:196px;object-fit:cover}
+.qshot figcaption{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;padding:20px;
+  background:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,.52))}
+.qstars{display:flex;gap:5px;color:#FFC531}
+.qstars svg{width:17px;height:17px;display:block}
+.qshot blockquote{margin:0;text-align:center;color:#fff;font-size:19px;
+  font-weight:700;line-height:1.3;text-wrap:balance}
+
+.qcards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.qcard{background:var(--surface);border-radius:var(--radius-card);
+  box-shadow:var(--shadow);padding:14px 12px;text-align:center}
+.qcard b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.qbubs{display:flex;justify-content:center;gap:8px;margin:12px 0}
+.qcard .bubble{width:36px;height:36px;border-radius:50%;flex:none;display:grid;
+  place-items:center;background:var(--bub);color:var(--gly)}
+.qcard .bubble svg{width:19px;height:19px}
+.qcard p{margin:0;font-size:12px;line-height:1.4;color:var(--ink)}
+
+.qwho{display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:10px;background:var(--surface);border-radius:var(--radius-card);
+  box-shadow:var(--shadow);padding:12px;font-size:12px;color:var(--ink)}
+.qavatar{width:28px;height:28px;border-radius:50%;flex:none;display:grid;
+  place-items:center;background:#DBEAFE;color:#3B82F6}
+.qavatar svg{width:16px;height:16px}
 
 /* ---------------------------------------------------- disqualification */
 /* The eligibility stop, laid out as the reference lays it out: on white, under

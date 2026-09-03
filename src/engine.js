@@ -12,10 +12,10 @@
   }
   var TOTAL_Q=__TOTAL_Q__, SEGMENTS=__SEGMENTS__;
   /* The bar is divided by section, not by question count - see build.py. */
-  var SEGMENT_STARTS=__SEGMENT_STARTS__;
+  var SEGMENT_STARTS=__SEGMENT_STARTS__, STEP_AT=__STEP_AT__;
   function segmentOf(screen){
-    var at=0;
-    SEGMENT_STARTS.forEach(function(start,i){ if(screen>=start) at=i; });
+    var step=STEP_AT[screen]||1, at=0;
+    SEGMENT_STARTS.forEach(function(start,i){ if(step>=start) at=i; });
     return at;
   }
   var answers={};      /* group -> array of selected values */

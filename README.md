@@ -305,6 +305,15 @@ privacy on and a commit with the real address is rejected at push time.
     calls it "BRAEVON 4-in-1" throughout, from the reference's "QUAD 4-in-1".
   - the dose column in `MOLECULES` is not rendered and its figures were never
     verified; it is em-dashes now rather than invented numbers.
+- **The 137% figure is the reference's, not Braevon's.** Screen 33 presents it
+  as Braevon's own result. It needs a Braevon source or it should come out
+  before this is shown to a patient. The on-screen asterisk that used to flag
+  this was removed to match the reference's layout, so this note is now the
+  only record of it.
+- **The testimonial photos are placeholders.** Screens 32 and 44 point at
+  `hero-benefits.jpg` and `braevon-hero.jpg` from the existing asset folder;
+  the reference uses shot-for-purpose photography. The quotes themselves are
+  written for this concept, as they were in v1.
 - **Nothing is pre-selected.** A previous build opened every single-answer
   screen on a default. Checked against the live reference on 2026-09-03: its
   radios are all unchecked and its Next stays disabled until you choose, so the
@@ -319,10 +328,14 @@ privacy on and a commit with the real address is rejected at push time.
   side-effect screens and on 27, 29 and 38, where every other answer is
   disqualifying. `src/groups.json` carries this per screen, along with the
   section captions. Read off the live reference on 2026-09-03.
-- **The progress bar is divided by section, not by question count.** Screens
-  1-23 are segment 1; screen 24 starts segment 2. An even five-way split of the
-  40 questions put screen 24 in segment 3, a whole segment ahead of the
-  reference. `SEGMENT_STARTS` in `src/build.py` holds the boundaries: the first
-  two are confirmed against the live page, **the last three (32, 39, 44) are
-  read off our own flow's shape and are not verified.** Walking the reference
-  past its safety screens would settle them.
+- **The progress bar follows the reference's own step numbers.** Every screen
+  name in the extraction ends in one - "A2 - 03", "Blood Pressure 2 - 07.a",
+  "Birth Date - 20" - running 1 to 21, and the bar is divided over those, not
+  over our 40 questions. Two traps: the step is the LAST number in the name
+  ("FACT-2 - 12" is step 12, not 2), and an interstitial is not a step even
+  when its name carries one, which is why the reference's "137%" screen and the
+  question after it both say "12" but sit in different segments.
+  `SEGMENT_STARTS` = [1, 7, 12, 16, 19]. Every boundary up to 12 is confirmed
+  against the live page (steps 3, 5, 6 in segment 1; 7, 8, 11 in segment 2; 12
+  in segment 3); **16 and 19 are the remaining steps split evenly and are not
+  verified.**
