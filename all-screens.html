@@ -19,6 +19,15 @@
   --accent:#E6430D;        /* CTA, progress fill, selection, key emphasis */
   --accent-soft:#FDECE6;   /* selected-option fill                       */
   --accent-tint:#FF8B5E;   /* the accent on a dark surface               */
+  /* The accent as a GROUND under small white type. #E6430D is 4.06:1 against
+     white, which clears AA for large text and misses it for the 10-16px labels
+     the checkout's bar, pills, strip and tags carry. This is the same hue two
+     steps down at 6.1:1, so those chips pass without the page gaining a second
+     orange - nothing else may use it, and nothing that carries large type
+     should. */
+  --accent-deep:#B8300A;
+  --accent-deeper:#8E2405;  /* the far end of the same gradients            */
+  --green-ink:#15803D;      /* green as SMALL type: #16A34A is 3.36:1       */
   --ink:#171D2C;
   --title-ink:#2B313C;
   --muted:#4B5568;
@@ -761,6 +770,359 @@ img{max-width:100%;display:block}
 .dq-back{border:none;background:var(--accent);color:#fff}
 .dq-ghost{border:none;background:var(--wash);color:var(--muted)}
 
+/* ---------------------------------------------- approval / checkout (48) */
+/* The reference's approval page, measured off the live DOM on 2026-09-04 and
+   restated in Braevon's font, palette and button - see `checkout.py` for what
+   was copied and what could not be.
+
+   The page is one 480px column like every other screen, so nothing here changes
+   the shell. What it does do is carry its own chrome: the reference drops the
+   Trustpilot rating and the progress bar on this page and shows a centred
+   wordmark over a countdown bar instead, which is why the screen is `data-bare`
+   and prints a masthead of its own. Three blocks bleed to the column edge
+   (`ck-mast`, `ck-clock`, `ft`) with the negative-margin trick `.rv-head`
+   already uses; the stage's own padding is what they are cancelling. */
+.ck{gap:0}
+/* Blocks are 32px apart, as the reference's Content Stack is. Written as a
+   margin rather than a flex `gap` so the three chrome blocks can opt out. */
+.ck > * + *{margin-top:var(--gap-block)}
+
+.ck-mast{margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0;
+  display:flex;justify-content:center;padding:16px var(--pad) 14px}
+.ck-mast .logo svg{height:22px}
+.ck-clock{margin:0 calc(var(--pad) * -1);
+  background:linear-gradient(90deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
+  color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:15px 16px;font-size:14px;font-weight:600;text-align:center}
+/* Underlined, which is v1's settled treatment for the same clock - it is the
+   one part of the sentence that changes, and weight alone did not carry it. */
+.ck-clock b{font-weight:800;color:#fff;text-decoration:underline;
+  text-underline-offset:3px;font-variant-numeric:tabular-nums}
+
+.ck-h1{margin:0;font-size:26px;line-height:1.2;font-weight:600;
+  letter-spacing:-.01em;color:var(--title-ink)}
+.ck-h2{margin:0;font-size:26px;line-height:1.2;font-weight:600;
+  letter-spacing:-.01em;color:var(--title-ink)}
+.ck-h2 em{font-style:normal;color:var(--accent)}
+.ck-h2.accent{color:var(--accent)}
+.ck-lead{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ck-sect > * + *{margin-top:var(--gap-title)}
+.ck-lead + *{margin-top:var(--gap-title)}
+
+/* -- 1 goals ------------------------------------------------------------ */
+/* The reference centres this card at 345px rather than running it full width,
+   so it reads as a receipt of what was answered rather than as a section. */
+.ck-goals{align-self:center;max-width:345px;width:100%;
+  background:var(--surface);border-radius:var(--radius-media);
+  box-shadow:var(--shadow);padding:24px;
+  display:flex;align-items:center;gap:16px}
+.ck-goals-mark{flex:none;width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
+  display:grid;place-items:center;color:#fff}
+.ck-goals-mark svg{width:28px;height:28px}
+.ck-goals b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
+.ck-goals ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:2px}
+.ck-goals li{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink)}
+.ck-goals li svg{flex:none;width:12px;height:12px;stroke:var(--accent);stroke-width:3}
+
+/* -- 2 intro + the onset chart ------------------------------------------ */
+.ck-intro p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ck-intro p + p{margin-top:16px}
+.ck-intro b{font-weight:700}
+/* The reference gives the chart a 20px-padded box of its own under the copy.
+
+   The chart holds a **floor width and scrolls sideways below it**, which is the
+   fallback the artwork's own source suggests. Its chip lettering is outlined
+   paths scaled off a 1168-unit viewBox, so it shrinks with the box: at the 432
+   this column gives it the labels read, at the 284 a 320px phone gives it they
+   are about 6px. 2x is the artwork's stated ceiling - past that the chips
+   collide - so the width is what has to give, not the type. There is no scroll
+   at all at 480px and up, which is every case but a phone. */
+.ck-chart{margin-top:16px;padding:20px 0;overflow-x:auto;
+  -webkit-overflow-scrolling:touch}
+.ck-chart svg{display:block;width:100%;min-width:420px;height:auto}
+
+/* -- 3 the programme card ----------------------------------------------- */
+.ck-prog{background:var(--surface);border-radius:var(--radius-media);
+  box-shadow:var(--shadow);padding:24px}
+.ck-prog-head{display:flex;align-items:center;gap:16px}
+.ck-prog-mark{flex:none;width:48px;height:48px;border-radius:50%;
+  background:var(--accent-soft);display:grid;place-items:center;color:var(--accent)}
+.ck-prog-mark svg{width:22px;height:22px}
+.ck-prog-head h2{margin:0;font-size:26px;line-height:1.2;font-weight:600;
+  color:var(--accent)}
+/* Copy left, render right - the reference's own split, and it does not stack:
+   the render is 109px wide and the column has 384px to give. */
+.ck-prog-body{display:flex;align-items:center;gap:10px;margin-top:24px}
+.ck-prog-body p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ck-prog-body b{font-weight:700}
+.ck-prog-sub{margin-top:16px !important;font-size:14px !important;color:var(--ink) !important}
+.ck-prog-body img{flex:none;width:112px;height:auto;align-self:center}
+.ck-prob{display:flex;align-items:center;gap:16px;margin-top:32px;
+  background:linear-gradient(180deg,#FFF3EE 0%,#FFEBE2 100%);
+  border-radius:var(--radius-card);padding:24px}
+.ck-prob p{margin:0;flex:1;font-size:14px;line-height:1.2;color:#9A2C06}
+.ck-prob b{font-weight:700}
+.ck-prob-fig{flex:none;text-align:center}
+.ck-prob-fig b{display:block;font-size:26px;line-height:1.2;font-weight:800;
+  color:var(--accent)}
+.ck-prob-fig span{display:block;font-size:12px;color:var(--ink)}
+
+/* -- 4 the benefit rows -------------------------------------------------- */
+.ck-benefits{display:flex;flex-direction:column;gap:var(--gap-opt)}
+.ck-benefit{display:flex;align-items:center;gap:16px;
+  background:var(--surface);border-radius:var(--radius-media);
+  box-shadow:var(--shadow);padding:12px 24px;min-height:64px}
+.ck-benefit .bubble{flex:none;width:36px;height:36px;border-radius:50%;
+  display:grid;place-items:center;background:var(--bub);color:var(--gly)}
+.ck-benefit .bubble svg{width:18px;height:18px;stroke-width:2.4}
+.ck-benefit b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.ck-benefit span{display:block;font-size:14px;color:var(--ink)}
+
+/* -- 5 what's included --------------------------------------------------- */
+.ck-incl{background:#FFF8F5;border-radius:var(--radius-media);padding:24px 24px 40px}
+.ck-incl-card{display:flex;align-items:flex-start;gap:24px;margin-top:32px;
+  background:var(--surface);border-radius:var(--radius-card);
+  box-shadow:0 4px 16px rgba(0,0,0,.08);padding:24px}
+.ck-incl-card img{flex:none;width:66px;height:auto}
+/* Flex items floor at their own min-content width, so without this the stack
+   list holds the card open and the whole thing runs past the column at 320px. */
+.ck-incl-card > div,.ck-prog-body > div,.ck-prod-head > div,
+.ck-benefit > div,.ck-goals > div{min-width:0}
+.ck-incl-title{display:flex;align-items:center;gap:12px}
+.ck-incl-title b{font-size:20px;line-height:1.3;font-weight:700;color:var(--ink)}
+.ck-tag{display:inline-block;background:var(--accent-deep);color:#fff;border-radius:4px;
+  padding:4px 8px;font-size:10px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;line-height:1}
+.ck-stack{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:4px}
+.ck-stack li{font-size:14px;line-height:1.35;color:var(--ink)}
+.ck-stack b{font-weight:700}
+.ck-incl-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:16px}
+.ck-incl-list li{display:flex;align-items:flex-start;gap:10px;
+  font-size:12px;font-weight:500;line-height:1.3;color:var(--ink)}
+.ck-incl-list svg{flex:none;width:16px;height:16px;stroke:#16A34A;stroke-width:2.6}
+
+/* -- 6 what happens next ------------------------------------------------- */
+/* The connector is a border on the item, not a pseudo-element: the reference
+   runs a 5px rule down the left of every step but the last, and a border stops
+   at the item's own box for free. */
+.ck-steps{margin:0;padding:24px;list-style:none;
+  background:var(--surface);border-radius:var(--radius-media);box-shadow:var(--shadow)}
+.ck-steps li{position:relative;padding:0 0 32px 24px;border-left:5px solid var(--accent-soft)}
+.ck-steps li:last-child{border-left-color:transparent;padding-bottom:0}
+.ck-steps li::before{content:"";position:absolute;left:-10px;top:2px;
+  width:15px;height:15px;border-radius:50%;background:var(--accent)}
+.ck-step-n{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;
+  color:var(--accent)}
+.ck-steps b{display:block;margin-top:8px;font-size:16px;font-weight:600;color:var(--ink)}
+.ck-steps p{margin:6px 0 0;font-size:14px;line-height:1.35;color:var(--muted)}
+
+/* -- 7 the countdown pill ------------------------------------------------ */
+.ck-pill{align-self:center;display:flex;align-items:center;gap:8px;
+  border-radius:4px;padding:9px 16px;color:#fff;
+  background:linear-gradient(90deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
+  font-size:16px;font-weight:500}
+.ck-pill b{font-weight:800;font-variant-numeric:tabular-nums}
+
+/* -- 8 the packs and the product card ------------------------------------ */
+.ck-packs{display:flex;gap:16px}
+/* Two cards, side by side, at every width - the reference never stacks them and
+   208px each fits the 432px column with its 16px between. */
+.ck-pack{flex:1;min-width:0;position:relative;background:var(--surface);
+  border:1px solid var(--hairline);border-radius:var(--radius-card);
+  box-shadow:var(--shadow);padding:24px 12px 20px;cursor:pointer;
+  font-family:inherit;text-align:center;transition:box-shadow .14s ease,border-color .14s ease}
+.ck-pack.selected{border-color:var(--accent-line);box-shadow:0 4px 20px var(--glow)}
+.ck-pack .ring{position:absolute;top:10px;left:10px;width:16px;height:16px;
+  border-radius:50%;border:1.5px solid var(--border);background:#fff}
+.ck-pack.selected .ring{border-color:var(--accent);
+  box-shadow:inset 0 0 0 3.5px #fff,inset 0 0 0 9px var(--accent)}
+.ck-pack em{display:inline-block;font-style:normal;border-radius:4px;
+  padding:4px 8px;font-size:10px;font-weight:700;color:#fff;letter-spacing:.03em;
+  line-height:1}
+.ck-pack b{display:block;margin-top:12px;font-size:20px;font-weight:700;
+  color:var(--accent);line-height:1.3}
+.ck-pack small{display:block;font-size:14px;color:var(--ink)}
+
+.ck-prod{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
+  box-shadow:var(--shadow);padding:24px}
+.ck-prod-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.ck-prod-head b{display:block;margin-top:6px;font-size:20px;font-weight:600;
+  color:var(--ink);line-height:1.3}
+.ck-prod-head small{display:block;font-size:17px;font-weight:500;color:var(--title-ink)}
+.ck-prod-rate{flex:none;text-align:right}
+.ck-prod-rate .stars{justify-content:flex-end}
+.ck-prod-rate span{display:block;margin-top:4px;font-size:12px;color:var(--ink)}
+/* The render sits on the reference's own wash panel; ours is warmed to the
+   brand rather than kept blue. */
+.ck-prod-shot{margin-top:24px;border-radius:var(--radius-card);
+  background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
+  display:grid;place-items:center;padding:20px}
+.ck-prod-shot img{width:150px;height:auto}
+.ck-prod-price{margin:24px 0 0;text-align:center;font-size:18px;font-weight:500;
+  color:var(--title-ink)}
+.ck-prod-price b{font-weight:700;color:var(--green-ink)}
+.ck-prod-list{margin:20px 0 0;padding:0;list-style:none;display:grid;gap:16px}
+.ck-prod-list li{display:flex;align-items:flex-start;gap:10px;
+  font-size:12px;font-weight:500;line-height:1.3;color:var(--ink)}
+.ck-prod-list svg{flex:none;width:16px;height:16px;stroke:#16A34A;stroke-width:2.6}
+.ck-prod-list b{font-weight:700}
+
+/* -- 9 HSA and HIPAA ----------------------------------------------------- */
+.ck-hsa{display:flex;justify-content:center}
+.ck-hsa span{border:1px solid var(--border);border-radius:999px;padding:8px 16px;
+  font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--green-ink)}
+.ck-hipaa{margin-top:16px !important;background:var(--surface);
+  border-radius:var(--radius-media);box-shadow:var(--shadow);
+  padding:24px 24px 32px;text-align:center}
+.ck-hipaa p{margin:0;display:flex;align-items:center;justify-content:center;gap:5px;
+  font-size:12px;color:var(--ink)}
+.ck-hipaa svg{width:16px;height:16px;stroke:#16A34A}
+.ck-hipaa span{display:block;margin-top:3px;font-size:12px;color:var(--ink)}
+
+/* -- 10 / 14 the guarantee ---------------------------------------------- */
+.ck-guar{display:flex;align-items:flex-start;gap:16px}
+.ck-guar-mark{flex:none;width:33px;height:33px;color:var(--accent)}
+.ck-guar-mark svg{width:33px;height:33px}
+.ck-guar b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.ck-guar p{margin:2px 0 0;font-size:14px;line-height:1.35;color:var(--ink)}
+
+/* -- 11 as featured on --------------------------------------------------- */
+/* Type-set marks, not the publications' artwork - see PRESS in checkout.py. */
+.ck-press{text-align:center}
+.ck-press > p{margin:0 0 14px;font-size:12px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted)}
+.ck-press-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:14px 22px}
+.ck-pm{font-size:15px;color:#6B6B6B;line-height:1;white-space:nowrap}
+.ck-pm i,.ck-pm b,.ck-pm u{font-style:normal;text-decoration:none}
+.pm-ok i{font-weight:800;font-style:italic;font-size:17px}
+.pm-ok u{font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-left:3px}
+.pm-bal i{font-style:italic;font-size:11px;margin-right:2px}
+.pm-bal b{font-weight:700}
+.pm-bal u{font-size:11px;margin-left:2px}
+.pm-mh{font-weight:700;letter-spacing:-.01em}
+.pm-law i{font-style:italic;background:#6B6B6B;color:#fff;padding:1px 3px;margin-right:3px}
+.pm-law b{font-weight:800;letter-spacing:.02em}
+.pm-lt{font-style:italic;font-weight:600;letter-spacing:.02em}
+.pm-hu i{font-style:italic;margin-right:3px}
+.pm-hu b{font-weight:700;font-size:11px;letter-spacing:.06em}
+
+/* -- 12 the quotes ------------------------------------------------------- */
+.ck-quotes{display:flex;flex-direction:column;gap:24px}
+.ck-quote{background:linear-gradient(135deg,#FFF7F4 0%,#FFF4F0 100%);
+  border-radius:var(--radius-media);padding:24px}
+.ck-quote-top{display:flex;align-items:flex-start;gap:16px}
+.ck-quote-top h3{margin:0;flex:1;font-size:17px;font-weight:500;line-height:1.35;
+  color:var(--title-ink)}
+.ck-quote-top .stars{flex:none}
+.ck-quote > p{margin:16px 0 0;font-size:14px;line-height:1.35;color:var(--ink)}
+.ck-who{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-top:16px}
+.ck-who b{font-size:16px;font-weight:500;color:var(--ink)}
+.ck-who span{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ink)}
+.ck-who svg{width:15px;height:15px;stroke:#16A34A;stroke-width:2.6}
+
+/* -- 13 are you ready ---------------------------------------------------- */
+.ck-ready > * + *{margin-top:16px}
+.ck-ready-tag{display:inline-block;border-radius:33px;padding:16px 24px;
+  background:linear-gradient(90deg,#FFD9C7 0%,rgba(255,217,199,0) 100%);
+  font-size:16px;font-weight:500;color:var(--ink)}
+.ck-ready-clock{display:inline-flex;align-items:center;gap:5px;
+  background:var(--surface);padding:6px 8px;font-size:12px;color:var(--muted)}
+.ck-ready-clock b{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.ck-ready-strip{display:flex;align-items:center;border-radius:4px;padding:10px 16px;
+  background:linear-gradient(90deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
+  color:#fff;font-size:12px}
+.ck-ready-strip b{font-weight:900}
+/* The reference runs a 4px rule down the left of the clock / strip / line
+   group with an arrow head at its foot, pointing at the card below. It is one
+   border on the group rather than three, and the head is a rotated caret. */
+.ck-ready-rail{position:relative;padding-left:32px;
+  border-left:4px solid var(--accent-soft);margin-top:24px !important}
+.ck-ready-rail > * + *{margin-top:16px}
+.ck-ready-rail::after{content:"";position:absolute;left:-9px;bottom:-6px;
+  width:14px;height:14px;border-right:4px solid var(--accent-soft);
+  border-bottom:4px solid var(--accent-soft);transform:rotate(45deg);
+  border-bottom-right-radius:3px}
+.ck-ready-line{margin:0;font-size:20px;font-weight:600;
+  line-height:1.3;color:var(--ink)}
+.ck-ready-card{background:var(--surface);border-radius:var(--radius-media);
+  box-shadow:var(--shadow);padding:24px;margin-top:32px !important}
+.ck-ready-card h3{margin:0;font-size:20px;font-weight:600;color:var(--ink)}
+.ck-ready-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:24px}
+.ck-ready-list li{display:flex;align-items:flex-start;gap:16px}
+.ck-ready-list svg{flex:none;width:20px;height:20px;stroke:var(--accent);stroke-width:2.4}
+.ck-ready-list b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.ck-ready-list span{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
+.ck-ready-packs{display:flex;gap:24px;margin-top:32px;
+  background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
+  border-radius:var(--radius-card);padding:24px}
+.ck-ready-pack{flex:1;min-width:0}
+.ck-ready-pack b{display:block;margin-top:8px;font-size:20px;font-weight:600;
+  line-height:1.3;color:var(--ink)}
+.ck-ready-pack em{display:block;margin-top:8px;font-style:normal;font-size:20px;
+  font-weight:700;color:#16A34A}
+.ck-ready-note{margin:24px auto 0;max-width:270px;text-align:center;
+  font-size:12px;line-height:1.3;color:var(--muted)}
+.ck-ready-note b{font-weight:700}
+.ck-ready-card .cta{margin-top:24px}
+
+/* -- 15 the FAQ ---------------------------------------------------------- */
+.ck-faq{background:linear-gradient(180deg,#FFF3EE 0%,#FFF9F7 100%);
+  border-radius:12px;padding:32px}
+.ck-faq h2{margin:0 0 24px;text-align:center;font-size:20px;font-weight:600;
+  color:var(--accent)}
+.ck-faq-item{border-top:1px solid #FFE0D3}
+.ck-faq-item:first-of-type{border-top:none}
+.ck-faq-item summary{display:flex;align-items:flex-start;gap:10px;
+  list-style:none;cursor:pointer;padding:14px 0;
+  font-size:14px;line-height:1.35;color:var(--title-ink)}
+.ck-faq-item summary::-webkit-details-marker{display:none}
+.ck-faq-item summary svg{order:2;flex:none;width:16px;height:16px;margin-left:auto;
+  stroke:var(--accent);transition:transform .16s ease}
+.ck-faq-item[open] summary svg{transform:rotate(180deg)}
+.ck-faq-item p{margin:0 0 16px;font-size:13px;line-height:1.5;color:var(--muted)}
+
+/* ------------------------------------------------------------- footer */
+/* braevon.com's own footer, its phone variant, in white rather than the site's
+   #141414 - and without the full-width wordmark it prints at the very bottom.
+   Bleeds to the column edge and eats the stage's bottom padding, so it sits
+   flush at the foot of the page the way the site's does. */
+.ft{margin:var(--gap-block) calc(var(--pad) * -1) -32px;
+  border-top:1px solid var(--border);background:var(--page)}
+.ft-in{padding:40px var(--pad) 32px;display:flex;flex-direction:column;gap:30px}
+/* The site sets its footer mark at 179px in a 338px column. Held to that
+   proportion here it would be 229px wide, which is a different design; 34px
+   tall (~132px) keeps it clearly larger than the masthead's 22px without
+   turning the footer into a second brand statement. */
+.ft-mark svg{height:34px;width:auto}
+.ft-tag{margin:17px 0 0;font-size:14px;line-height:1.6;letter-spacing:-.02em;
+  color:var(--muted)}
+.ft-contact{margin-top:20px;display:grid;gap:5px}
+.ft-contact span{display:flex;align-items:center;gap:10px;font-size:12px;
+  letter-spacing:-.02em;color:var(--muted)}
+.ft-contact svg{flex:none;width:20px;height:20px;color:var(--faint)}
+.ft-contact a{color:var(--muted);text-decoration:none}
+.ft-contact a:hover{color:var(--accent)}
+.ft-rule{height:1px;background:var(--border)}
+.ft-legal p{margin:0;font-size:13px;line-height:1.4;letter-spacing:-.03em;
+  color:var(--muted)}
+.ft-legal p + p{margin-top:10px}
+.ft-bottom{display:flex;flex-direction:column;gap:21px}
+.ft-bot-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.ft-seal{flex:none;width:63px;height:auto}
+.ft-links{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.ft-links a{font-size:12px;letter-spacing:-.02em;color:var(--muted);text-decoration:none}
+.ft-links a:hover{color:var(--accent)}
+.ft-bot-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-size:12px;letter-spacing:-.03em;color:var(--muted)}
+.ft-social{display:flex;align-items:center;gap:11px}
+.ft-social a{color:var(--muted);display:block}
+.ft-social a:hover{color:var(--accent)}
+.ft-social svg{width:22px;height:22px;display:block}
+
 /* ------------------------------------------------------------- narrow */
 @media (max-width:420px){ .hero-h1{font-size:31px} .strip{font-size:11px} }
 @media (max-width:379px){
@@ -768,6 +1130,17 @@ img{max-width:100%;display:block}
   .qhead{font-size:20px}
   .hero-h1{font-size:27px}
   .strip{white-space:normal}
+  /* The checkout at 320px. Only the three two-column cards need anything: each
+     pairs a fixed-width render with a text column, and the text is what runs
+     out of room first. The pack pair is left alone - it is two 130px cards at
+     this width and still reads. */
+  .ck-h1,.ck-h2,.ck-prog-head h2{font-size:22px}
+  .ck-incl,.ck-faq{padding:20px}
+  .ck-incl-card{gap:16px;padding:18px}
+  .ck-incl-card img{width:52px}
+  .ck-prog-body img{width:88px}
+  .ck-ready-packs{gap:16px;padding:18px}
+  .ck-ready-line{font-size:18px}
 }
 
 /* ------------------------------------------------- all-screens document */
@@ -1234,6 +1607,287 @@ body.frames .dq{position:static;display:block}
 <path d="M275.51 70.5906C275.509 72.2842 275.19 73.9038 274.577 75.3766C273.938 76.8743 273.054 78.1777 271.949 79.2826C270.844 80.4115 269.518 81.2699 268.045 81.9081C266.572 82.5218 265.002 82.8408 263.382 82.8409H245.384C243.665 82.8409 242.069 82.522 240.596 81.9081C239.123 81.2944 237.797 80.4112 236.692 79.3065C235.563 78.2018 234.702 76.876 234.064 75.403C233.45 73.9298 233.131 72.3087 233.131 70.6146V47.1164H248.674V67.3248H260.065L260.092 67.3009V47.0924H275.51V70.5906Z" fill="#01000C"/>
 <path d="M263.355 0C264.976 0 266.524 0.320151 267.997 0.983089C269.495 1.646 270.82 2.5543 271.925 3.65901L271.949 3.63503C273.029 4.73992 273.914 6.06545 274.553 7.53862C275.166 9.01139 275.486 10.5823 275.486 12.2023V35.7245H260.065V15.5184H248.674V35.7245H233.131V12.2287C233.131 10.6083 233.45 9.03571 234.064 7.5626C234.678 6.0894 235.539 4.76391 236.668 3.65901C237.797 2.55429 239.098 1.64597 240.596 0.983089C242.069 0.344705 243.666 0 245.36 0H263.355Z" fill="#01000C"/>
 </svg></div><div class="rating"><span class="txt">Excellent 4.6</span><span class="stars"><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i></span></div></header><div class="rule"></div><div class="navrow"><button class="back-btn" aria-label="Go back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button><div class="progress" role="progressbar" aria-valuenow="40"><div class="seg"><span style="width:100%"></span></div><div class="seg"><span style="width:100%"></span></div><div class="seg"><span style="width:100%"></span></div><div class="seg"><span style="width:100%"></span></div><div class="seg now"><span style="width:100%"></span></div></div></div><main class="stage"><section class="step on" data-step="47" data-q="40"><div class="col"><h1 class="qhead"><span data-name-echo>How</span> can you be reached if necessary?</h1><p class="sub">Our medical team and pharmacy use email and text for patient communication.</p><div class="fields"><div class="field"><label for="email">Email</label><input id="email" type="email" placeholder="hello@example.com" autocomplete="off"/><p class="err" hidden></p></div><div class="field"><label for="phone_number">Phone Number</label><input id="phone_number" type="tel" placeholder="(555) 123-4567" autocomplete="off" data-us-phone="1" inputmode="tel" maxlength="14"/><p class="err" hidden></p></div></div><div class="opts" data-group="final_submission_terms_agreement" data-mode="multi" style="margin-top:16px"><button class="opt checkbox" data-value="yes"><span class="lbl">By clicking Submit, I agree to receive emails, customer support text messages and phone calls from Braevon, and I agree to the Terms of Service and Privacy Policy.</span><span class="ring"></span></button></div><button class="cta cta-next" data-blocked="1">Submit<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></section></main></div></div>
+<div class="frame-label">Screen 48 &mdash; Approval &amp; checkout</div><div class="frame"><div class="shell"><main class="stage"><section class="step on" data-step="48" data-bare data-checkout><div class="col ck"><header class="ck-mast"><div class="logo"><svg viewBox="0 0 323 83" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Braevon">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M30.1017 0.124685C31.7959 0.124685 33.3929 0.444836 34.8661 1.10777C36.3635 1.77068 37.689 2.67898 38.7937 3.7837H38.844C39.9486 4.91294 40.8571 6.21388 41.5199 7.71126C42.1583 9.18445 42.5006 10.7328 42.5006 12.3534V32.3868C42.5006 34.572 41.7642 36.3656 40.2419 37.8633C38.7198 39.3606 36.8789 40.098 34.6695 40.0981V40.5896C36.8791 40.5897 38.6957 41.3501 40.2179 42.8723C41.7647 44.3945 42.5006 46.2111 42.5006 48.4208V70.7633C42.5006 72.4571 42.1826 74.0294 41.5199 75.4533C40.8324 76.9265 39.9225 78.228 38.8176 79.3329C37.7128 80.4623 36.3871 81.3225 34.9141 81.9609C33.441 82.5745 31.8196 82.8936 30.1257 82.8936H0V0.124685H30.1017ZM15.5424 67.3272H26.9342V47.1931H15.5424V67.3272ZM15.5424 35.5543H26.9342V15.6431H15.5424V35.5543Z" fill="#01000C"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M77.6113 0.0983089C79.3052 0.0983089 80.9267 0.417398 82.3997 1.03105C83.8973 1.66937 85.1984 2.55425 86.3033 3.65901C87.3836 4.76391 88.2689 6.0894 88.9072 7.5626C89.521 9.03574 89.84 10.6569 89.84 12.351V34.8421C89.8398 37.3705 89.1524 39.7025 87.7779 41.7645C86.4029 43.8515 84.5607 45.2997 82.1791 46.1836L81.1241 46.5769L88.8329 82.8912H72.6527L65.433 47.9772L65.0661 47.0684H62.9057V82.8672H47.4856V0.0983089H77.6113ZM62.9297 35.6766H74.4462V15.6407H62.9297V35.6766Z" fill="#01000C"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M124.632 0C126.326 0 127.923 0.320151 129.396 0.983089C130.894 1.646 132.219 2.5543 133.324 3.65901L133.348 3.63503C134.453 4.73992 135.313 6.06544 135.952 7.53862C136.565 9.0112 136.884 10.5817 136.884 11.1713V81.8602L121.342 82.8912V47.0924H109.95V82.8912H94.53V12.2527C94.53 10.6321 94.8489 9.05977 95.4628 7.58657C96.0766 6.11347 96.9619 4.78783 98.0668 3.68299C99.1957 2.55413 100.496 1.64587 101.944 0.983089C103.368 0.344801 104.94 0.000103874 106.634 0H124.632ZM109.95 35.6262H121.342V15.5184H109.95V35.6262Z" fill="#01000C"/>
+<path d="M310.747 0.124685C312.442 0.124685 314.039 0.444836 315.512 1.10777C317.009 1.77068 318.335 2.67899 319.439 3.7837C320.52 4.88858 321.405 6.21411 322.043 7.68728H322.067C322.681 9.1604 323 10.7329 323 12.3534V82.8696H307.458V15.6431H296.066V82.8696H280.646V12.3534C280.646 10.7329 280.965 9.1604 281.578 7.68728C282.192 6.21408 283.077 4.88859 284.182 3.7837C285.312 2.67898 286.612 1.77065 288.11 1.10777C289.583 0.469389 291.18 0.124685 292.874 0.124685H310.747Z" fill="#01000C"/>
+<path d="M180.464 15.6407H157.949V35.7749H178.009V47.0444H157.949V67.3248H180.464V82.8672H142.505V0.0983089H180.464V15.6407Z" fill="#01000C"/>
+<path d="M201.166 42.5989C201.166 44.4649 201.485 46.1845 202.099 47.6822L206.936 60.4264L211.602 47.7062C212.24 46.1596 212.558 44.4406 212.558 42.575H212.582V0.0983089H228.125V42.5989C228.125 46.1837 227.487 49.7453 226.235 53.1827L215.014 82.8672H198.833L187.636 53.1827C186.384 49.7453 185.746 46.1597 185.746 42.575V0.0983089H201.166V42.5989Z" fill="#01000C"/>
+<path d="M275.51 70.5906C275.509 72.2842 275.19 73.9038 274.577 75.3766C273.938 76.8743 273.054 78.1777 271.949 79.2826C270.844 80.4115 269.518 81.2699 268.045 81.9081C266.572 82.5218 265.002 82.8408 263.382 82.8409H245.384C243.665 82.8409 242.069 82.522 240.596 81.9081C239.123 81.2944 237.797 80.4112 236.692 79.3065C235.563 78.2018 234.702 76.876 234.064 75.403C233.45 73.9298 233.131 72.3087 233.131 70.6146V47.1164H248.674V67.3248H260.065L260.092 67.3009V47.0924H275.51V70.5906Z" fill="#01000C"/>
+<path d="M263.355 0C264.976 0 266.524 0.320151 267.997 0.983089C269.495 1.646 270.82 2.5543 271.925 3.65901L271.949 3.63503C273.029 4.73992 273.914 6.06545 274.553 7.53862C275.166 9.01139 275.486 10.5823 275.486 12.2023V35.7245H260.065V15.5184H248.674V35.7245H233.131V12.2287C233.131 10.6083 233.45 9.03571 234.064 7.5626C234.678 6.0894 235.539 4.76391 236.668 3.65901C237.797 2.55429 239.098 1.64597 240.596 0.983089C242.069 0.344705 243.666 0 245.36 0H263.355Z" fill="#01000C"/>
+</svg></div></header><div class="ck-clock"><span><span data-fname-echo>Your</span> approval is valid for</span><b data-countdown>10:00</b></div><h1 class="ck-h1"><span data-fname-echo>Your</span> BRAEVON 4-in-1 prescription plan approval!</h1><div class="ck-goals"><span class="ck-goals-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><div><b>YOUR GOALS</b><ul><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><span data-echo="Q1_primary_goal">&mdash;</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Increase erection strength</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Longer duration &amp; satisfaction</li></ul></div></div><div class="ck-intro"><p>You get <b>clinician-prescribed medication</b>, personalised dosing delivered discreetly to your door. Plus 1:1 physician guidance, and 24/7 Braevon support.</p><p>Your medication price never goes up &mdash; even when your dose increases.</p></div><div class="ck-chart"><svg viewBox="0 0 1168 521" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style><![CDATA[
+  /* ==========================================================================
+     Onset / duration chart — plays once, then holds the finished chart.
+
+     The x axis is time, so each curve is revealed by a clip rectangle that
+     scales from 0 to full width. Deliberately not a stroke-dashoffset "draw":
+     three of these four curves are dashed, and animating dashoffset would chew
+     through the dash pattern. A wipe keeps every dash where the designer put it.
+
+     ONE PASS, ~5.7s, and every animation ends on `forwards` so the last frame
+     is the finished chart and nothing moves again. There is no loop: the client
+     asked for it to play once and stop.
+
+     CDATA because an SVG is parsed as XML: a bare "less-than" anywhere in here,
+     comments included, is read as the start of a tag and the file fails.
+     ========================================================================== */
+
+  /* ---- the reveals ---- */
+  .wipe rect {
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    animation: wipe 1.5s cubic-bezier(.33,.72,.32,1) forwards;
+  }
+  #wipe-vardenafil rect { animation-delay: .35s; }
+  #wipe-sildenafil rect { animation-delay: .55s; }
+  #wipe-tadalafil  rect { animation-delay: .75s; }
+  /* Last in, and over a longer slice, so it reads as the conclusion. */
+  #wipe-braevon    rect { animation-duration: 1.8s; animation-delay: 1.35s; }
+  @keyframes wipe { to { transform: scaleX(1); } }
+
+  /* ---- labels: each waits for its own curve, then stays ---- */
+  .label { opacity: 0; animation: rise .7s cubic-bezier(.22,.61,.36,1) forwards; }
+  .label-vardenafil { animation-delay: 1.55s; }
+  .label-sildenafil { animation-delay: 1.75s; }
+  .label-tadalafil  { animation-delay: 1.95s; }
+  .label-braevon    { animation-delay: 3.05s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(9px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- the frame: in once, then it stays ---- */
+  .grid line, .axis, .ticks > g { opacity: 0; animation: fade .5s ease-out forwards; }
+  .grid line:nth-child(1) { animation-delay: .04s; }
+  .grid line:nth-child(2) { animation-delay: .10s; }
+  .grid line:nth-child(3) { animation-delay: .16s; }
+  .grid line:nth-child(4) { animation-delay: .22s; }
+  .ticks > g:nth-child(1) { animation-delay: .30s; }
+  .ticks > g:nth-child(2) { animation-delay: .36s; }
+  .ticks > g:nth-child(3) { animation-delay: .42s; }
+  .ticks > g:nth-child(4) { animation-delay: .48s; }
+  @keyframes fade { to { opacity: 1; } }
+
+  .badge {
+    opacity: 0;
+    transform-origin: 35.6px 445.8px;
+    animation: pop .6s cubic-bezier(.34,1.56,.64,1) 1.15s forwards;
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(.55); }
+    60%  { opacity: 1; }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .clock-hand {
+    transform-origin: 35.97px 445.41px;
+    animation: sweep 1.1s cubic-bezier(.33,.72,.32,1) 1.3s backwards;
+  }
+  @keyframes sweep { from { transform: rotate(-150deg); } to { transform: rotate(0deg); } }
+
+  /* ---- one highlight along the BRAEVON line after it finishes drawing, then
+     gone for good. Path length is 1321; the dash is a 110-unit segment. ---- */
+  .spark {
+    opacity: 0;
+    stroke-dasharray: 110 1321;
+    animation: spark 2.2s cubic-bezier(.45,0,.55,1) 3.5s forwards;
+  }
+  @keyframes spark {
+    0%        { stroke-dashoffset: 110;   opacity: 0; }
+    12%       { opacity: .75; }
+    62%       { opacity: .75; }
+    100%      { stroke-dashoffset: -1321; opacity: 0; }
+  }
+
+  /* ---- the chips, scaled so the lettering reads ----
+     The lettering is outlined paths, not live text, so there is no font-size to
+     raise — "bigger" means scaling the whole chip: pill, swatch and letterforms
+     together. The scale rides on a wrapper group because `.label` itself is
+     already carrying the `rise` transform, and a transform on one element
+     replaces rather than composes.
+
+     transform-origin is in user-space units (transform-box defaults to
+     view-box) and is set to each chip's SWATCH — the little square that touches
+     its curve — not to a corner of the pill. That keeps every chip pinned to the
+     line it labels while the pill grows away from the plot instead of across it,
+     which is what buys the room: corner-anchored, these collide at 1.7x.
+
+     2 is the ceiling. BRAEVON scales about its vertical centre and its top edge
+     reaches y=2.2 of the 521-unit canvas; at 2.1 it is off the top. The other
+     three scale about their pill top, and at 2 the nearest pair (BRAEVON bottom
+     to TADALAFIL top) still clears by 11 units.
+
+     **Set to 1.7 on 2026-09-04**, at the client's word - the chips read as
+     oversized against the plot at 2. The anchors are unchanged and still the
+     swatches, so every chip stays pinned to the line it labels and simply
+     shrinks towards it. ---- */
+  @media all {
+    .lbl-fit            { transform: scale(1.7); }
+    /* swatch right edge, pill mid — grows left, and up/down off the top curve */
+    .lbl-fit-braevon    { transform-origin: 1078.714px 52.6476px; }
+    /* swatch right edge, pill top — grow left + down */
+    .lbl-fit-sildenafil { transform-origin: 596.3955px 113.356px; }
+    .lbl-fit-tadalafil  { transform-origin: 1081.9955px 114.007px; }
+    /* swatch LEFT edge here: this chip carries its swatch on the left */
+    .lbl-fit-vardenafil { transform-origin: 246px 270.507px; }
+  }
+
+  /* Anyone who has asked their system for less movement gets the finished
+     chart, immediately and still. */
+  @media (prefers-reduced-motion: reduce) {
+    .wipe rect { transform: scaleX(1); animation: none; }
+    .grid line, .axis, .ticks > g, .badge, .label { opacity: 1; animation: none; transform: none; }
+    .clock-hand { animation: none; }
+    .spark { display: none; }
+  }
+]]></style>
+
+<clipPath id="wipe-braevon"   class="wipe"><rect x="0" y="0" width="1168" height="521"/></clipPath>
+<clipPath id="wipe-tadalafil" class="wipe"><rect x="0" y="0" width="1168" height="521"/></clipPath>
+<clipPath id="wipe-sildenafil" class="wipe"><rect x="0" y="0" width="1168" height="521"/></clipPath>
+<clipPath id="wipe-vardenafil" class="wipe"><rect x="0" y="0" width="1168" height="521"/></clipPath>
+
+<g class="grid" opacity="0.5" stroke="#94A3B8" stroke-width="1.85611" stroke-dasharray="7.42 7.42">
+  <line x1="205.445" y1="0.827148" x2="205.445" y2="446.293"/>
+  <line x1="365.238" y1="0.827148" x2="365.238" y2="446.293"/>
+  <line x1="684.82" y1="0.827148" x2="684.82" y2="446.293"/>
+  <line x1="1118.54" y1="0.827148" x2="1118.54" y2="446.293"/>
+</g>
+
+<mask id="mask0_1224_6503" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="26" y="0" width="1142" height="521">
+<path d="M1168 0.827148H26.6309V520.538H1168V0.827148Z" fill="black"/>
+</mask>
+<g class="curve" clip-path="url(#wipe-braevon)">
+<g mask="url(#mask0_1224_6503)">
+<path d="M22.8262 446.294C114.136 446.294 171.204 52.6475 330.996 52.6475H1141.37V446.294H22.8262Z" fill="url(#paint0_linear_1224_6503)"/>
+<path d="M22.8262 446.294C114.136 446.294 171.204 52.6475 330.996 52.6475H1141.37" stroke="#E6430D" stroke-width="11.1367" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+
+<mask id="mask1_1224_6503" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="1142" height="521">
+<path d="M1141.37 0.827148H0V520.538H1141.37V0.827148Z" fill="#4B5568"/>
+</mask>
+<g class="curve" clip-path="url(#wipe-tadalafil)">
+<g mask="url(#mask1_1224_6503)">
+<path d="M856.027 135.395H1140.44V445.365H472.135C495.846 439.816 519.547 422.221 543.697 398.229C573.166 368.952 603.531 329.914 635.604 290.97C667.703 251.993 701.535 213.082 738.012 183.914C774.486 154.748 813.52 135.395 856.027 135.395Z" fill="url(#paint1_linear_1224_6503)" fill-opacity="0.6" style="mix-blend-mode:multiply"/>
+<path d="M856.027 135.395H1140.44V445.365H472.135C495.846 439.816 519.547 422.221 543.697 398.229C573.166 368.952 603.531 329.914 635.604 290.97C667.703 251.993 701.535 213.082 738.012 183.914C774.486 154.748 813.52 135.395 856.027 135.395Z" stroke="#D2D8E2" stroke-width="1.85611"/>
+<path d="M456.549 446.293C570.686 446.293 684.822 134.467 856.028 134.467H1141.37" stroke="#D2D8E2" stroke-width="7.42444" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="11.14 11.14"/>
+</g>
+</g>
+
+<mask id="mask2_1224_6503" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="1142" height="521">
+<path d="M1141.37 0.827148H0V520.538H1141.37V0.827148Z" fill="#4B5568"/>
+</mask>
+<g class="curve" clip-path="url(#wipe-sildenafil)">
+<g mask="url(#mask2_1224_6503)">
+<path d="M604.927 113.121C611.593 113.121 618.307 118.016 625.047 127.103C631.755 136.146 638.32 149.112 644.729 164.748C657.545 196.01 669.66 237.721 681.074 279.487C692.481 321.225 703.191 363.026 713.186 394.372C718.182 410.042 723.015 423.152 727.688 432.357C730.022 436.956 732.341 440.63 734.651 443.166C735.429 444.02 736.223 444.759 737.028 445.365H462.783C463.771 444.783 464.75 444.073 465.716 443.245C468.671 440.713 471.588 437.038 474.478 432.43C480.259 423.211 486.037 410.089 491.839 394.412C503.446 363.05 515.227 321.245 527.349 279.502C539.478 237.73 551.949 196.019 564.944 164.753C571.444 149.116 578.052 136.148 584.783 127.104C591.546 118.016 598.26 113.121 604.927 113.121Z" fill="url(#paint2_linear_1224_6503)" fill-opacity="0.3" style="mix-blend-mode:multiply"/>
+<path d="M604.927 113.121C611.593 113.121 618.307 118.016 625.047 127.103C631.755 136.146 638.32 149.112 644.729 164.748C657.545 196.01 669.66 237.721 681.074 279.487C692.481 321.225 703.191 363.026 713.186 394.372C718.182 410.042 723.015 423.152 727.688 432.357C730.022 436.956 732.341 440.63 734.651 443.166C735.429 444.02 736.223 444.759 737.028 445.365H462.783C463.771 444.783 464.75 444.073 465.716 443.245C468.671 440.713 471.588 437.038 474.478 432.43C480.259 423.211 486.037 410.089 491.839 394.412C503.446 363.05 515.227 321.245 527.349 279.502C539.478 237.73 551.949 196.019 564.944 164.753C571.444 149.116 578.052 136.148 584.783 127.104C591.546 118.016 598.26 113.121 604.927 113.121Z" stroke="#AEB6C4" stroke-width="1.85611"/>
+<path d="M456.549 446.293C502.204 446.293 547.858 112.193 604.927 112.193C661.995 112.193 707.65 446.293 741.891 446.293" stroke="#AEB6C4" stroke-width="7.42444" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="11.14 11.14"/>
+</g>
+</g>
+
+<g class="curve" clip-path="url(#wipe-vardenafil)">
+<path d="M365.237 179.941C393.437 179.942 423.897 196.468 454.713 221.496C485.5 246.501 516.487 279.86 545.73 313.265C574.948 346.64 602.451 380.096 626.186 405.169C638.057 417.71 649.023 428.195 658.827 435.551C664.834 440.058 670.465 443.433 675.643 445.365H209.197C209.644 444.918 210.077 444.407 210.494 443.844C212.011 441.795 213.516 438.841 215.041 435.164C218.096 427.8 221.319 417.311 224.885 404.785C232.027 379.697 240.575 346.333 251.979 312.953C263.383 279.57 277.613 246.269 296.074 221.328C314.533 196.391 337.117 179.941 365.237 179.941Z" fill="url(#paint3_linear_1224_6503)" fill-opacity="0.4" style="mix-blend-mode:multiply"/>
+<path d="M365.237 179.941C393.437 179.942 423.897 196.468 454.713 221.496C485.5 246.501 516.487 279.86 545.73 313.265C574.948 346.64 602.451 380.096 626.186 405.169C638.057 417.71 649.023 428.195 658.827 435.551C664.834 440.058 670.465 443.433 675.643 445.365H209.197C209.644 444.918 210.077 444.407 210.494 443.844C212.011 441.795 213.516 438.841 215.041 435.164C218.096 427.8 221.319 417.311 224.885 404.785C232.027 379.697 240.575 346.333 251.979 312.953C263.383 279.57 277.613 246.269 296.074 221.328C314.533 196.391 337.117 179.941 365.237 179.941Z" stroke="#8B94A6" stroke-width="1.85611"/>
+<path d="M205.445 446.293C228.273 446.293 251.1 179.014 365.237 179.014C479.374 179.014 627.752 446.293 684.82 446.293" stroke="#8B94A6" stroke-width="7.42444" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="11.14 11.14"/>
+<path d="M205.445 446.293C228.273 446.293 251.1 179.014 365.237 179.014C479.374 179.014 627.752 446.293 684.82 446.293" stroke="#8B94A6" stroke-width="7.42444" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="11.14 11.14"/>
+</g>
+
+<path class="spark" d="M22.8262 446.294C114.136 446.294 171.204 52.6475 330.996 52.6475H1141.37" stroke="#FFD6AE" stroke-width="11.1367" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+<g class="lbl-fit lbl-fit-vardenafil">
+<g class="label label-vardenafil">
+<rect width="176.986" height="37.9855" transform="translate(236 270.507)" fill="none"/>
+<rect width="176.986" height="37.9855" transform="translate(236 270.507)" fill="#FFFFFF" stroke="#DEE2EA" stroke-width="2.4"/>
+<rect x="246" y="276.507" width="25.9855" height="25.9855" fill="#8B94A6"/>
+<rect x="246" y="276.507" width="25.9855" height="25.9855" fill="#8B94A6"/>
+<path d="M280.397 282.904H283.439L287.141 294.606L290.844 282.904H293.886L288.971 297.5H285.312L280.397 282.904ZM302.265 294.266H296.435L295.392 297.5H292.35L297.329 282.904H301.371L306.35 297.5H303.329L302.265 294.266ZM301.499 291.883L299.35 285.33L297.222 291.883H301.499ZM307.537 282.904H313.473C315.133 282.904 316.487 283.316 317.537 284.138C318.601 284.961 319.133 286.188 319.133 287.819C319.133 288.968 318.863 289.918 318.324 290.67C317.785 291.422 317.04 291.968 316.09 292.309L319.111 297.5H316.005L313.196 292.691H310.431V297.5H307.537V282.904ZM313.303 290.309C314.353 290.309 315.118 290.131 315.601 289.777C316.097 289.422 316.345 288.762 316.345 287.798C316.345 286.876 316.097 286.245 315.601 285.904C315.118 285.55 314.353 285.372 313.303 285.372H310.431V290.309H313.303ZM320.662 282.904H326.024C328.236 282.904 329.938 283.528 331.13 284.777C332.321 286.025 332.917 287.855 332.917 290.266C332.917 292.649 332.314 294.45 331.109 295.67C329.917 296.89 328.222 297.5 326.024 297.5H320.662V282.904ZM325.109 295.032C326.329 295.032 327.279 294.911 327.96 294.67C328.655 294.415 329.173 293.94 329.513 293.245C329.853 292.55 330.024 291.543 330.024 290.223C330.024 288.918 329.853 287.918 329.513 287.223C329.173 286.528 328.655 286.046 327.96 285.777C327.265 285.507 326.314 285.372 325.109 285.372H323.556V295.032H325.109ZM334.627 282.904H345.286V285.457H337.52V289.096H344.18V291.351H337.52V294.947H345.286V297.5H334.627V282.904ZM346.99 282.904H350.735L356.586 294.074V282.904H359.437V297.5H355.692L349.841 286.33V297.5H346.99V282.904ZM370.546 294.266H364.716L363.674 297.5H360.631L365.61 282.904H369.652L374.631 297.5H371.61L370.546 294.266ZM369.78 291.883L367.631 285.33L365.503 291.883H369.78ZM375.818 282.904H385.627V285.457H378.712V289.628H384.946V292.096H378.712V297.5H375.818V282.904ZM387.322 282.904H390.216V297.5H387.322V282.904ZM392.263 282.904H395.157V294.819H402.072V297.5H392.263V282.904Z" fill="#171D2C"/>
+</g>
+</g>
+
+<g class="lbl-fit lbl-fit-tadalafil">
+<g class="label label-tadalafil">
+<rect width="179" height="37.9855" transform="translate(913 114.007)" fill="#FFFFFF" stroke="#DEE2EA" stroke-width="2.4"/>
+<path d="M928.203 128.894H923.692V126.404H935.586V128.894H931.097V141H928.203V128.894ZM944.81 137.766H938.98L937.937 141H934.895L939.874 126.404H943.916L948.895 141H945.874L944.81 137.766ZM944.044 135.383L941.895 128.83L939.767 135.383H944.044ZM950.082 126.404H955.444C957.656 126.404 959.358 127.028 960.55 128.277C961.741 129.525 962.337 131.355 962.337 133.766C962.337 136.149 961.734 137.95 960.529 139.17C959.337 140.39 957.642 141 955.444 141H950.082V126.404ZM954.529 138.532C955.748 138.532 956.699 138.411 957.38 138.17C958.075 137.915 958.592 137.44 958.933 136.745C959.273 136.05 959.444 135.043 959.444 133.723C959.444 132.418 959.273 131.418 958.933 130.723C958.592 130.028 958.075 129.546 957.38 129.277C956.685 129.007 955.734 128.872 954.529 128.872H952.975V138.532H954.529ZM972.778 137.766H966.949L965.906 141H962.864L967.842 126.404H971.885L976.864 141H973.842L972.778 137.766ZM972.013 135.383L969.864 128.83L967.736 135.383H972.013ZM978.051 126.404H980.944V138.319H987.859V141H978.051V126.404ZM998.618 137.766H992.789L991.746 141H988.703L993.682 126.404H997.725L1002.7 141H999.682L998.618 137.766ZM997.852 135.383L995.703 128.83L993.576 135.383H997.852ZM1003.89 126.404H1013.7V128.957H1006.78V133.128H1013.02V135.596H1006.78V141H1003.89V126.404ZM1015.39 126.404H1018.29V141H1015.39V126.404ZM1020.34 126.404H1023.23V138.319H1030.14V141H1020.34V126.404Z" fill="#171D2C"/>
+<rect x="1056.01" y="120.007" width="25.9855" height="25.9855" fill="#D2D8E2"/>
+<rect x="1056.01" y="120.007" width="25.9855" height="25.9855" fill="#D2D8E2"/>
+</g>
+</g>
+
+<path class="axis" d="M0 446.294H1141.37" stroke="#CBD5E1" stroke-width="3.71222"/>
+
+<g class="badge">
+<path d="M35.6158 464.451C46.3274 464.451 55.0108 456.083 55.0108 445.761C55.0108 435.439 46.3274 427.071 35.6158 427.071C24.9042 427.071 16.2207 435.439 16.2207 445.761C16.2207 456.083 24.9042 464.451 35.6158 464.451Z" fill="#E6430D"/>
+<circle cx="35.9693" cy="445.409" r="12.3423" stroke="#E4A000" stroke-width="1.05791"/>
+<path class="clock-hand" d="M35.9688 440.472V445.409L39.0543 448.494" stroke="#E4A000" stroke-width="1.05791" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+<g class="ticks">
+<g>
+<path d="M205.443 435.157V457.431" stroke="#CBD5E1" stroke-width="3.71222"/>
+<path d="M190.239 481.195L186.09 485.025V482.152L190.239 478.323H192.367V496.567H190.239V481.195ZM206.492 480.504C207.663 482.152 208.248 484.502 208.248 487.551C208.248 490.53 207.663 492.835 206.492 494.466C205.322 496.08 203.682 496.887 201.572 496.887C199.444 496.887 197.787 496.071 196.599 494.44C195.428 492.791 194.843 490.459 194.843 487.445C194.843 484.431 195.428 482.108 196.599 480.477C197.787 478.828 199.444 478.004 201.572 478.004C203.7 478.004 205.34 478.837 206.492 480.504ZM204.95 493.004C205.694 491.833 206.067 489.981 206.067 487.445C206.067 484.963 205.694 483.128 204.95 481.94C204.205 480.734 203.079 480.131 201.572 480.131C200.065 480.131 198.939 480.734 198.194 481.94C197.45 483.128 197.077 484.963 197.077 487.445C197.077 489.981 197.45 491.833 198.194 493.004C198.939 494.174 200.065 494.759 201.572 494.759C203.079 494.759 204.205 494.174 204.95 493.004ZM212.318 481.727V496.567H210.083V478.323H213.222L218.222 493.615L223.222 478.323H226.599V496.567H224.365V480.982L219.259 496.461H217.131L212.318 481.727Z" fill="#4B5568"/>
+</g>
+<g>
+<path d="M365.236 435.157V457.431" stroke="#CBD5E1" stroke-width="3.71222"/>
+<path d="M348.686 481.195L344.537 485.025V482.152L348.686 478.323H350.814V496.567H348.686V481.195ZM359.62 496.887C357.935 496.887 356.535 496.452 355.418 495.583C354.301 494.697 353.591 493.438 353.29 491.807L355.551 491.408C355.728 492.578 356.171 493.482 356.88 494.121C357.59 494.741 358.503 495.051 359.62 495.051C360.967 495.051 361.996 494.688 362.705 493.961C363.414 493.234 363.769 492.161 363.769 490.743C363.769 489.342 363.414 488.278 362.705 487.551C361.996 486.824 360.967 486.461 359.62 486.461C358.875 486.461 358.192 486.603 357.572 486.887C356.969 487.152 356.481 487.543 356.109 488.057H353.742L354.513 478.323H365.364V480.371H356.481L356.003 486.408C356.942 485.273 358.184 484.706 359.726 484.706C361.623 484.706 363.148 485.246 364.301 486.328C365.453 487.41 366.029 488.917 366.029 490.849C366.029 492.782 365.462 494.271 364.327 495.317C363.21 496.363 361.641 496.887 359.62 496.887ZM370.105 481.727V496.567H367.871V478.323H371.009L376.009 493.615L381.009 478.323H384.387V496.567H382.153V480.982L377.046 496.461H374.919L370.105 481.727Z" fill="#4B5568"/>
+</g>
+<g>
+<path d="M684.82 435.157V457.431" stroke="#CBD5E1" stroke-width="3.71222"/>
+<path d="M672.373 492.551H663.57L663.543 490.371L672.001 478.323H674.501V490.637H677.054V492.551H674.501V496.567H672.373V492.551ZM672.373 490.637V481.222L665.831 490.637H672.373ZM689.673 488.296H680.551V496.567H678.264V478.323H680.551V486.222H689.673V478.323H691.961V496.567H689.673V488.296ZM694.024 478.323H700.22C702.171 478.323 703.713 478.837 704.848 479.865C705.983 480.876 706.55 482.25 706.55 483.988C706.55 485.371 706.187 486.532 705.46 487.472C704.733 488.411 703.722 489.041 702.428 489.36L706.63 496.567H704.077L700.008 489.599H696.311V496.567H694.024V478.323ZM699.768 487.631C701.311 487.631 702.437 487.339 703.146 486.754C703.855 486.168 704.21 485.229 704.21 483.934C704.21 482.676 703.829 481.762 703.066 481.195C702.322 480.61 701.134 480.317 699.502 480.317H696.311V487.631H699.768Z" fill="#4B5568"/>
+</g>
+<g>
+<path d="M1118.54 435.157V457.431" stroke="#CBD5E1" stroke-width="3.71222"/>
+<path d="M1095.56 496.887C1093.71 496.887 1092.19 496.443 1090.98 495.557C1089.79 494.652 1089.13 493.438 1088.99 491.913L1091.2 491.514C1091.27 492.56 1091.68 493.376 1092.45 493.961C1093.23 494.528 1094.26 494.812 1095.56 494.812C1096.82 494.812 1097.8 494.52 1098.51 493.934C1099.24 493.332 1099.6 492.498 1099.6 491.434C1099.6 490.246 1099.18 489.395 1098.35 488.881C1097.53 488.367 1096.12 488.11 1094.12 488.11V486.461C1095.45 486.461 1096.49 486.363 1097.23 486.168C1097.98 485.956 1098.51 485.61 1098.83 485.131C1099.17 484.635 1099.33 483.952 1099.33 483.083C1099.33 482.02 1098.98 481.204 1098.27 480.637C1097.58 480.069 1096.61 479.785 1095.37 479.785C1094.38 479.785 1093.55 480.025 1092.9 480.504C1092.24 480.982 1091.82 481.683 1091.62 482.605L1089.63 482.206C1089.8 480.929 1090.42 479.918 1091.46 479.174C1092.51 478.411 1093.81 478.03 1095.37 478.03C1097.2 478.03 1098.65 478.473 1099.73 479.36C1100.83 480.229 1101.38 481.408 1101.38 482.897C1101.38 485.06 1100.42 486.505 1098.51 487.232C1100.74 487.977 1101.86 489.449 1101.86 491.647C1101.86 492.711 1101.59 493.642 1101.06 494.44C1100.55 495.22 1099.81 495.823 1098.86 496.248C1097.92 496.674 1096.82 496.887 1095.56 496.887ZM1109.8 496.887C1105.6 496.887 1103.5 493.695 1103.5 487.312C1103.5 485.309 1103.77 483.615 1104.32 482.232C1104.89 480.832 1105.66 479.785 1106.63 479.094C1107.61 478.385 1108.71 478.03 1109.93 478.03C1113.23 478.03 1115.33 479.413 1116.24 482.179L1113.97 482.711C1113.64 481.754 1113.19 481.062 1112.62 480.637C1112.05 480.211 1111.24 479.998 1110.2 479.998C1108.74 479.998 1107.62 480.645 1106.82 481.94C1106.02 483.234 1105.62 485.016 1105.62 487.285V487.631C1106.03 486.532 1106.69 485.69 1107.59 485.105C1108.5 484.52 1109.48 484.227 1110.54 484.227C1111.8 484.227 1112.88 484.493 1113.79 485.025C1114.69 485.557 1115.38 486.284 1115.84 487.206C1116.32 488.128 1116.55 489.165 1116.55 490.317C1116.55 492.285 1116 493.872 1114.91 495.078C1113.81 496.284 1112.24 496.887 1110.2 496.887H1109.8ZM1110.14 494.998C1111.42 494.998 1112.45 494.573 1113.23 493.722C1114.01 492.871 1114.4 491.78 1114.4 490.45C1114.4 489.121 1114 488.066 1113.2 487.285C1112.41 486.505 1111.34 486.115 1110.01 486.115C1109.3 486.115 1108.65 486.293 1108.04 486.647C1107.46 487.002 1106.99 487.507 1106.63 488.163C1106.3 488.819 1106.13 489.582 1106.13 490.45C1106.13 491.851 1106.47 492.959 1107.17 493.775C1107.88 494.59 1108.87 494.998 1110.14 494.998ZM1129.8 488.296H1120.68V496.567H1118.39V478.323H1120.68V486.222H1129.8V478.323H1132.09V496.567H1129.8V488.296ZM1134.15 478.323H1140.35C1142.3 478.323 1143.84 478.837 1144.98 479.865C1146.11 480.876 1146.68 482.25 1146.68 483.988C1146.68 485.371 1146.32 486.532 1145.59 487.472C1144.86 488.411 1143.85 489.041 1142.56 489.36L1146.76 496.567H1144.21L1140.14 489.599H1136.44V496.567H1134.15V478.323ZM1139.9 487.631C1141.44 487.631 1142.57 487.339 1143.28 486.754C1143.99 486.168 1144.34 485.229 1144.34 483.934C1144.34 482.676 1143.96 481.762 1143.2 481.195C1142.45 480.61 1141.26 480.317 1139.63 480.317H1136.44V487.631H1139.9Z" fill="#4B5568"/>
+</g>
+</g>
+
+<g class="lbl-fit lbl-fit-sildenafil">
+<g class="label label-sildenafil">
+<rect width="178.547" height="37.9855" transform="translate(427.85 113.356)" fill="none"/>
+<rect width="178.547" height="37.9855" transform="translate(427.85 113.356)" fill="#FFFFFF" stroke="#DEE2EA" stroke-width="2.4"/>
+<path d="M441.443 135.647C441.642 136.513 442.053 137.158 442.677 137.584C443.301 138.009 444.174 138.222 445.294 138.222C446.457 138.222 447.273 138.073 447.741 137.775C448.209 137.463 448.443 136.945 448.443 136.222C448.443 135.711 448.287 135.314 447.975 135.03C447.663 134.747 447.244 134.541 446.72 134.413C446.195 134.286 445.45 134.165 444.486 134.052C442.826 133.839 441.549 133.364 440.656 132.626C439.776 131.889 439.337 130.938 439.337 129.775C439.337 128.442 439.833 127.385 440.826 126.605C441.833 125.811 443.266 125.413 445.124 125.413C446.656 125.413 447.911 125.725 448.89 126.35C449.869 126.96 450.514 127.853 450.826 129.03L448.358 129.775C448.216 129.094 447.883 128.598 447.358 128.286C446.833 127.96 446.074 127.796 445.081 127.796C443.918 127.796 443.11 127.981 442.656 128.35C442.216 128.718 441.996 129.201 441.996 129.796C441.996 130.335 442.223 130.761 442.677 131.073C443.131 131.385 443.947 131.605 445.124 131.733C447.152 131.96 448.677 132.442 449.698 133.179C450.734 133.903 451.252 134.917 451.252 136.222C451.252 137.655 450.72 138.761 449.656 139.541C448.606 140.307 447.166 140.69 445.337 140.69C443.422 140.69 441.939 140.335 440.89 139.626C439.84 138.917 439.174 137.867 438.89 136.477L441.443 135.647ZM452.961 125.754H455.854V140.35H452.961V125.754ZM457.902 125.754H460.796V137.669H467.711V140.35H457.902V125.754ZM469.406 125.754H474.768C476.981 125.754 478.683 126.378 479.874 127.626C481.066 128.874 481.661 130.704 481.661 133.116C481.661 135.499 481.059 137.3 479.853 138.52C478.661 139.74 476.966 140.35 474.768 140.35H469.406V125.754ZM473.853 137.882C475.073 137.882 476.023 137.761 476.704 137.52C477.399 137.265 477.917 136.789 478.257 136.094C478.598 135.399 478.768 134.392 478.768 133.073C478.768 131.768 478.598 130.768 478.257 130.073C477.917 129.378 477.399 128.896 476.704 128.626C476.009 128.357 475.059 128.222 473.853 128.222H472.3V137.882H473.853ZM483.371 125.754H494.03V128.307H486.265V131.945H492.924V134.201H486.265V137.796H494.03V140.35H483.371V125.754ZM495.734 125.754H499.479L505.33 136.924V125.754H508.181V140.35H504.436L498.585 129.179V140.35H495.734V125.754ZM519.29 137.116H513.46L512.418 140.35H509.375L514.354 125.754H518.397L523.375 140.35H520.354L519.29 137.116ZM518.524 134.733L516.375 128.179L514.248 134.733H518.524ZM524.562 125.754H534.371V128.307H527.456V132.477H533.69V134.945H527.456V140.35H524.562V125.754ZM536.066 125.754H538.96V140.35H536.066V125.754ZM541.008 125.754H543.901V137.669H550.816V140.35H541.008V125.754Z" fill="#171D2C"/>
+<rect x="570.41" y="119.356" width="25.9855" height="25.9855" fill="#AEB6C4"/>
+</g>
+</g>
+
+<g class="lbl-fit lbl-fit-braevon">
+<g class="label label-braevon">
+<rect width="284.2131" height="50.4147" transform="translate(807.7729 27.4402)" fill="#FFFFFF" stroke="#DEE2EA" stroke-width="2.4"/>
+<path d="M822.013829228431 63.26482535987749V43.894825359877494H830.1986304979622Q832.1642393846809 43.894825359877494 833.5721447801886 44.56432694679155Q834.9800501756965 45.23382853370562 835.7249523973762 46.47793265968218Q836.4698546190559 47.722036785658744 836.4698546190559 49.48224503761187Q836.4698546190559 50.779639324721245 835.7639555712044 51.93663932472124Q835.0580565233528 53.09363932472124 833.4694508104621 53.85544376808062L833.4668514452278 52.01461076026811Q834.9618609667122 52.59441520362749 835.792561284095 53.41861710792436Q836.6232616014778 54.24281901222124 836.9482584276496 55.220418377455616Q837.2732552538215 56.19801774268999 837.2732552538215 57.27181583839312Q837.2732552538215 60.105822186049366 835.399949223548 61.68532377296343Q833.5266431932746 63.26482535987749 830.2012298631965 63.26482535987749ZM825.8488768358528 59.91078727393999H830.6224412889778Q831.9068260546028 59.91078727393999 832.6725168505012 59.18149393897905Q833.4382076463996 58.45220060401812 833.4382076463996 57.27441520362749Q833.4382076463996 56.07582853370562 832.6725168505012 55.3439358335103Q831.9068260546028 54.61204313331499 830.6224412889778 54.61204313331499H825.8488768358528ZM825.8488768358528 51.26580314308062H830.4404412889778Q831.4388260546028 51.26580314308062 832.0368165331184 50.69511234718218Q832.634807011634 50.124421551283746 832.634807011634 49.18583488136187Q832.634807011634 48.24464884620562 832.0368165331184 47.688254559096244Q831.4388260546028 47.13186027198687 830.4404412889778 47.13186027198687H825.8488768358528Z M838.965829228431 63.26482535987749V43.894825359877494H846.300447636634Q848.2920501756965 43.894825359877494 849.8273530321419 44.60072440772906Q851.3626558885871 45.30662345558062 852.2375581102668 46.68072440772906Q853.1124603319465 48.05482535987749 853.1124603319465 50.056831707533746Q853.1124603319465 52.04062980323687 852.1855644579231 53.43812821632281Q851.2586685838996 54.83562662940874 849.6934762010872 55.527229168471244L854.1238736620246 63.26482535987749H849.8078228807747L845.0290216112434 54.73162028175249L847.5094508104621 56.192838055189995H842.8008768358528V63.26482535987749ZM842.8008768358528 52.83879996925249H846.3342457323372Q847.2312362108528 52.83879996925249 847.8864285936653 52.486503460463425Q848.5416209764778 52.134206951674365 848.9095168505012 51.506314251479054Q849.2774127245247 50.87842155128374 849.2774127245247 50.054232342299365Q849.2774127245247 49.20664249854937 848.9095168505012 48.58004948097124Q848.5416209764778 47.95345646339312 847.8864285936653 47.60115995460406Q847.2312362108528 47.24886344581499 846.3342457323372 47.24886344581499H842.8008768358528Z M853.7546431932745 63.26482535987749 860.358630497962 43.894825359877494H865.4027066698371L872.0066939745246 63.26482535987749H867.8336400194464L866.4972489061652 59.23484440284624H859.2432869921028L857.9042965135872 63.26482535987749ZM860.3170977831184 55.88080631690874H865.4182393846809L862.358062871009 46.53125455909624H863.4032742967902Z M873.0778292284309 63.26482535987749V43.894825359877494H886.049242558509V47.24886344581499H876.9128768358528V51.87680631690874H885.5292425585089V55.230844402846245H876.9128768358528V59.91078727393999H886.049242558509V63.26482535987749Z M892.6454317674934 63.26482535987749 885.9686431932746 43.894825359877494H890.1624984178841L895.279267949134 59.640377117689994H894.4420565233528L899.5562266893684 43.894825359877494H903.7526812792122L897.0758927049934 63.26482535987749Z M914.4646431932747 63.57682535987749Q912.2962393846809 63.57682535987749 910.4359365282356 62.82412504249468Q908.5756336717903 62.07142472511187 907.1911320848762 60.70902409034625Q905.8066304979623 59.34662345558062 905.0292298631966 57.52532377296343Q904.251829228431 55.704024090346245 904.251829228431 53.56682535987749Q904.251829228431 51.429626629408745 905.0175295458138 49.60832694679156Q905.7832298631965 47.78702726417437 907.1677314501106 46.43632694679155Q908.5522330370247 45.08562662940874 910.41253589347 44.33422599464312Q912.2728387499153 43.58282535987749 914.4646431932747 43.58282535987749Q916.6564476366341 43.58282535987749 918.5167504930794 44.33552567726031Q920.3770533495247 45.08822599464312 921.7615549364388 46.43892631202593Q923.1460565233529 47.789626629408744 923.9117568407357 49.609626629408744Q924.6774571581185 51.429626629408745 924.6774571581185 53.56682535987749Q924.6774571581185 55.704024090346245 923.9000565233529 57.52532377296343Q923.1226558885872 59.34662345558062 921.7381543016731 60.70902409034625Q920.353652714759 62.07142472511187 918.4933498583138 62.82412504249468Q916.6330470018685 63.57682535987749 914.4646431932747 63.57682535987749ZM914.4646431932747 60.10578410011187Q915.827034306556 60.10578410011187 916.9840279588998 59.62218790870561Q918.1410216112434 59.13859171729936 919.0146178026497 58.26629838233843Q919.888213994056 57.39400504737749 920.3653117723763 56.195412029799364Q920.8424095506966 54.99681901222124 920.8424095506966 53.56682535987749Q920.8424095506966 52.13943107276812 920.3653117723763 50.9525383725728Q919.888213994056 49.76564567237749 919.0146178026497 48.88165202003374Q918.1410216112434 47.99765836768999 916.9840279588998 47.525762493666555Q915.827034306556 47.05386661964312 914.4646431932747 47.05386661964312Q913.1022520799935 47.05386661964312 911.9452584276497 47.525762493666555Q910.788264775306 47.99765836768999 909.9146685838997 48.88165202003374Q909.0410723924934 49.76564567237749 908.5639746141732 50.9525383725728Q908.0868768358529 52.13943107276812 908.0868768358529 53.56682535987749Q908.0868768358529 54.99681901222124 908.5639746141732 56.195412029799364Q909.0410723924934 57.39400504737749 909.9146685838997 58.26629838233843Q910.788264775306 59.13859171729936 911.9465581102669 59.62218790870561Q913.1048514452278 60.10578410011187 914.4646431932747 60.10578410011187Z M926.6638292284309 63.26482535987749V43.894825359877494H929.6304603319466L940.1266368456183 57.85676188331499L938.5588133592903 58.20777140479937V43.894825359877494H942.3938609667122V63.26482535987749H939.4038292284308L929.0714571581184 49.19888883643999L930.4988768358528 48.84787931495562V63.26482535987749Z M956.4104032030402 63.26482535987749V59.06323551612749H947.7030343065559V55.85219425636187L956.1763968553839 43.894825359877494H960.2194571581183V55.85219425636187H963.1470723924933V59.06323551612749H960.2194571581183V63.26482535987749ZM950.5058673143683 57.238011395033745 949.8038546190559 55.85219425636187H956.4104032030402V46.882257732924366L957.388012089759 47.18126090675249Z M965.3258546190559 57.79184122901812V54.56780314308062H976.7659180956184V57.79184122901812Z M979.8858292284309 63.26482535987749V43.894825359877494H983.7208768358528V63.26482535987749Z M986.281829228431 63.26482535987749V43.894825359877494H989.2484603319466L999.7446368456184 57.85676188331499L998.1768133592903 58.20777140479937V43.894825359877494H1002.0118609667122V63.26482535987749H999.0218292284309L988.6894571581184 49.19888883643999L990.1168768358528 48.84787931495562V63.26482535987749Z M1005.1318546190558 57.79184122901812V54.56780314308062H1016.5719180956183V57.79184122901812Z M1022.3672362108528 63.26482535987749V47.14226408058062H1018.6102330370246V43.894825359877494H1026.2022838182747V63.26482535987749Z" fill="#171D2C"/>
+<rect x="1044.2258" y="35.4034" width="34.4882" height="34.4882" fill="#E6430D"/>
+</g>
+</g>
+
+<defs>
+<linearGradient id="paint0_linear_1224_6503" x1="582.097" y1="-162.661" x2="582.097" y2="316.215" gradientUnits="userSpaceOnUse">
+<stop stop-color="#E6430D" stop-opacity="0.73"/>
+<stop offset="1" stop-color="#E6430D" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint1_linear_1224_6503" x1="456.549" y1="134.467" x2="456.549" y2="446.293" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D2D8E2"/>
+<stop offset="1" stop-color="#D2D8E2" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint2_linear_1224_6503" x1="598.819" y1="208.367" x2="599.485" y2="525.104" gradientUnits="userSpaceOnUse">
+<stop stop-color="#AEB6C4"/>
+<stop offset="1" stop-color="#AEB6C4" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint3_linear_1224_6503" x1="205.445" y1="179.014" x2="205.445" y2="446.293" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8B94A6"/>
+<stop offset="1" stop-color="#8B94A6" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>
+</div><div class="ck-prog"><div class="ck-prog-head"><span class="ck-prog-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h2>BRAEVON 4-in-1</h2></div><div class="ck-prog-body"><div><p>Based on your intake form, you are a good candidate for the <b>BRAEVON 4-in-1 programme</b>.</p><p class="ck-prog-sub">This 4-in-1 stack is designed to prime desire (brain) and boost blood flow (body) in one sublingual dose.</p></div><img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/></div><div class="ck-prob"><p>You have a <b>very high</b> chance of success with prescribed BRAEVON medication</p><div class="ck-prob-fig"><b>94%</b><span>VERY HIGH</span></div></div></div><div class="ck-sect"><h2 class="ck-h2">The goals <em>you will accomplish</em> with your plan:</h2><div class="ck-benefits"><div class="ck-benefit"><span class="bubble" style="--bub:#FFEDD5;--gly:#F97316"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><div><b>Be Ready in Minutes</b><span>Results seen within 10&ndash;15 min</span></div></div><div class="ck-benefit"><span class="bubble" style="--bub:#F3EBFF;--gly:#A855F7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><div><b>Feel Desire Again</b><span>Primes the brain&rsquo;s arousal pathways</span></div></div><div class="ck-benefit"><span class="bubble" style="--bub:#FEE2E2;--gly:#EF4444"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><div><b>Boost Performance</b><span>Supports a strong blood-flow response</span></div></div><div class="ck-benefit"><span class="bubble" style="--bub:#DFF7E6;--gly:#22C55E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><div><b>Last Longer</b><span>Up to 36 hour performance window</span></div></div><div class="ck-benefit"><span class="bubble" style="--bub:#DBEAFE;--gly:#3B82F6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><div><b>Increased Confidence</b><span>A 4-in-1 formula for a reliable experience</span></div></div></div></div><div class="ck-incl"><h2 class="ck-h2 accent">What&rsquo;s included:</h2><div class="ck-incl-card"><img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/><div><div class="ck-incl-title"><b>BRAEVON</b><span class="ck-tag">4-IN-1 STACK</span></div><ul class="ck-stack"><li><b>Sildenafil:</b> For getting hard fast</li><li><b>Tadalafil:</b> For staying ready up to 36 hours</li><li><b>Vardenafil:</b> For a firmer, more reliable response</li><li><b>Apomorphine:</b> Ignites desire in the brain</li></ul></div></div><ul class="ck-incl-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Medication, supplies and instructions</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Cancel anytime, come back anytime</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>24/7 medical support</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>One-on-one access to our team of physicians</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Free express shipping, discreetly packaged</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Our promise to help you as much (or as little) as you want along the way</li></ul></div><div class="ck-sect"><h2 class="ck-h2">What happens <em>next?</em></h2><ol class="ck-steps"><li><span class="ck-step-n">STEP 1</span><b>Physician Review</b><p>You&rsquo;re already pre-qualified. After checkout, a board-certified physician will review your information and begin the approval process.</p></li><li><span class="ck-step-n">STEP 2</span><b>Fast Prescription Approval</b><p>Most prescriptions are approved in less than 24 hours. If needed, same-day consultations with a licensed clinician are available &mdash; at no extra charge.</p></li><li><span class="ck-step-n">STEP 3</span><b>Medication Shipping</b><p>Once approved, your medication is prepared and shipped. You&rsquo;ll receive tracking information within 2 business days, and your prescription will be on its way.</p></li><li><span class="ck-step-n">STEP 4</span><b>Monthly Refills</b><p>At the end of each month, you&rsquo;ll fill out a quick refill form. We&rsquo;ll send email and text updates with tracking information as your next shipment heads your way.</p></li><li><span class="ck-step-n">STEP 5</span><b>Unlimited Support</b><p>Questions about your progress, side effects or dosage? You have unlimited, 24/7 access to our care team and licensed clinicians &mdash; whenever you need us.</p></li></ol></div><div class="ck-pill"><span>Your approval is reserved for</span><b data-countdown>10:00</b></div><div class="ck-sect"><h2 class="ck-h2"><em>Choose</em> your medication preference below:</h2><div class="ck-packs" data-packs><button class="ck-pack selected" type="button" data-pack="6" data-price="119"><span class="ring"></span><em style="background:#B8300A">MOST POPULAR</em><b>6 PACK</b><small>216 hour coverage</small></button><button class="ck-pack" type="button" data-pack="10" data-price="159"><span class="ring"></span><em style="background:#0B7A70">BEST VALUE</em><b>10 PACK</b><small>360 hour coverage</small></button></div><div class="ck-prod"><div class="ck-prod-head"><div><span class="ck-tag" data-pack-tag>6 PACK</span><b>BRAEVON 4-in-1</b><small>ED Medication</small></div><div class="ck-prod-rate"><span class="stars"><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i></span><span>175,000+ customers</span></div></div><div class="ck-prod-shot"><img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/></div><p class="ck-prod-price">Prescribed for only <b data-pack-price>$119</b></p><ul class="ck-prod-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Powerful 4-in-1 performance stack that targets desire (brain) and performance (body)</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><b>Free shipping:</b> discreet delivery</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><b>Price includes:</b> doctor consult, unlimited 1:1 medical support, written prescription, 4 weeks of medicine and free shipping</li></ul></div></div><div class="ck-hsa"><span>HSA/FSA eligible</span></div><div class="ck-hipaa"><p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Your data is protected by HIPAA</p><span>All transactions are secured and encrypted.</span></div><div class="ck-guar"><span class="ck-guar-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/><path d="M8.6 15.6L6.5 22l5.5-2.6 5.5 2.6-2.1-6.4"/></svg></span><div><b>Cancel Anytime</b><p>Plans can be cancelled at any time from your patient portal. No contracts, no cancellation fees, and you can come back whenever you want to.</p></div></div><div class="ck-press"><p>As featured on</p><div class="ck-press-row"><span class="ck-pm pm-ok"><i>OK!</i><u>magazine</u></span><span class="ck-pm pm-bal"><i>The</i><b>Balancing</b><u>Act</u></span><span class="ck-pm pm-mh">Men&rsquo;s Health</span><span class="ck-pm pm-law"><i>LA</i><b>WEEKLY</b></span><span class="ck-pm pm-lt">Lifetime</span><span class="ck-pm pm-hu"><i>Health</i><b>UNCENSORED</b></span></div></div><div class="ck-sect"><h2 class="ck-h2">The <em>results</em> speak for themselves!</h2><p class="ck-lead">Braevon success stories are coming in, and we cannot get enough.</p><div class="ck-quotes"><article class="ck-quote"><div class="ck-quote-top"><h3>&ldquo;Feeling like my younger self again&rdquo;</h3><span class="stars"><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i></span></div><p>Honestly, I didn&rsquo;t think anything would really help me, but Braevon proved me wrong. I feel like my younger self again, and my wife has noticed too.</p><div class="ck-who"><b>Ethan C.</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> Verified customer</span></div></article><article class="ck-quote"><div class="ck-quote-top"><h3>&ldquo;The desire is back, not just the performance&rdquo;</h3><span class="stars"><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i></span></div><p>Incredible formula &mdash; not only does it work, but having the desire come back takes things to another level entirely.</p><div class="ck-who"><b>Ryan M.</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> Verified customer</span></div></article><article class="ck-quote"><div class="ck-quote-top"><h3>&ldquo;Nothing else compared to the combination&rdquo;</h3><span class="stars"><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i><i><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6-5 4.4 1.5 6.5L10 15.3 4.2 18.6l1.5-6.5-5-4.4 6.6-.6L10 1z"/></svg></i></span></div><p>I had tried other products, but nothing compares. The four medicines work together and the difference is hard to describe.</p><div class="ck-who"><b>Logan K.</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> Verified customer</span></div></article></div></div><div class="ck-ready"><span class="ck-ready-tag">Are you ready?</span><h2 class="ck-h2">It&rsquo;s time for the <em>life you deserve</em></h2><div class="ck-ready-rail"><div class="ck-ready-clock"><span>You&rsquo;re approved for</span><b data-countdown>10:00</b></div><div class="ck-ready-strip">Prescriptions start at just <b>$119</b> &mdash; no insurance needed</div><p class="ck-ready-line">The most effective ED programme is right here</p></div><div class="ck-ready-card"><h3>What&rsquo;s included?</h3><ul class="ck-ready-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><div><b>4-in-1 ED medication</b><span>Cost of medication is included</span></div></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><div><b>No insurance necessary</b></div></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><div><b>Board-certified doctor review</b></div></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><div><b>1:1 physician guidance</b></div></li></ul><div class="ck-ready-packs"><div class="ck-ready-pack"><span class="ck-tag">6 Pack</span><b>BRAEVON 4-in-1 prescribed for just</b><em>$119</em></div><div class="ck-ready-pack"><span class="ck-tag">10 Pack</span><b>BRAEVON 4-in-1 prescribed for just</b><em>$159</em></div></div><p class="ck-ready-note">Pay one month at a time. No contracts, cancel anytime. <b>Medication is included.</b></p><button class="cta cta-next" type="button">Checkout<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div><div class="ck-guar"><span class="ck-guar-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/><path d="M8.6 15.6L6.5 22l5.5-2.6 5.5 2.6-2.1-6.4"/></svg></span><div><b>Cancel Anytime</b><p>Plans can be cancelled at any time from your patient portal. No contracts, no cancellation fees, and you can come back whenever you want to.</p></div></div><div class="ck-faq"><h2>Frequently asked questions</h2><details class="ck-faq-item"><summary>If Viagra&reg; or Cialis&reg; didn&rsquo;t work for me, could BRAEVON?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary><p>Often, yes. BRAEVON is not a single-ingredient pill &mdash; it is a physician-designed formula combining apomorphine, vardenafil, sildenafil and tadalafil, so it works on arousal, onset, firmness and duration rather than one of them. Because it dissolves under the tongue it is absorbed directly into the bloodstream, which is usually faster than a swallowed tablet. Your dose is set by a licensed prescriber against your own medical profile. No treatment works for everyone, but a multi-mechanism formula gives more to work with than a single molecule does.</p></details><details class="ck-faq-item"><summary>How quickly does BRAEVON start working?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary><p>It dissolves under the tongue instead of passing through the stomach, so it typically begins working within 15&ndash;30 minutes. For the best result, take it about 30 minutes beforehand.</p></details><details class="ck-faq-item"><summary>How long do the effects last?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary><p>Most patients report effects lasting up to 36 hours &mdash; a window rather than a countdown. Duration varies with metabolism and general health, and can run longer if you have liver or kidney conditions or take certain other medicines. Your prescriber reviews your history before setting a dose for exactly this reason.</p></details><details class="ck-faq-item"><summary>What are the common side effects?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary><p>The most commonly reported are headache, flushing, nasal congestion, mild indigestion, dizziness, back or muscle discomfort, nausea, temporary vision changes and mild irritation under the tongue. Most are mild and temporary when they occur. Because BRAEVON combines several active ingredients, your prescriber reviews your medical history and sets your dose to keep them to a minimum.</p></details><details class="ck-faq-item"><summary>Does the price cover the medication and the doctor?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary><p>Yes. The price shown above includes the doctor consultation, unlimited 1:1 medical support, your written prescription, a month of medicine and free shipping. There is nothing else to pay and no insurance is needed. Plans can be cancelled at any time from your patient portal.</p></details></div><footer class="ft"><div class="ft-in"><div class="ft-brand"><div class="ft-mark"><svg viewBox="0 0 323 83" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Braevon">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M30.1017 0.124685C31.7959 0.124685 33.3929 0.444836 34.8661 1.10777C36.3635 1.77068 37.689 2.67898 38.7937 3.7837H38.844C39.9486 4.91294 40.8571 6.21388 41.5199 7.71126C42.1583 9.18445 42.5006 10.7328 42.5006 12.3534V32.3868C42.5006 34.572 41.7642 36.3656 40.2419 37.8633C38.7198 39.3606 36.8789 40.098 34.6695 40.0981V40.5896C36.8791 40.5897 38.6957 41.3501 40.2179 42.8723C41.7647 44.3945 42.5006 46.2111 42.5006 48.4208V70.7633C42.5006 72.4571 42.1826 74.0294 41.5199 75.4533C40.8324 76.9265 39.9225 78.228 38.8176 79.3329C37.7128 80.4623 36.3871 81.3225 34.9141 81.9609C33.441 82.5745 31.8196 82.8936 30.1257 82.8936H0V0.124685H30.1017ZM15.5424 67.3272H26.9342V47.1931H15.5424V67.3272ZM15.5424 35.5543H26.9342V15.6431H15.5424V35.5543Z" fill="#01000C"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M77.6113 0.0983089C79.3052 0.0983089 80.9267 0.417398 82.3997 1.03105C83.8973 1.66937 85.1984 2.55425 86.3033 3.65901C87.3836 4.76391 88.2689 6.0894 88.9072 7.5626C89.521 9.03574 89.84 10.6569 89.84 12.351V34.8421C89.8398 37.3705 89.1524 39.7025 87.7779 41.7645C86.4029 43.8515 84.5607 45.2997 82.1791 46.1836L81.1241 46.5769L88.8329 82.8912H72.6527L65.433 47.9772L65.0661 47.0684H62.9057V82.8672H47.4856V0.0983089H77.6113ZM62.9297 35.6766H74.4462V15.6407H62.9297V35.6766Z" fill="#01000C"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M124.632 0C126.326 0 127.923 0.320151 129.396 0.983089C130.894 1.646 132.219 2.5543 133.324 3.65901L133.348 3.63503C134.453 4.73992 135.313 6.06544 135.952 7.53862C136.565 9.0112 136.884 10.5817 136.884 11.1713V81.8602L121.342 82.8912V47.0924H109.95V82.8912H94.53V12.2527C94.53 10.6321 94.8489 9.05977 95.4628 7.58657C96.0766 6.11347 96.9619 4.78783 98.0668 3.68299C99.1957 2.55413 100.496 1.64587 101.944 0.983089C103.368 0.344801 104.94 0.000103874 106.634 0H124.632ZM109.95 35.6262H121.342V15.5184H109.95V35.6262Z" fill="#01000C"/>
+<path d="M310.747 0.124685C312.442 0.124685 314.039 0.444836 315.512 1.10777C317.009 1.77068 318.335 2.67899 319.439 3.7837C320.52 4.88858 321.405 6.21411 322.043 7.68728H322.067C322.681 9.1604 323 10.7329 323 12.3534V82.8696H307.458V15.6431H296.066V82.8696H280.646V12.3534C280.646 10.7329 280.965 9.1604 281.578 7.68728C282.192 6.21408 283.077 4.88859 284.182 3.7837C285.312 2.67898 286.612 1.77065 288.11 1.10777C289.583 0.469389 291.18 0.124685 292.874 0.124685H310.747Z" fill="#01000C"/>
+<path d="M180.464 15.6407H157.949V35.7749H178.009V47.0444H157.949V67.3248H180.464V82.8672H142.505V0.0983089H180.464V15.6407Z" fill="#01000C"/>
+<path d="M201.166 42.5989C201.166 44.4649 201.485 46.1845 202.099 47.6822L206.936 60.4264L211.602 47.7062C212.24 46.1596 212.558 44.4406 212.558 42.575H212.582V0.0983089H228.125V42.5989C228.125 46.1837 227.487 49.7453 226.235 53.1827L215.014 82.8672H198.833L187.636 53.1827C186.384 49.7453 185.746 46.1597 185.746 42.575V0.0983089H201.166V42.5989Z" fill="#01000C"/>
+<path d="M275.51 70.5906C275.509 72.2842 275.19 73.9038 274.577 75.3766C273.938 76.8743 273.054 78.1777 271.949 79.2826C270.844 80.4115 269.518 81.2699 268.045 81.9081C266.572 82.5218 265.002 82.8408 263.382 82.8409H245.384C243.665 82.8409 242.069 82.522 240.596 81.9081C239.123 81.2944 237.797 80.4112 236.692 79.3065C235.563 78.2018 234.702 76.876 234.064 75.403C233.45 73.9298 233.131 72.3087 233.131 70.6146V47.1164H248.674V67.3248H260.065L260.092 67.3009V47.0924H275.51V70.5906Z" fill="#01000C"/>
+<path d="M263.355 0C264.976 0 266.524 0.320151 267.997 0.983089C269.495 1.646 270.82 2.5543 271.925 3.65901L271.949 3.63503C273.029 4.73992 273.914 6.06545 274.553 7.53862C275.166 9.01139 275.486 10.5823 275.486 12.2023V35.7245H260.065V15.5184H248.674V35.7245H233.131V12.2287C233.131 10.6083 233.45 9.03571 234.064 7.5626C234.678 6.0894 235.539 4.76391 236.668 3.65901C237.797 2.55429 239.098 1.64597 240.596 0.983089C242.069 0.344705 243.666 0 245.36 0H263.355Z" fill="#01000C"/>
+</svg></div><p class="ft-tag">Direct-to-consumer telehealth biological optimization with licensed board-certified medical guidance.</p><div class="ft-contact"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:support@braevon.com">support@braevon.com</a></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>1317 Edgewater Dr, Suite 2177, Orlando, Florida 32804</span></div></div><div class="ft-rule"></div><div class="ft-legal"><p>This website is not a pharmacy or healthcare provider. Medical services and prescription fulfillment are provided by third-party licensed providers and pharmacies.</p><p>Prescription medications are prescribed, when clinically appropriate, by licensed medical providers and filled and shipped by US-based, licensed pharmacies.</p><p>Service availability and eligibility vary by state. You must be 18 years of age or older to use this service.</p><p>The content on this website is for informational purposes only and should not be considered medical advice or a substitute for consultation with a licensed healthcare provider.</p><p>All clinical services are provided by Beluga Health, a licensed Telehealth medical group. Website: belugahealth.com</p></div><div class="ft-rule"></div><div class="ft-bottom"><div class="ft-bot-top"><img class="ft-seal" src="assets/images/footer-seal.png" alt="LegitScript Certified"/><div class="ft-links"><a href="https://www.braevon.com/providers" target="_blank" rel="noopener">Our Medical Providers</a><a href="https://www.braevon.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a><a href="https://www.braevon.com/privacy" target="_blank" rel="noopener">Privacy &amp; Security Policy</a><a href="https://www.braevon.com/returns-and-shipping" target="_blank" rel="noopener">Shipping, Cancellation &amp; Refund Policy</a></div></div><div class="ft-bot-row"><span>&copy; 2026 BRAEVON LLC. All rights reserved.</span><span class="ft-social"><a href="https://www.instagram.com/braevonhealth" target="_blank" rel="noopener" aria-label="Braevon on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/></svg></a><a href="https://www.facebook.com/profile.php?id=61593288807004" target="_blank" rel="noopener" aria-label="Braevon on Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5H16.7V3.6A21 21 0 0 0 14.3 3.5c-2.4 0-4 1.45-4 4.12V9.9H7.6V13h2.7v8z"/></svg></a></span></div></div></div></footer></div></section></main></div></div>
 <div class="frame-label">Screen 48 &mdash; Assessment received</div><div class="frame"><div class="shell"><header class="masthead"><div class="logo"><svg viewBox="0 0 323 83" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Braevon">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M30.1017 0.124685C31.7959 0.124685 33.3929 0.444836 34.8661 1.10777C36.3635 1.77068 37.689 2.67898 38.7937 3.7837H38.844C39.9486 4.91294 40.8571 6.21388 41.5199 7.71126C42.1583 9.18445 42.5006 10.7328 42.5006 12.3534V32.3868C42.5006 34.572 41.7642 36.3656 40.2419 37.8633C38.7198 39.3606 36.8789 40.098 34.6695 40.0981V40.5896C36.8791 40.5897 38.6957 41.3501 40.2179 42.8723C41.7647 44.3945 42.5006 46.2111 42.5006 48.4208V70.7633C42.5006 72.4571 42.1826 74.0294 41.5199 75.4533C40.8324 76.9265 39.9225 78.228 38.8176 79.3329C37.7128 80.4623 36.3871 81.3225 34.9141 81.9609C33.441 82.5745 31.8196 82.8936 30.1257 82.8936H0V0.124685H30.1017ZM15.5424 67.3272H26.9342V47.1931H15.5424V67.3272ZM15.5424 35.5543H26.9342V15.6431H15.5424V35.5543Z" fill="#01000C"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M77.6113 0.0983089C79.3052 0.0983089 80.9267 0.417398 82.3997 1.03105C83.8973 1.66937 85.1984 2.55425 86.3033 3.65901C87.3836 4.76391 88.2689 6.0894 88.9072 7.5626C89.521 9.03574 89.84 10.6569 89.84 12.351V34.8421C89.8398 37.3705 89.1524 39.7025 87.7779 41.7645C86.4029 43.8515 84.5607 45.2997 82.1791 46.1836L81.1241 46.5769L88.8329 82.8912H72.6527L65.433 47.9772L65.0661 47.0684H62.9057V82.8672H47.4856V0.0983089H77.6113ZM62.9297 35.6766H74.4462V15.6407H62.9297V35.6766Z" fill="#01000C"/>

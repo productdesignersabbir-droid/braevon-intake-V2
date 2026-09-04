@@ -28,6 +28,7 @@ import json
 import os
 import re
 
+import checkout
 from logo import LOGO
 from theme import CSS
 
@@ -53,6 +54,15 @@ SEGMENTS = 5
 # The medical review replaces the masthead and the bar with its own result
 # header, as the reference does.
 BARE_SCREEN = 45
+
+# The approval / checkout page, added on 2026-09-04. It is not in
+# `medvi-flow.json` because it is not part of the questionnaire: the reference
+# serves it from `/approval`, a separate page the intake hands off to, and the
+# extractor only walks `/intake-s`. It is built by `checkout.py` and appended to
+# the flow as one more step, so Submit walks onto it the way Continue walks onto
+# any other screen. Like the medical review it carries its own chrome, so it is
+# `data-bare` too.
+CHECKOUT_SCREEN = 48
 
 # The reference numbers its own steps - every screen name ends in one ("A2 - 03",
 # "Blood Pressure 2 - 07.a", "Birth Date - 20"), running 1 to 21. Its bar is
@@ -945,7 +955,20 @@ def sections():
             a += (' data-dq-on="%s" data-dq="%s"'
                   % (attr('|'.join(stop)), attr(dq_reason(p))))
         out.append('<section class="step"%s>%s</section>' % (a, render(p)))
+    out.append(checkout_section())
     return out
+
+
+def checkout_section():
+    """The approval / checkout page as the flow's last step.
+
+    It carries no `data-q`, so it takes no progress segment and no question
+    number - the same as every screen after the last question. `data-bare` hides
+    the shell's masthead and progress row; the page prints a centred wordmark
+    and a countdown bar of its own instead, as the reference does."""
+    return ('<section class="step" data-step="%d" data-bare data-checkout>%s</section>'
+            % (CHECKOUT_SCREEN,
+               checkout.screen(LOGO, ICON, _ic, STARS, MOLECULES)))
 
 
 STARS = ('<span class="stars">%s</span>'
@@ -1045,7 +1068,9 @@ def static_progress(q, screen):
 
 def emit_frames():
     frames, q = [], 0
-    for p, html in zip(STEPS, sections()):
+    built = sections()
+    checkout_html = built[-1]
+    for p, html in zip(STEPS, built):
         counted = p in QUESTIONS
         if counted:
             q += 1
@@ -1060,6 +1085,14 @@ def emit_frames():
             chrome = chrome.replace('<button class="back-btn"', '<button class="back-btn" hidden')
         frames.append('<div class="frame-label">%s</div><div class="frame"><div class="shell">'
                       '%s<main class="stage">%s</main></div></div>' % (lbl, chrome, inner))
+    # The checkout carries its own chrome, so it goes into a frame bare - the
+    # same treatment BARE_SCREEN gets in the loop above.
+    frames.append('<div class="frame-label">Screen %02d &mdash; Approval &amp; checkout</div>'
+                  '<div class="frame"><div class="shell"><main class="stage">%s</main>'
+                  '</div></div>'
+                  % (CHECKOUT_SCREEN,
+                     checkout_html.replace('<section class="step"',
+                                           '<section class="step on"', 1)))
     frames.append('<div class="frame-label">Screen %02d &mdash; Assessment received</div>'
                   '<div class="frame"><div class="shell">%s%s</div></div>'
                   % (len(STEPS) + 2, MASTHEAD,

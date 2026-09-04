@@ -280,9 +280,54 @@
     backBtn.hidden = bare || el.hasAttribute('data-no-back') || history.length===0;
     window.scrollTo({top:0, behavior:'auto'});
     if(el.querySelector('[data-loader]')) runLoader(el);
-    if(el.querySelector('[data-name-echo],[data-echo]')) fillSummary(el);
+    if(el.querySelector('[data-name-echo],[data-echo],[data-fname-echo]')) fillSummary(el);
+    if(el.hasAttribute('data-checkout')) startClock(el);
     echoState();
   }
+
+  /* ------------------------------------------------- the checkout's clock */
+  /* One interval and one deadline, painted onto every [data-countdown] on the
+     screen - the reference states the same time in three places and they must
+     not disagree. It starts when the checkout is first reached rather than on
+     load, so the time cannot have run down while the questionnaire was being
+     filled in; walking back and forward again picks the running clock up rather
+     than restarting it, because a deadline that resets on every visit reads as
+     a trick. At zero it holds at 00:00 - nothing on this page is withdrawn. */
+  var CLOCK_SECS=600, clockLeft=CLOCK_SECS, clockTimer=null;
+  function paintClock(el){
+    var m=Math.floor(clockLeft/60), s=clockLeft%60;
+    var t=m+':'+(s<10?'0':'')+s;
+    [].forEach.call(el.querySelectorAll('[data-countdown]'), function(b){
+      b.textContent=t;
+    });
+  }
+  function startClock(el){
+    paintClock(el);
+    if(clockTimer) return;
+    clockTimer=setInterval(function(){
+      if(clockLeft<=0){ clearInterval(clockTimer); clockTimer=null; return; }
+      clockLeft--; paintClock(el);
+    }, 1000);
+  }
+
+  /* ------------------------------------------------- the checkout's packs */
+  /* The price lives on the card as `data-price`, so there is one place to edit
+     it and the rendered figure is never the source of truth. The static frames
+     run no script and show the pack `checkout.LEAD_PACK` names, which is the
+     one that opens selected here too. */
+  stage.addEventListener('click', function(e){
+    var pack=e.target.closest('.ck-pack'); if(!pack) return;
+    var box=pack.closest('[data-packs]'); if(!box) return;
+    [].forEach.call(box.querySelectorAll('.ck-pack'), function(p){
+      p.classList.remove('selected');
+    });
+    pack.classList.add('selected');
+    var card=pack.closest('.step');
+    var tag=card.querySelector('[data-pack-tag]');
+    var price=card.querySelector('[data-pack-price]');
+    if(tag) tag.textContent=pack.dataset.pack+' PACK';
+    if(price) price.textContent='$'+pack.dataset.price;
+  });
   function advance(){
     var el=steps[idx];
     if(!stepValid(el)){ showError(el); return; }
@@ -348,6 +393,12 @@
     /* "Marcus, how" or "How" — the sentence has to read either way, so the
        echo carries the whole opening rather than just the name. */
     if(n) n.textContent = (fn&&fn.value.trim()) ? fn.value.trim()+', how' : 'How';
+    /* The checkout's headline and its clock bar both open on the patient's
+       name in the possessive - "Marcus's approval is valid for". A separate
+       hook from [data-name-echo] because that one carries a whole clause. */
+    [].forEach.call(el.querySelectorAll('[data-fname-echo]'), function(e){
+      e.textContent = (fn&&fn.value.trim()) ? fn.value.trim()+'\u2019s' : 'Your';
+    });
     [].forEach.call(el.querySelectorAll('[data-echo]'), function(e){
       var k=e.dataset.echo;
       if(k==='bp'){

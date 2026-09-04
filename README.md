@@ -27,6 +27,8 @@ in a browser.
 │   ├── extract_v1.py   pulls the question set out of a v1 build
 │   ├── questions.json  …into here — the content this site renders
 │   ├── logo.py         the Braevon wordmark, lifted from v1
+│   ├── checkout.py     screen 48, the approval / checkout page
+│   ├── chart.svg       the onset chart, as supplied; recoloured on the way out
 │   ├── theme.py        the stylesheet
 │   └── build.py        renders the two HTML files
 └── vercel.json         /screens → all-screens.html, plus noindex headers
@@ -225,6 +227,116 @@ appended as frame 35 in `all-screens.html`.
 the reason, `data-dq-on` narrows what triggers it, and with no `data-dq-on` any
 answer other than the exclusive "None of these" is a contraindication.
 
+## Screen 48 — the approval / checkout page
+
+Added 2026-09-04, at the client's word, after the note above said it was out of
+scope. It is **not** v1's checkout restyled and it is **not** in
+`medvi-flow.json`: the reference serves it from `/approval?flow=org`, a separate
+page the questionnaire hands off to, and `extract_medvi.py` only walks
+`/intake-s`. `src/checkout.py` builds it; `build.py` appends it to the flow as
+one more step so Submit walks onto it the way Continue walks onto any screen.
+
+**Layout, block order, geometry and type are the reference's.** Every number in
+the `.ck` block of `theme.py` was read off the live page with
+`getBoundingClientRect` / `getComputedStyle` on 2026-09-04 — the same method
+`docs/medvi-reference.md` used on the questionnaire. Verified after the build:
+each of the sixteen blocks lands within about 40px of the reference's own height
+over a 7,400px page, and the pack cards are exactly its 208x121.
+
+Its sixteen blocks, in order:
+
+| | | | |
+|---|---|---|---|
+| 0 | headline | 8 | pack radios + product card |
+| 1 | goals card | 9 | HSA mark + HIPAA card |
+| 2 | intro copy + the onset chart | 10 | cancellation promise |
+| 3 | the programme card | 11 | "as featured on" |
+| 4 | five benefit rows | 12 | three quotes |
+| 5 | what's included | 13 | "Are you ready?" + Checkout |
+| 6 | what happens next | 14 | cancellation promise (again) |
+| 7 | countdown pill | 15 | FAQ, then the footer |
+
+**Everything inside those blocks is Braevon's**, from v1's own checkout (screen
+34 of `v1/src/steps.py`, built from the client's `Checkout Page 2.pdf`): the
+product, the render (`product-prime.png`, the flat orange tablet from that PDF —
+not `product-tablet.png`, the copper render the rest of the flow uses), the FAQ,
+the rating and the customer count.
+
+**Prices are v1's table**, which the client set on 2026-08-17: 6 uses/month at
+$119, 10 at $159. The reference offers exactly two packs, so those two are the
+two shown and v1's 20-use tier is one row away in `PACKS`. Coverage is uses ×
+the 36-hour window this flow already claims on screen 2, which is how the
+reference derives its own "180 hour" / "360 hour" figures. **The price lives on
+the card as `data-price`** and the rendered figure is never the source of truth,
+so a change is one edit.
+
+**Its chrome is its own.** The reference drops the Trustpilot rating and the
+progress bar here and shows a centred wordmark over a countdown bar, so the
+screen is `data-bare` like the medical review and prints its own masthead.
+Three blocks bleed to the column edge — the masthead, the clock bar and the
+footer — with the negative-margin trick `.rv-head` already uses.
+
+**One clock, three faces.** `startClock()` in `engine.js` runs a single 10:00
+interval and paints every `[data-countdown]` on the screen, because the
+reference states the same deadline in three places. It starts when the checkout
+is first reached rather than on load, so the time cannot have run down while the
+questionnaire was being filled in, and walking back and forward picks the
+running clock up rather than restarting it — a deadline that resets on every
+visit reads as a trick. At zero it holds at 00:00; nothing is withdrawn.
+
+### The onset chart
+
+`src/chart.svg` is the chart **as supplied**, and `checkout.chart()` applies four
+recolours and one rule change on the way out, so a new export drops in and the
+recolour still applies:
+
+| from | to | |
+|---|---|---|
+| `fill="white" fill-opacity="0.32"` | `fill="none"` | the chip underlay |
+| `fill="#01000C" fill-opacity="0.56"` | white + a `#DEE2EA` hairline | the chip pill |
+| `fill="white"` | `#4B5568` | the four tick labels |
+| `fill="#FDFCFC"` | `#171D2C` | the chip lettering |
+
+The rule change: the 2x chip scale was behind `@media (max-width: 600px)` and is
+now unconditional. **Inside an inline SVG a media query still measures the
+viewport, not the drawing**, and this chart is ~432px wide at every viewport
+width because the column is — so at 1x on a desktop the lettering renders at
+about 4.7px, which is the case the 2x scale exists for. Measured after the
+change: all four chips sit inside the 432×193 box and the tightest pair
+(BRAEVON's bottom to SILDENAFIL's top) clears by 3.8px, which is the artwork's
+own stated margin.
+
+**The `braevon-hold` wrapper, its `<style>` and its IntersectionObserver are
+dropped.** They exist to hold the chart at frame zero until it is scrolled to;
+here it lives inside a `display:none` step, CSS animations do not run on a
+`display:none` subtree and start from frame zero when it is shown, so the step
+machinery already does the observer's job — and an observer on a hidden element
+would never fire, which would hold the chart for ever.
+
+### The footer
+
+braevon.com's own footer, read off the live site's **phone** variant on
+2026-09-04 — the right one to copy, because this page is a 480px column at every
+width. Two changes, both the client's: it is white rather than the site's
+`#141414`, and **the full-width BRAEVON wordmark the site prints at the very
+bottom is gone**. Everything else is the site's, wording and order unchanged —
+the tagline, `support@braevon.com`, the Orlando address, the five legal
+paragraphs, the LegitScript seal, the four policy links, the copyright and the
+two social links. `assets/images/footer-seal.png` is the site's own seal file.
+
+### Two colour tokens this screen added
+
+`--accent-deep` (#B8300A) and `--accent-deeper` (#8E2405). `#E6430D` is 4.06:1
+against white — clear for large text, short of AA for the 10-16px white labels
+the clock bar, the pills, the strip and the tags carry. Those chips take
+`--accent-deep` at 6.1:1 instead, so the page does not gain a second orange for
+anything that carries large type. `--green-ink` (#15803D) is the same fix for
+green as small type: `#16A34A` is 3.36:1. Nothing else may use any of the three.
+
+Checked after the change — every text/ground pair on this screen is at or above
+AA: the bar and pills 6.1:1, the pack badges 6.1 and 5.2, the green price 5.0,
+the press marks 5.3, the footer greys 7.5.
+
 ## Behaviour
 
 Carried from v1: "None of these" is exclusive in both directions; Yes and Other
@@ -278,10 +390,24 @@ privacy on and a commit with the real address is rejected at push time.
 
 ## Known gaps
 
-- **The v1 approval and checkout screens are not here.** Those were redesigned by
-  the client in Figma in August 2026 and are not part of the reference's flow,
-  which ends at an assessment-complete read-back. v2 ends the same way, at screen
-  34. Carrying them over or restyling them is separate work.
+- **The checkout's operational promises are not signed off.** "Most prescriptions
+  are approved in less than 24 hours" and "tracking information within 2 business
+  days" are the reference's timings with Braevon's name on them (`NEXT_STEPS` in
+  `checkout.py`). Nobody at Braevon has confirmed either. Same for
+  "24/7 medical support" and "free express shipping" in `INCLUDED` — those at
+  least restate claims v1's own checkout makes.
+- **The reference's money-back guarantee is a cancellation promise here.** A
+  refund is a commercial commitment only the client can make; what Braevon does
+  say, in v1's FAQ, is that a plan can be cancelled from the patient portal at
+  any time. **Ask them which they want** — the block and its ribbon are already
+  the right shape for either.
+- **"BACKED BY RESEARCH FROM" is not built.** The reference runs NIH, WebMD,
+  ScienceDaily and Mayo Clinic logos under that heading, which is a third
+  party's trademark carrying an endorsement claim Braevon has not evidenced. The
+  slot holds v1's "As featured on" row instead — six marks **set in type** to
+  match each masthead's character, not the publications' artwork. Same limit v1
+  set, asked about twice there and answered the same way. Real files drop into
+  `assets/images/press/` and swap for the `<span>`s; the row is already right.
 - **`assets/video/hero.mp4` is missing** — screen 1 falls back to its poster.
 - **The testimonial copy is placeholder**, as it was in v1. Three reviews written
   for this concept, not real ones. Say so before showing anyone who might take
@@ -325,11 +451,11 @@ privacy on and a commit with the real address is rejected at push time.
 - **The 94% success probability is the reference's number, not Braevon's** -
   same problem as the 137%. Screen 45 presents it as a result of this
   assessment; nothing computes it. It needs a source or it should come out.
-- **Submit ends at a confirmation, not a checkout.** The reference posts to its
-  own backend; this build has none, so Submit now shows an "Assessment
-  Received" state instead of doing nothing, which is what it did before. Where
-  the flow goes after that - approval, checkout - is the v1 work that is
-  deliberately out of v2 scope.
+- **Submit walks onto the checkout; the checkout's own button ends the flow.**
+  Screen 47's Submit shows screen 48; that page's "Checkout" shows the
+  "Assessment Received" state. **Nothing is charged and nothing is posted** —
+  there is no backend here and no payment step at all. The reference hands off
+  to Stripe at this point; wiring that up is separate work.
 - **Screen 41's photograph is a stand-in.** The reference opens that one
   question screen with a photo (the only question screen that has one - checked
   by listing every image in its DOM). It uses a man at his bathroom cabinet: an
