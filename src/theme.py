@@ -378,11 +378,15 @@ img{max-width:100%;display:block}
 
 .qshot-top{margin-bottom:var(--gap-title);border-radius:var(--radius-card);
   overflow:hidden;background:var(--neutral-tint)}
-/* A tall portrait cropped to this band would cut the face; bias the crop
-   towards the top so hair, eyes and mouth all stay in frame. 20% is tuned to
-   man-portrait.jpg (1045x1400) - retune it if that photograph is replaced. */
-.qshot-top img{display:block;width:100%;height:168px;object-fit:cover;
-  object-position:50% 20%}
+/* Square, asked for on 2026-09-04: the 168px band this used to be cropped a
+   tall portrait down to a strip across the eyes. A square box is close enough
+   to the photograph's own 3:4 that hair, face and shoulders all survive, and
+   only a little off the top and bottom is lost. `aspect-ratio` rather than a
+   fixed height, so it stays square at every shell width.
+   The bias is still slightly high, because a face sits above the middle of a
+   portrait - tuned to man-portrait.jpg (1045x1400); retune if it is replaced. */
+.qshot-top img{display:block;width:100%;aspect-ratio:1;height:auto;
+  object-fit:cover;object-position:50% 15%}
 
 .reveal{display:none;margin-top:var(--gap-block)}
 .reveal.on{display:block}
