@@ -1656,7 +1656,11 @@ body.frames .dq{position:static;display:block}
        — on "select all that apply" the patient may well want two or three, and
        leaving on the first tick collects exactly one;
      - unticking never advances;
-     - an open follow-up still has to be typed into;
+     - ANY open follow-up holds the screen, optional or not. Optional means it
+       does not gate Next - the patient can move on without typing - and that
+       is a different thing from letting the screen leave on its own while the
+       box is sitting there open. Answering "Yes" is what opens the box, so
+       auto-advancing on that same click took the box away as it arrived;
      - the blood-pressure screen never jumps: picking a band fills both numbers
        and so satisfies the step, but that screen exists precisely so someone
        who knows their real reading can type it.
@@ -1670,7 +1674,7 @@ body.frames .dq{position:static;display:block}
     if(el.querySelector('.bp')) return;
     if(multi && !opt.dataset.exclusive) return;
     if(!opt.classList.contains('selected')) return;
-    if(el.querySelector('.reveal.on:not([data-optional])')) return;
+    if(el.querySelector('.reveal.on')) return;
     if(!stepValid(el)) return;
     setTimeout(function(){ if(steps[idx]===el) advance(); }, 140);
   }

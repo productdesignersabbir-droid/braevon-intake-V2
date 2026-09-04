@@ -480,12 +480,23 @@ labels it — stays on screen and still works, so this is a shortcut past it
 rather than a replacement. Four things hold it back: a multi-select waits unless
 the answer is the exclusive "None of these" (on "select all that apply" the
 patient may want two or three, and leaving on the first tick collects exactly
-one); unticking never advances; an open follow-up still has to be typed into;
+one); unticking never advances; **any open follow-up holds the screen**
+(2026-09-04 — see below); 
 and the blood-pressure screen never jumps, because it exists precisely so
 someone who knows their real reading can type it. Everything else falls out of
 `stepValid`, so the eligibility and patient-info screens hold on their own while
 their inputs are empty. It routes through `advance()`, the same function the
 button calls, so a disqualifying answer still opens the stop screen.
+
+An open follow-up holds the screen whether or not it is optional. *Optional*
+means the box does not gate *Next* — the patient can move on without typing —
+which is a different thing from letting the screen leave on its own while the
+box is sitting there open. The two were conflated until 2026-09-04: answering
+"Yes" is the click that opens the box, and auto-advance fired on that same
+click, so the box appeared and the screen left underneath it. Every Yes/No
+screen with a detail box was affected (9, 10, 23, 39–42, and the multi-answer
+screens with a "tell us more"). "No" opens nothing and still advances on the
+answer, as before.
 
 **Selection is an outline and a glow, never a fill** — a 1px `--accent` stroke
 with a soft orange halo, over the resting `--hairline` grey. A tinted row reads
