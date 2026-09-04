@@ -153,11 +153,27 @@ def blocks_of(body):
                 if 'bp-warning' in attrs:
                     ent["kind"] = "bp-warning"
                     ent["text"] = txt(inner)
+                # A follow-up question inside the reveal, not a text box: v1's
+                # `reveal_yesno`, which draws its Yes/No as `.tile` buttons
+                # under a `.fieldset-label`. `parse_opts` only matches `.opt`,
+                # so these came out as empty reveals - which lost four
+                # questions, all of them disqualifying ones (curve-recent,
+                # curve-pain, heart-recent, stroke-recent).
                 nested = parse_opts(inner)
+                if not nested:
+                    nested = [{"value": tm.group(2), "label": txt(tm.group(3))}
+                              for tm in re.finditer(
+                                  r'<button class="tile([^"]*)" data-value="([^"]+)"'
+                                  r'[^>]*>(.*?)</button>', inner, re.S)]
                 if nested:
                     g = re.search(r'data-group="([^"]+)"', inner)
                     ent["options"] = nested
                     ent["group"] = g.group(1) if g else None
+                    ent["mode"] = (lambda m: m.group(1) if m else 'single')(
+                        re.search(r'data-mode="([^"]+)"', inner))
+                    q = re.search(r'<p class="fieldset-label[^"]*">(.*?)</p>', inner, re.S)
+                    if q and not ent["label"]:
+                        ent["label"] = txt(q.group(1))
                 out.append(ent)
             else:  # field
                 lab = re.search(r'<label[^>]*>(.*?)</label>', inner, re.S)

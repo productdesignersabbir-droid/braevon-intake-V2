@@ -1171,19 +1171,43 @@
     "t": "reveal",
     "for": "curve",
     "on": "yes",
-    "label": null,
+    "label": "Have you had active bending of your penis within the last 12 months?",
     "control": null,
     "placeholder": null,
-    "error": null
+    "error": null,
+    "options": [
+     {
+      "value": "no",
+      "label": "No"
+     },
+     {
+      "value": "yes",
+      "label": "Yes"
+     }
+    ],
+    "group": "curve-recent",
+    "mode": "single"
    },
    {
     "t": "reveal",
     "for": "curve",
     "on": "yes",
-    "label": null,
+    "label": "Do you experience pain with erections or with ejaculation?",
     "control": null,
     "placeholder": null,
-    "error": null
+    "error": null,
+    "options": [
+     {
+      "value": "no",
+      "label": "No"
+     },
+     {
+      "value": "yes",
+      "label": "Yes"
+     }
+    ],
+    "group": "curve-pain",
+    "mode": "single"
    }
   ],
   "marketing": false
@@ -1307,19 +1331,43 @@
     "t": "reveal",
     "for": "history",
     "on": "heart",
-    "label": null,
+    "label": "Have you had a heart attack within the last three months?",
     "control": null,
     "placeholder": null,
-    "error": null
+    "error": null,
+    "options": [
+     {
+      "value": "no",
+      "label": "No"
+     },
+     {
+      "value": "yes",
+      "label": "Yes"
+     }
+    ],
+    "group": "heart-recent",
+    "mode": "single"
    },
    {
     "t": "reveal",
     "for": "history",
     "on": "stroke",
-    "label": null,
+    "label": "Have you had a stroke within the last six months?",
     "control": null,
     "placeholder": null,
-    "error": null
+    "error": null,
+    "options": [
+     {
+      "value": "no",
+      "label": "No"
+     },
+     {
+      "value": "yes",
+      "label": "Yes"
+     }
+    ],
+    "group": "stroke-recent",
+    "mode": "single"
    },
    {
     "t": "reveal",
@@ -1854,6 +1902,26 @@
  },
  {
   "step": 34,
+  "q": null,
+  "dq": null,
+  "dq_on": null,
+  "cond": null,
+  "no_back": true,
+  "blocks": [],
+  "marketing": true
+ },
+ {
+  "step": 35,
+  "q": null,
+  "dq": null,
+  "dq_on": null,
+  "cond": null,
+  "no_back": true,
+  "blocks": [],
+  "marketing": true
+ },
+ {
+  "step": 36,
   "q": null,
   "dq": null,
   "dq_on": null,

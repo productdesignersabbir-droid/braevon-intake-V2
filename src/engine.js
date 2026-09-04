@@ -6,7 +6,13 @@
   var segs=[].slice.call(prog.querySelectorAll('.seg span'));
   var backBtn=document.getElementById('backBtn');
   var dq=document.getElementById('dq'), done=document.getElementById('done');
-  function stop(on){
+  var dqFallback=null;
+  function stop(on, reason){
+    var slot=dq.querySelector('[data-dq-reason]');
+    if(slot){
+      if(dqFallback===null) dqFallback=slot.textContent;
+      slot.textContent = (on && reason) ? reason : dqFallback;
+    }
     dq.classList.toggle('on', on);
     stage.hidden=on; prog.hidden=on||prog.hidden; backBtn.hidden=on||backBtn.hidden;
   }
@@ -228,11 +234,18 @@
        into that list: one named answer ("Never", "More than 3 years ago"), or
        everything except the exclusive "None of these" on a safety screen. */
     var reason=el.dataset.dq; if(!reason) return null;
+    var named=el.hasAttribute('data-dq-on');
     var stop=(el.dataset.dqOn||'').split('|');
+    /* No named answers means the screen stops on ANY answer but its "none of
+       these" - v1's nitrate screen, where every option is a contraindication.
+       `data-dq-safe` carries that one exempt value. Without this branch such a
+       screen has a reason nothing can ever trigger. */
+    var safe=el.dataset.dqSafe;
     var hit=false;
     [].forEach.call(el.querySelectorAll('.opts'), function(box){
       [].forEach.call(box.querySelectorAll('.opt.selected'), function(o){
-        if(stop.indexOf(o.dataset.value)>-1) hit=true;
+        var v=o.dataset.value;
+        if(named ? stop.indexOf(v)>-1 : v!==safe) hit=true;
       });
     });
     return hit?reason:null;
@@ -326,13 +339,13 @@
     var tag=card.querySelector('[data-pack-tag]');
     var price=card.querySelector('[data-pack-price]');
     if(tag) tag.textContent=pack.dataset.pack+' PACK';
-    if(price) price.textContent='$'+pack.dataset.price;
+    if(price) price.textContent=pack.dataset.price;
   });
   function advance(){
     var el=steps[idx];
     if(!stepValid(el)){ showError(el); return; }
     var why=disqualifies(el);
-    if(why){ stop(true); return; }
+    if(why){ stop(true, why); return; }
     for(var j=idx+1;j<steps.length;j++){
       if(shown(steps[j])){ history.push(idx); show(j); return; }
     }
@@ -388,7 +401,7 @@
     return picked.length?picked.join(', '):null;
   }
   function fillSummary(el){
-    var fn=document.getElementById('first_name');
+    var fn=document.getElementById('firstName');
     var n=el.querySelector('[data-name-echo]');
     /* "Marcus, how" or "How" — the sentence has to read either way, so the
        echo carries the whole opening rather than just the name. */
@@ -398,6 +411,20 @@
        hook from [data-name-echo] because that one carries a whole clause. */
     [].forEach.call(el.querySelectorAll('[data-fname-echo]'), function(e){
       e.textContent = (fn&&fn.value.trim()) ? fn.value.trim()+'\u2019s' : 'Your';
+    });
+    /* The goals card leads its echoed line with that goal's own glyph. All
+       five ship inside the span; this shows the one the answer names and hides
+       the rest. With no answer the markup's own `on` stays put, which is what
+       the JS-less frames render. */
+    [].forEach.call(el.querySelectorAll('[data-echo-icon]'), function(e){
+      /* `label()` joins a multi-answer screen's picks with ", ", and v1's goals
+         question is multi - so match the FIRST goal picked rather than the
+         whole string, or nothing matches and the chip renders no icon. */
+      var want=(label(e.dataset.echoIcon)||'').split(', ')[0];
+      if(!want) return;
+      [].forEach.call(e.children, function(i){
+        i.classList.toggle('on', i.dataset.goal===want);
+      });
     });
     [].forEach.call(el.querySelectorAll('[data-echo]'), function(e){
       var k=e.dataset.echo;

@@ -321,9 +321,21 @@ img{max-width:100%;display:block}
 .opt.tile .lbl{flex:none;font-size:16px;font-weight:500}
 .opt.tile .lbl small{display:block;margin-top:8px;font-size:12px;font-weight:400;
   line-height:1.35;color:var(--muted)}
+/* A Yes/No that opens inside a reveal is a follow-up, not the screen's own
+   question, so it takes the tile's shape at a row's height rather than the
+   170px card the sex question uses. Without this v1's four safety follow-ups
+   each ate most of a phone viewport. */
+.reveal .opts.tilegrid .opt.tile{min-height:56px;padding:14px 16px;gap:0}
+.reveal .opts.tilegrid .opt.tile .lbl{font-size:15px}
+.reveal .legend{margin-top:0}
+.reveal > .legend + .opts{margin-top:12px}
 
 /* --------------------------------------------------------------- fields */
 .fields{display:flex;flex-wrap:wrap;gap:12px}
+/* Two field groups in a row - v1's eligibility screen puts its date selects
+   above the height/weight pair - need the same 12px between them that the
+   fields inside a group get, or the two rows touch. */
+.dob + .fields,.fields + .fields,.fields + .dob{margin-top:12px}
 .field{flex:1 1 100%;min-width:0}
 .field.half{flex:1 1 calc(50% - 6px)}
 .field label,.dob-label{display:block;margin:0 0 8px;font-size:17px;font-weight:500;color:var(--ink)}
@@ -791,6 +803,21 @@ img{max-width:100%;display:block}
 .dq-ghost{border:none;background:var(--wash);color:var(--muted)}
 
 /* ---------------------------------------------- approval / checkout (48) */
+/* ---- one step down the ramp, 2026-09-04 ----
+   Every size in this block was the reference's own, measured off its live page:
+   26px headings, 16px body, 14px sub-lines. Set in **Plus Jakarta Sans** they
+   read markedly larger than the reference does in Inter - bigger x-height,
+   wider set - so at identical numbers the page looks heavier than the thing it
+   is copying. The client asked for it brought down to match.
+
+   So the ramp is 26/20/18/17/16/15/14 -> 23/18/17/16/15/14/13. **Sizes at 12px
+   and below are untouched** - captions, badges and tags are already at the
+   floor and a step there costs legibility rather than buying likeness. The
+   footer block below is untouched too: those sizes are braevon.com's own.
+
+   This is the one place the checkout departs from the measured reference on
+   purpose. Do not "restore" it to the reference's numbers. */
+
 /* The reference's approval page, measured off the live DOM on 2026-09-04 and
    restated in Braevon's font, palette and button - see `checkout.py` for what
    was copied and what could not be.
@@ -810,22 +837,51 @@ img{max-width:100%;display:block}
 .ck-mast{margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0;
   display:flex;justify-content:center;padding:16px var(--pad) 14px}
 .ck-mast .logo svg{height:22px}
+/* Full-strength `--accent`, flat, at the client's word on 2026-09-04 - it was a
+   gradient of `--accent-deep`. **White on #E6430D is 4.06:1**, which clears AA
+   for large text and is just under the 4.5:1 this 14px label needs; the client
+   asked for the primary orange and that is the call. Raising the label to 19px
+   bold would make it "large text" and clear it at 3:1, if it ever comes up.
+
+   And it runs the **full width of the window**, not the 480 column - also the
+   client's, against the reference, whose own bar stops at its column. The
+   `50% - 50vw` pair is the standard full-bleed: it works because every ancestor
+   up to `body` is centred and none of them clips.
+
+   `body.frames` keeps the column-width bar. Those frames are 480px boxes on a
+   grey page for the Figma import, and a viewport-wide band there would run
+   across the whole document once per frame. */
 .ck-clock{margin:0 calc(var(--pad) * -1);
-  background:linear-gradient(90deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
+  background:var(--accent);
   color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:15px 16px;font-size:14px;font-weight:600;text-align:center}
+  padding:15px 16px;font-size:13px;font-weight:600;text-align:center}
+body:not(.frames) .ck-clock{margin-inline:calc(50% - 50vw)}
+/* `clip` rather than `hidden`: it does not make body a scroll container, so
+   nothing else changes. It is only here to swallow the scrollbar's width, which
+   `50vw` counts and the client area does not. */
+body:not(.frames){overflow-x:clip}
 /* Underlined, which is v1's settled treatment for the same clock - it is the
    one part of the sentence that changes, and weight alone did not carry it. */
 .ck-clock b{font-weight:800;color:#fff;text-decoration:underline;
   text-underline-offset:3px;font-variant-numeric:tabular-nums}
 
-.ck-h1{margin:0;font-size:26px;line-height:1.2;font-weight:600;
+/* The top margin is stated here rather than left to `.ck > * + *`. That rule
+   and this selector have the same specificity, so this one wins on source
+   order, and a bare `margin:0` was landing the headline flush against the
+   countdown bar - a real zero-gap bug, not just a tight one. 40px rather than
+   the block's 32 because the client asked for more air under the bar. */
+.ck-h1{margin:40px 0 0;font-size:23px;line-height:1.2;font-weight:600;
   letter-spacing:-.01em;color:var(--title-ink)}
-.ck-h2{margin:0;font-size:26px;line-height:1.2;font-weight:600;
+.ck-h2{margin:0;font-size:23px;line-height:1.2;font-weight:600;
   letter-spacing:-.01em;color:var(--title-ink)}
 .ck-h2 em{font-style:normal;color:var(--accent)}
+/* One heading takes this - "Choose your medication preference below:" - at the
+   client's word on 2026-09-04. Centred and a step down from the section ramp,
+   so it reads as the lead-in to the two cards under it rather than as another
+   section title. Do not widen it to `.ck-h2`; the rest stay left at 23px. */
+.ck-h2.mid{text-align:center;font-size:20px}
 .ck-h2.accent{color:var(--accent)}
-.ck-lead{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ck-lead{margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
 .ck-sect > * + *{margin-top:var(--gap-title)}
 .ck-lead + *{margin-top:var(--gap-title)}
 
@@ -840,13 +896,23 @@ img{max-width:100%;display:block}
   background:linear-gradient(135deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
   display:grid;place-items:center;color:#fff}
 .ck-goals-mark svg{width:28px;height:28px}
-.ck-goals b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
+.ck-goals b{display:block;font-size:13px;font-weight:700;color:var(--accent)}
 .ck-goals ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:2px}
-.ck-goals li{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink)}
-.ck-goals li svg{flex:none;width:12px;height:12px;stroke:var(--accent);stroke-width:3}
+.ck-goals li{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink)}
+/* One glyph per goal rather than three identical ticks, as the reference sets
+   them. The hues are `GOAL_STYLE`'s - the five the client picked for screen 1,
+   and the documented exception to orange carrying emphasis. */
+.ck-goals li svg{flex:none;width:13px;height:13px;stroke-width:2.2}
+/* The first line echoes whichever goal was picked, so its glyph has to follow.
+   All five ship in the markup and `fillSummary()` shows the one that matches;
+   with no answer - the static frames - the first stays on, so a frame never
+   renders an empty box where an icon should be. */
+.ck-goal-ic{flex:none;display:flex;width:13px;height:13px}
+.ck-goal-ic i{display:none}
+.ck-goal-ic i.on{display:block}
 
 /* -- 2 intro + the onset chart ------------------------------------------ */
-.ck-intro p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ck-intro p{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
 .ck-intro p + p{margin-top:16px}
 .ck-intro b{font-weight:700}
 /* The reference gives the chart a 20px-padded box of its own under the copy.
@@ -858,9 +924,25 @@ img{max-width:100%;display:block}
    are about 6px. 2x is the artwork's stated ceiling - past that the chips
    collide - so the width is what has to give, not the type. There is no scroll
    at all at 480px and up, which is every case but a phone. */
+/* **The chart breaks out of the text column, up to 640px.** The reference draws
+   its chart 392x280 in a 432 column - 1.4:1. This artwork is 1168x521, 2.24:1,
+   so at the column's 432 it comes out 193px tall and reads as a strip beside
+   the reference's block. Its proportions and its lettering are not ours to
+   change, so the width is what gives: at 640 it is 285px tall, which is the
+   reference's 280 within five pixels, with the artwork and every label
+   untouched.
+
+   `min()` is doing the capping, so this is 480 wide in a 480 window, 640 on any
+   desktop, and never wider - a full-bleed chart on a 1400px monitor would be
+   625px tall. Below 420 it holds its floor and scrolls, as before.
+
+   `body.frames` keeps it inside the column: those frames are 480px boxes and a
+   640px chart would hang out of each one. */
 .ck-chart{margin-top:16px;padding:20px 0;overflow-x:auto;
   -webkit-overflow-scrolling:touch}
-.ck-chart svg{display:block;width:100%;min-width:420px;height:auto}
+.ck-chart svg{display:block;width:100%;min-width:420px;height:auto;margin:0 auto}
+body:not(.frames) .ck-chart{margin-inline:calc(50% - 50vw)}
+body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 
 /* -- 3 the programme card ----------------------------------------------- */
 .ck-prog{background:var(--surface);border-radius:var(--radius-media);
@@ -869,22 +951,24 @@ img{max-width:100%;display:block}
 .ck-prog-mark{flex:none;width:48px;height:48px;border-radius:50%;
   background:var(--accent-soft);display:grid;place-items:center;color:var(--accent)}
 .ck-prog-mark svg{width:22px;height:22px}
-.ck-prog-head h2{margin:0;font-size:26px;line-height:1.2;font-weight:600;
+.ck-prog-head h2{margin:0;font-size:23px;line-height:1.2;font-weight:600;
   color:var(--accent)}
 /* Copy left, render right - the reference's own split, and it does not stack:
-   the render is 109px wide and the column has 384px to give. */
-.ck-prog-body{display:flex;align-items:center;gap:10px;margin-top:24px}
-.ck-prog-body p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+   the render is 109px wide and the column has 384px to give.
+   40px above rather than the reference's 24: the client asked on 2026-09-04 for
+   more air between the "BRAEVON 4-in-1" heading and the tablet under it. */
+.ck-prog-body{display:flex;align-items:center;gap:10px;margin-top:40px}
+.ck-prog-body p{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
 .ck-prog-body b{font-weight:700}
-.ck-prog-sub{margin-top:16px !important;font-size:14px !important;color:var(--ink) !important}
+.ck-prog-sub{margin-top:16px !important;font-size:13px !important;color:var(--ink) !important}
 .ck-prog-body img{flex:none;width:112px;height:auto;align-self:center}
 .ck-prob{display:flex;align-items:center;gap:16px;margin-top:32px;
   background:linear-gradient(180deg,#FFF3EE 0%,#FFEBE2 100%);
   border-radius:var(--radius-card);padding:24px}
-.ck-prob p{margin:0;flex:1;font-size:14px;line-height:1.2;color:#9A2C06}
+.ck-prob p{margin:0;flex:1;font-size:13px;line-height:1.2;color:#9A2C06}
 .ck-prob b{font-weight:700}
 .ck-prob-fig{flex:none;text-align:center}
-.ck-prob-fig b{display:block;font-size:26px;line-height:1.2;font-weight:800;
+.ck-prob-fig b{display:block;font-size:23px;line-height:1.2;font-weight:800;
   color:var(--accent)}
 .ck-prob-fig span{display:block;font-size:12px;color:var(--ink)}
 
@@ -896,30 +980,40 @@ img{max-width:100%;display:block}
 .ck-benefit .bubble{flex:none;width:36px;height:36px;border-radius:50%;
   display:grid;place-items:center;background:var(--bub);color:var(--gly)}
 .ck-benefit .bubble svg{width:18px;height:18px;stroke-width:2.4}
-.ck-benefit b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
-.ck-benefit span{display:block;font-size:14px;color:var(--ink)}
+.ck-benefit b{display:block;font-size:15px;font-weight:500;color:var(--ink)}
+.ck-benefit span{display:block;font-size:13px;color:var(--ink)}
 
 /* -- 5 what's included --------------------------------------------------- */
 .ck-incl{background:#FFF8F5;border-radius:var(--radius-media);padding:24px 24px 40px}
 .ck-incl-card{display:flex;align-items:flex-start;gap:24px;margin-top:32px;
   background:var(--surface);border-radius:var(--radius-card);
   box-shadow:0 4px 16px rgba(0,0,0,.08);padding:24px}
-.ck-incl-card img{flex:none;width:66px;height:auto}
+/* 96px, up from the reference's 66 - the client asked for the tablet bigger on
+   2026-09-04. The copy column takes the difference and still holds four
+   molecule lines at 212px. */
+.ck-incl-card img{flex:none;width:96px;height:auto}
 /* Flex items floor at their own min-content width, so without this the stack
    list holds the card open and the whole thing runs past the column at 320px. */
 .ck-incl-card > div,.ck-prog-body > div,.ck-prod-head > div,
 .ck-benefit > div,.ck-goals > div{min-width:0}
 .ck-incl-title{display:flex;align-items:center;gap:12px}
-.ck-incl-title b{font-size:20px;line-height:1.3;font-weight:700;color:var(--ink)}
-.ck-tag{display:inline-block;background:var(--accent-deep);color:#fff;border-radius:4px;
+.ck-incl-title b{font-size:18px;line-height:1.3;font-weight:700;color:var(--ink)}
+/* Primary `--accent`, at the client's word on 2026-09-04 - it was
+   `--accent-deep`. Same trade as the countdown bar: white on #E6430D is 4.06:1
+   and this cap is 10px, so it is under AA. Their brand call, taken knowingly.
+   This one rule is every tag on the page - the 4-in-1 stack chip, the pack tag
+   on the product card and the two in the "what's included" stack - so they
+   cannot drift apart. */
+.ck-tag{display:inline-block;background:var(--accent);color:#fff;border-radius:4px;
   padding:4px 8px;font-size:10px;font-weight:700;letter-spacing:.04em;
   text-transform:uppercase;line-height:1}
 .ck-stack{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:4px}
-.ck-stack li{font-size:14px;line-height:1.35;color:var(--ink)}
+.ck-stack li{font-size:13px;line-height:1.35;color:var(--ink)}
 .ck-stack b{font-weight:700}
 .ck-incl-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:16px}
 .ck-incl-list li{display:flex;align-items:flex-start;gap:10px;
   font-size:12px;font-weight:500;line-height:1.3;color:var(--ink)}
+.ck-incl-list li > span{min-width:0}
 .ck-incl-list svg{flex:none;width:16px;height:16px;stroke:#16A34A;stroke-width:2.6}
 
 /* -- 6 what happens next ------------------------------------------------- */
@@ -928,20 +1022,28 @@ img{max-width:100%;display:block}
    at the item's own box for free. */
 .ck-steps{margin:0;padding:24px;list-style:none;
   background:var(--surface);border-radius:var(--radius-media);box-shadow:var(--shadow)}
-.ck-steps li{position:relative;padding:0 0 32px 24px;border-left:5px solid var(--accent-soft)}
+/* #FBD0BE rather than `--accent-soft` (#FDECE6). The reference's rail is a mid
+   blue and clearly reads; the soft tint is 1.06:1 against white, so the rule
+   vanished and the step dots floated unconnected. */
+.ck-steps li{position:relative;padding:0 0 32px 24px;border-left:5px solid #FBD0BE}
 .ck-steps li:last-child{border-left-color:transparent;padding-bottom:0}
 .ck-steps li::before{content:"";position:absolute;left:-10px;top:2px;
   width:15px;height:15px;border-radius:50%;background:var(--accent)}
 .ck-step-n{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;
   color:var(--accent)}
-.ck-steps b{display:block;margin-top:8px;font-size:16px;font-weight:600;color:var(--ink)}
-.ck-steps p{margin:6px 0 0;font-size:14px;line-height:1.35;color:var(--muted)}
+.ck-steps b{display:block;margin-top:8px;font-size:15px;font-weight:600;color:var(--ink)}
+.ck-steps p{margin:6px 0 0;font-size:13px;line-height:1.35;color:var(--muted)}
 
 /* -- 7 the countdown pill ------------------------------------------------ */
+/* **v1's mint**, at the client's word on 2026-09-04 - `#41D8A6` ground with
+   `#00462F` type, which is exactly what v1's approval screen sets its countdown
+   pill to (`Approval page.pdf`, 2026-08-14) and reads at 9.4:1. It was an
+   orange gradient. The bar at the top of the page stays orange: v1 ran the same
+   split - a mint pill on the approval, a different ground on the checkout bar -
+   so the two are not meant to be one family. */
 .ck-pill{align-self:center;display:flex;align-items:center;gap:8px;
-  border-radius:4px;padding:9px 16px;color:#fff;
-  background:linear-gradient(90deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
-  font-size:16px;font-weight:500}
+  border-radius:4px;padding:9px 16px;color:#00462F;background:#41D8A6;
+  font-size:15px;font-weight:600}
 .ck-pill b{font-weight:800;font-variant-numeric:tabular-nums}
 
 /* -- 8 the packs and the product card ------------------------------------ */
@@ -957,42 +1059,60 @@ img{max-width:100%;display:block}
   border-radius:50%;border:1.5px solid var(--border);background:#fff}
 .ck-pack.selected .ring{border-color:var(--accent);
   box-shadow:inset 0 0 0 3.5px #fff,inset 0 0 0 9px var(--accent)}
+/* Only the "most popular" card carries a badge - that is where the client's
+   Figma puts it. The pair are flex siblings, so the card without one is still
+   the same height; the margin below the title is what keeps the two titles on
+   the same line rather than a placeholder chip. */
 .ck-pack em{display:inline-block;font-style:normal;border-radius:4px;
   padding:4px 8px;font-size:10px;font-weight:700;color:#fff;letter-spacing:.03em;
   line-height:1}
-.ck-pack b{display:block;margin-top:12px;font-size:20px;font-weight:700;
+.ck-pack b{display:block;margin-top:12px;font-size:18px;font-weight:700;
   color:var(--accent);line-height:1.3}
-.ck-pack small{display:block;font-size:14px;color:var(--ink)}
+.ck-pack:not(:has(em)) b{margin-top:33px}
+.ck-pack small{display:block;font-size:13px;line-height:1.35;color:var(--ink)}
 
 .ck-prod{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px}
 .ck-prod-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.ck-prod-head b{display:block;margin-top:6px;font-size:20px;font-weight:600;
+.ck-prod-head b{display:block;margin-top:6px;font-size:18px;font-weight:600;
   color:var(--ink);line-height:1.3}
-.ck-prod-head small{display:block;font-size:17px;font-weight:500;color:var(--title-ink)}
+.ck-prod-head small{display:block;font-size:16px;font-weight:500;color:var(--title-ink)}
 .ck-prod-rate{flex:none;text-align:right}
 .ck-prod-rate .stars{justify-content:flex-end}
-.ck-prod-rate span{display:block;margin-top:4px;font-size:12px;color:var(--ink)}
+/* `:not(.stars)` is load-bearing. The rating mark is itself a `<span class=
+   "stars">`, and a bare `.ck-prod-rate span` outranks `.stars`'s own
+   `display:flex` on specificity - which turned the five tiles into a vertical
+   column. Anything added here that styles `span` needs the same guard. */
+.ck-prod-rate > span:not(.stars){display:block;margin-top:4px;font-size:12px;
+  color:var(--ink)}
 /* The render sits on the reference's own wash panel; ours is warmed to the
    brand rather than kept blue. */
 .ck-prod-shot{margin-top:24px;border-radius:var(--radius-card);
   background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
   display:grid;place-items:center;padding:20px}
 .ck-prod-shot img{width:150px;height:auto}
-.ck-prod-price{margin:24px 0 0;text-align:center;font-size:18px;font-weight:500;
+.ck-prod-price{margin:24px 0 0;text-align:center;font-size:17px;font-weight:500;
   color:var(--title-ink)}
 .ck-prod-price b{font-weight:700;color:var(--green-ink)}
 .ck-prod-list{margin:20px 0 0;padding:0;list-style:none;display:grid;gap:16px}
 .ck-prod-list li{display:flex;align-items:flex-start;gap:10px;
   font-size:12px;font-weight:500;line-height:1.3;color:var(--ink)}
 .ck-prod-list svg{flex:none;width:16px;height:16px;stroke:#16A34A;stroke-width:2.6}
+/* The text is one flex item, so a bold lead-in and the sentence after it set as
+   a single wrapping paragraph. Without the span the bare text node became a
+   second anonymous flex item and "Price includes:" got a column of its own. */
+.ck-prod-list li > span{min-width:0}
 .ck-prod-list b{font-weight:700}
 
 /* -- 9 HSA and HIPAA ----------------------------------------------------- */
-.ck-hsa{display:flex;justify-content:center}
-.ck-hsa span{border:1px solid var(--border);border-radius:999px;padding:8px 16px;
-  font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--green-ink)}
+/* The reference sets this as a mark, not a chip: a circled tick beside
+   "HSA/FSA Eligible" in the page's own ink, centred on the ground with no pill
+   and no border. It was an outlined green capsule until the client asked for it
+   matched on 2026-09-04. The ring is v1's own `hsa` glyph. */
+.ck-hsa{display:flex;align-items:center;justify-content:center;gap:10px}
+.ck-hsa svg{flex:none;width:30px;height:30px;color:var(--green-ink)}
+.ck-hsa p{margin:0;font-size:17px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
+.ck-hsa b{font-weight:800}
 .ck-hipaa{margin-top:16px !important;background:var(--surface);
   border-radius:var(--radius-media);box-shadow:var(--shadow);
   padding:24px 24px 32px;text-align:center}
@@ -1005,42 +1125,26 @@ img{max-width:100%;display:block}
 .ck-guar{display:flex;align-items:flex-start;gap:16px}
 .ck-guar-mark{flex:none;width:33px;height:33px;color:var(--accent)}
 .ck-guar-mark svg{width:33px;height:33px}
-.ck-guar b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
-.ck-guar p{margin:2px 0 0;font-size:14px;line-height:1.35;color:var(--ink)}
+.ck-guar b{display:block;font-size:15px;font-weight:500;color:var(--ink)}
+.ck-guar p{margin:2px 0 0;font-size:13px;line-height:1.35;color:var(--ink)}
 
-/* -- 11 as featured on --------------------------------------------------- */
-/* Type-set marks, not the publications' artwork - see PRESS in checkout.py. */
-.ck-press{text-align:center}
-.ck-press > p{margin:0 0 14px;font-size:12px;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted)}
-.ck-press-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
-  gap:14px 22px}
-.ck-pm{font-size:15px;color:#6B6B6B;line-height:1;white-space:nowrap}
-.ck-pm i,.ck-pm b,.ck-pm u{font-style:normal;text-decoration:none}
-.pm-ok i{font-weight:800;font-style:italic;font-size:17px}
-.pm-ok u{font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-left:3px}
-.pm-bal i{font-style:italic;font-size:11px;margin-right:2px}
-.pm-bal b{font-weight:700}
-.pm-bal u{font-size:11px;margin-left:2px}
-.pm-mh{font-weight:700;letter-spacing:-.01em}
-.pm-law i{font-style:italic;background:#6B6B6B;color:#fff;padding:1px 3px;margin-right:3px}
-.pm-law b{font-weight:800;letter-spacing:.02em}
-.pm-lt{font-style:italic;font-weight:600;letter-spacing:.02em}
-.pm-hu i{font-style:italic;margin-right:3px}
-.pm-hu b{font-weight:700;font-size:11px;letter-spacing:.06em}
+/* -- 11 -----------------------------------------------------------------
+   Nothing here. The reference's "BACKED BY RESEARCH FROM" logo row is not
+   built - see the note in checkout.py - and the "as featured on" row that stood
+   in for it came out on 2026-09-04 at the client's word, styles and all. */
 
 /* -- 12 the quotes ------------------------------------------------------- */
 .ck-quotes{display:flex;flex-direction:column;gap:24px}
 .ck-quote{background:linear-gradient(135deg,#FFF7F4 0%,#FFF4F0 100%);
   border-radius:var(--radius-media);padding:24px}
 .ck-quote-top{display:flex;align-items:flex-start;gap:16px}
-.ck-quote-top h3{margin:0;flex:1;font-size:17px;font-weight:500;line-height:1.35;
+.ck-quote-top h3{margin:0;flex:1;font-size:16px;font-weight:500;line-height:1.35;
   color:var(--title-ink)}
 .ck-quote-top .stars{flex:none}
-.ck-quote > p{margin:16px 0 0;font-size:14px;line-height:1.35;color:var(--ink)}
+.ck-quote > p{margin:16px 0 0;font-size:13px;line-height:1.35;color:var(--ink)}
 .ck-who{display:flex;align-items:center;justify-content:space-between;gap:8px;
   margin-top:16px}
-.ck-who b{font-size:16px;font-weight:500;color:var(--ink)}
+.ck-who b{font-size:15px;font-weight:500;color:var(--ink)}
 .ck-who span{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ink)}
 .ck-who svg{width:15px;height:15px;stroke:#16A34A;stroke-width:2.6}
 
@@ -1048,7 +1152,7 @@ img{max-width:100%;display:block}
 .ck-ready > * + *{margin-top:16px}
 .ck-ready-tag{display:inline-block;border-radius:33px;padding:16px 24px;
   background:linear-gradient(90deg,#FFD9C7 0%,rgba(255,217,199,0) 100%);
-  font-size:16px;font-weight:500;color:var(--ink)}
+  font-size:15px;font-weight:500;color:var(--ink)}
 .ck-ready-clock{display:inline-flex;align-items:center;gap:5px;
   background:var(--surface);padding:6px 8px;font-size:12px;color:var(--muted)}
 .ck-ready-clock b{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
@@ -1066,23 +1170,23 @@ img{max-width:100%;display:block}
   width:14px;height:14px;border-right:4px solid var(--accent-soft);
   border-bottom:4px solid var(--accent-soft);transform:rotate(45deg);
   border-bottom-right-radius:3px}
-.ck-ready-line{margin:0;font-size:20px;font-weight:600;
+.ck-ready-line{margin:0;font-size:18px;font-weight:600;
   line-height:1.3;color:var(--ink)}
 .ck-ready-card{background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px;margin-top:32px !important}
-.ck-ready-card h3{margin:0;font-size:20px;font-weight:600;color:var(--ink)}
+.ck-ready-card h3{margin:0;font-size:18px;font-weight:600;color:var(--ink)}
 .ck-ready-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:24px}
 .ck-ready-list li{display:flex;align-items:flex-start;gap:16px}
 .ck-ready-list svg{flex:none;width:20px;height:20px;stroke:var(--accent);stroke-width:2.4}
-.ck-ready-list b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.ck-ready-list b{display:block;font-size:15px;font-weight:500;color:var(--ink)}
 .ck-ready-list span{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
 .ck-ready-packs{display:flex;gap:24px;margin-top:32px;
   background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
   border-radius:var(--radius-card);padding:24px}
 .ck-ready-pack{flex:1;min-width:0}
-.ck-ready-pack b{display:block;margin-top:8px;font-size:20px;font-weight:600;
+.ck-ready-pack b{display:block;margin-top:8px;font-size:18px;font-weight:600;
   line-height:1.3;color:var(--ink)}
-.ck-ready-pack em{display:block;margin-top:8px;font-style:normal;font-size:20px;
+.ck-ready-pack em{display:block;margin-top:8px;font-style:normal;font-size:18px;
   font-weight:700;color:#16A34A}
 .ck-ready-note{margin:24px auto 0;max-width:270px;text-align:center;
   font-size:12px;line-height:1.3;color:var(--muted)}
@@ -1092,13 +1196,13 @@ img{max-width:100%;display:block}
 /* -- 15 the FAQ ---------------------------------------------------------- */
 .ck-faq{background:linear-gradient(180deg,#FFF3EE 0%,#FFF9F7 100%);
   border-radius:12px;padding:32px}
-.ck-faq h2{margin:0 0 24px;text-align:center;font-size:20px;font-weight:600;
+.ck-faq h2{margin:0 0 24px;text-align:center;font-size:18px;font-weight:600;
   color:var(--accent)}
 .ck-faq-item{border-top:1px solid #FFE0D3}
 .ck-faq-item:first-of-type{border-top:none}
 .ck-faq-item summary{display:flex;align-items:flex-start;gap:10px;
   list-style:none;cursor:pointer;padding:14px 0;
-  font-size:14px;line-height:1.35;color:var(--title-ink)}
+  font-size:13px;line-height:1.35;color:var(--title-ink)}
 .ck-faq-item summary::-webkit-details-marker{display:none}
 .ck-faq-item summary svg{order:2;flex:none;width:16px;height:16px;margin-left:auto;
   stroke:var(--accent);transition:transform .16s ease}

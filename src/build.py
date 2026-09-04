@@ -29,31 +29,48 @@ import os
 import re
 
 import checkout
+import flow_v1
 from logo import LOGO
 from theme import CSS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.dirname(HERE)
-FLOW = json.load(open(os.path.join(HERE, 'medvi-flow.json'), encoding='utf-8'))
+
+# **The flow is Braevon's own 24 questions**, from 2026-09-04. It was the MEDVi
+# QUAD reference's 40 until then; the client asked for the reference's questions
+# to be replaced with v1's, keeping v2's design and every component - and for no
+# screen that does not ask something to be carried over. `flow_v1.py` does the
+# reshaping and refuses to build a screen with no question on it; the reference's
+# own flow stays in `medvi-flow.json` beside it, unread, so a screen can be
+# pulled back one at a time if the client wants one.
+FLOW = flow_v1.FLOW
 # Where the exclusive answer sits on each multi-answer screen, the line under it
 # when it has one, and the captions that break a long list into groups. Read off
 # the live reference on 2026-09-03, because the DOM extraction flattens all
 # three away. Keyed by screen; the caption is keyed by the label of the option
 # it sits above.
-GROUPS = json.load(open(os.path.join(HERE, 'groups.json'), encoding='utf-8'))
+# Where the "none of these" answer sits, per screen. v1 hoists it to the top of
+# every list that has one, so this is derived from the flow rather than read off
+# a page - `groups.json` was the reference's and is no longer loaded.
+GROUPS = {str(n): {'exclusive_first': True, 'exclusive_note': None, 'captions': {}}
+          for n in flow_v1.EXCLUSIVE_FIRST}
 
 BRAND = 'BRAEVON'
-STOP_SCREEN = 46          # the reference's "NO RX" page; here it is the overlay
-INTERSTITIALS = {2, 5, 8, 32, 33, 44}
-# Screens the reference lays out as two cards side by side rather than a
-# stacked list — measured off the live page, where the option wrapper is
-# flex-direction:row and each card is 208x190 instead of 432x51.
-TILE_SCREENS = {3, 7, 24, 39, 40, 41, 42}
+# The eligibility stop is an overlay, not a screen, in both flows.
+STOP_SCREEN = None
+# **Nothing here is an interstitial any more.** Every screen in this flow asks
+# something - that is the rule the client set - so the reference's marketing,
+# processing and read-back screens have no counterpart. The renderers for them
+# are still below and are simply never reached; they are the reference
+# implementation and are kept so a screen can be brought back deliberately.
+INTERSTITIALS = set()
+# v1's two-up control, its sex question's Male / Female cards. Read off the
+# extraction (`style: tiles`) rather than listed by number.
+TILE_SCREENS = flow_v1.TILE_SCREENS
 
 SEGMENTS = 5
-# The medical review replaces the masthead and the bar with its own result
-# header, as the reference does.
-BARE_SCREEN = 45
+# No screen carries its own chrome in this flow.
+BARE_SCREEN = None
 
 # The approval / checkout page, added on 2026-09-04. It is not in
 # `medvi-flow.json` because it is not part of the questionnaire: the reference
@@ -73,7 +90,7 @@ CHECKOUT_SCREEN = 48
 # live page: step 5 and step 6 sit in segment 1, step 7 through 11 in segment 2,
 # step 12 in segment 3. The last two (16, 19) are the remaining steps split
 # evenly and are NOT confirmed - see the README.
-SEGMENT_STARTS = [1, 7, 12, 16, 19]
+SEGMENT_STARTS = flow_v1.SEGMENT_STARTS
 
 _STEP_RE = re.compile(r'-\s*(\d+)')
 
@@ -138,17 +155,23 @@ ICON = {
 # blue"/"blue 2", "Light red", "light purple"/"purple", "Light Orange"/"Orange".
 # A deliberate exception to the rule that orange carries emphasis: the client
 # asked for these five hues and nothing else in the flow takes them.
+# Screen 1's goal icons, keyed by **v1's** option labels from 2026-09-04 (they
+# were the reference's until then). The five hues are the client's own, set on
+# 2026-09-03, and are a deliberate exception to orange carrying emphasis -
+# nothing else in the flow uses them. Paired to the nearest sense: a stopwatch
+# for lasting, a rising line for erections, a heart for arousal, a refresh arrow
+# for rebound, a shield-tick for confidence.
 GOAL_STYLE = {
-    'Improve stamina & endurance': ('#DFF7E6', '#22C55E',
-                                    _ic('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/>')),
-    'Increase erection strength':  ('#DBEAFE', '#31ABE8',
-                                    _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>')),
-    'Boost sex drive & desire':    ('#FEE2E2', '#EC4899',
-                                    _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5c0 5-7 9.5-7 9.5z"/>')),
-    'Quicker recovery':            ('#F3EBFF', '#A855F7',
-                                    _ic('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v5h-5"/>')),
-    'Boost confidence':            ('#FFEDD5', '#F97316',
-                                    _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>')),
+    'Last longer':         ('#DFF7E6', '#22C55E',
+                            _ic('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/>')),
+    'Better erections':    ('#DBEAFE', '#31ABE8',
+                            _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>')),
+    'More arousal':        ('#FEE2E2', '#EC4899',
+                            _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5c0 5-7 9.5-7 9.5z"/>')),
+    'Faster rebound time': ('#F3EBFF', '#A855F7',
+                            _ic('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v5h-5"/>')),
+    'More confidence':     ('#FFEDD5', '#F97316',
+                            _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>')),
 }
 
 _DROP = _ic('<path d="M12 3s6 6.5 6 10.5a6 6 0 0 1-12 0C6 9.5 12 3 12 3z"/>')
@@ -156,36 +179,31 @@ _DROP = _ic('<path d="M12 3s6 6.5 6 10.5a6 6 0 0 1-12 0C6 9.5 12 3 12 3z"/>')
 # The sex screen's two cards carry a 64px icon bubble in the reference, in the
 # same two hues its goal icons use. The other tile screens carry a small mark
 # that reads as decoration, and are left plain.
+# v1's sex question is screen 4, and it is the only tile screen in this flow.
 TILE_ICONS = {
-    (3, 'male'):   ('#DBEAFE', '#3B82F6',
+    (4, 'male'):   ('#DBEAFE', '#3B82F6',
                     _ic('<circle cx="10" cy="14" r="6"/><path d="M15 9l6-6M15 3h6v6"/>')),
-    (3, 'female'): ('#FCE7F3', '#EC4899',
+    (4, 'female'): ('#FCE7F3', '#EC4899',
                     _ic('<circle cx="12" cy="9" r="6"/><path d="M12 15v7M9 19h6"/>')),
-    (24, 'no'):    ('#DFF7E6', '#22C55E', _DROP),
-    (24, 'yes'):   ('#FEE2E2', '#EF4444', _DROP),
 }
 
 # The blood-pressure screens read as a scale, and the reference colours them as
 # one: a droplet per band, running blue (low) through green (normal) to red,
 # with the band's own caption in the same hue. "I don't know" steps out of the
 # scale and takes a grey cross.
-BAND_SCREENS = {25, 26}
-_BLUE, _CYAN = ('#DBEAFE', '#3B82F6'), ('#CFFAFE', '#06B6D4')
-_GREEN, _AMBER = ('#DCFCE7', '#22C55E'), ('#FEF3C7', '#EAB308')
-_ORANGE, _RED = ('#FFEDD5', '#F97316'), ('#FEE2E2', '#EF4444')
+BAND_SCREENS = flow_v1.BAND_SCREENS
+
+# v1's five blood-pressure bands, in its own values. The ramp is the reference's
+# - blue for low, green for normal, red for high - so the list reads as a scale
+# rather than five equal choices.
 BAND_STYLE = {
-    (25, 'Under 90'):     _BLUE,
-    (25, '91 - 109'):     _CYAN,
-    (25, '110 - 139'):    _GREEN,
-    (25, '140 - 149'):    _AMBER,
-    (25, '91 - 119'):     _ORANGE,   # the reference's value for its "150-159"
-    (25, 'Over 160'):     _RED,
-    (26, 'Under 50'):     _BLUE,
-    (26, '51 - 60'):      _CYAN,
-    (26, '61 - 80'):      _GREEN,
-    (26, '81 - 90'):      _ORANGE,
-    (26, 'Over 90'):      _RED,
+    (25, 'very-high'): ('#FEE2E2', '#EF4444'),
+    (25, 'high'):      ('#FFEDD5', '#F97316'),
+    (25, 'normal'):    ('#DFF7E6', '#22C55E'),
+    (25, 'low'):       ('#DBEAFE', '#3B82F6'),
+    (25, 'very-low'):  ('#E0E7FF', '#6366F1'),
 }
+
 _NOBAND = ('#E9ECF1', '#94A3B8')
 _CROSS = _ic('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>')
 
@@ -196,138 +214,49 @@ _CROSS = _ic('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>')
 # is per screen.
 _TICK_ART  = ('#DFF7E6', '#22C55E', _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>'))
 _CROSS_ART = ('#FEE2E2', '#EF4444', _ic('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'))
-GOOD_ANSWER = {
-    7:  'yes',   # waking with an erection is the reassuring answer
-    39: 'no',    # no allergy, no other allergy, no medication, nothing to add
-    40: 'no',
-    41: 'no',
-    42: 'no',
-}
+# Keyed to the reference's screens, which are gone. v1 draws no yes/no screen as
+# a pair of tiles - its only tile screen is the sex question - so nothing reads
+# this today. Left in place because the treatment is right and one line brings
+# it back if a Braevon screen is ever drawn that way.
+GOOD_ANSWER = {}
 
-# The reference picks out the word a question turns on and sets it in the
-# accent - the rest of the headline stays ink. One entry per screen that does
-# it; the phrase is matched against the escaped title, so write it as it reads.
-# A tinted panel under the options, where the reference puts one. Keyed by
-# screen so more can be added as they turn up.
-# Screens whose sub-head the reference sets as a second heading (H2 20/600 in
-# near-black) rather than a grey caption. Checked one by one against the live
-# page - the wording gives no clue which is which ("Select your primary goal:"
-# is grey, "When was your most recent physical exam?" is a heading).
-LEADS = {5, 23, 27}
-
-# The only screens whose second sub-head is a real legend over the list. The
-# extractor also files section captions and field labels under `subs`, and
-# those are carried by GROUPS and by the fields themselves.
-LEGENDS = {25, 26}
-
-# Answering "Yes" on these opens a box to list the detail, as the reference
-# does. The reference renders them only once Yes is picked, so they are not in
-# the DOM extraction - screen 40's wording is its own, taken from the live
-# screen; 39, 41 and 42 follow the same pattern and are ours. Like the
-# reference's, the box does not gate the step.
-# The reference carries a photograph above the headline on exactly one question
-# screen - the medications one. Checked by listing every <img> in its DOM and
-# discarding the wordmark: the only other photographs are the hero and the two
-# testimonials. Braevon's own asset stands in; a medicine-cabinet shot like the
-# reference's would sit better, see the README.
-# Every single-answer screen opens on its FIRST option, which is what the
-# reference does. Established by walking it: its sex screen arrives with "Male"
-# already selected and Next enabled, without anything being clicked. Screen 1 is
-# the exception - the reference leaves it unanswered - and carries Braevon's own
-# choice instead, asked for on 2026-09-03.
+# **Every table in this block was keyed to the reference's screen numbers**, and
+# those screens are not in this flow. They are emptied rather than re-guessed
+# onto Braevon's questions: which headline word takes the accent, which sub-head
+# is a heading rather than a caption, which screen carries a photograph and
+# which carries a footnote are per-screen judgements about the reference's copy,
+# and inventing new ones for v1's copy is design work nobody has asked for.
 #
-# Multi-answer screens are NOT defaulted: "select all that apply" has no single
-# answer, and ticking the first item would put a real symptom in the patient's
-# mouth.
+# Adding an entry is one line each and the renderers all still read them, so any
+# of it can come back for a named Braevon screen when someone decides it should.
+LEADS = set()          # sub-heads set as a second heading rather than a caption
+LEGENDS = set()        # v1 carries its own legends inline, in document order
+SCREEN_IMAGE = {}      # the reference's one photographed question screen
+REVEALS = {}           # v1's reveals are in its own blocks, rendered in order
+MEDLISTS = {}
+BREAKS = {}
+FOOTNOTES = {}
+HIGHLIGHTS = {}
+
+# **This flow preselects only what v1 preselects**, and that is two screens:
+# "Male" on the eligibility question and "Normal" on the blood-pressure bands.
+# Both are v1's own decisions, and the extraction carries them as `preselected`.
 #
-# CLINICAL NOTE: on 24 and 39-42 the first option is "No", so a patient clicking
-# straight through submits "no hypertension, no allergies, no medications"
-# without reading the question. That is the reference's own behaviour and it was
-# asked for explicitly, but it is the thing on this build most in need of a
-# prescriber's sign-off. See the README.
-DEFAULTS = {p['n']: p['options'][0]['value']
-            for p in FLOW if p['mode'] == 'single' and p['options']}
-DEFAULTS[1] = 'Quicker recovery'   # Braevon's choice; the reference has none
+# The reference's rule was different and is deliberately not carried over: it
+# opened *every* single-answer screen on its first option, which on its safety
+# screens meant a patient clicking through submitted "no allergies, no
+# medications, no conditions" without reading one of them. v2's own README
+# flagged that as the thing on the build most in need of a prescriber's
+# sign-off. With Braevon's questions there is no reason to reintroduce it, so an
+# unanswered safety screen stays unanswered and the CTA says what is missing.
+DEFAULTS = {p['n']: o['value']
+            for p in FLOW for o in p['options'] if o.get('preselected')}
 
 
 def _none_of(p):
-    """The 'none of these' answer on a multi-answer screen.
-
-    Usually the screen's own exclusive value. Screen 28 has no exclusive
-    recorded, so its none-answer is found by label instead."""
-    if p['exclusive']:
-        return p['exclusive']
-    for o in p['options']:
-        if re.match(r'^(none\b|no[,\s])', (o['label'] or '').strip(), re.I):
-            return o['value']
-    return None
-
-
-# A multi-answer screen opens on its "none of these", which is what the
-# reference does - nothing else could be a default there, and ticking a real
-# symptom on the patient's behalf would be worse than useless.
-# The final terms checkbox is deliberately absent: agreement is something the
-# patient gives, not something the form assumes on their behalf.
-for _p in FLOW:
-    if _p['mode'] == 'multi' and _p['options'] and _p['n'] != 47:
-        _v = _none_of(_p)
-        if _v:
-            DEFAULTS[_p['n']] = _v
-
-SCREEN_IMAGE = {
-    # The reference uses a man at his bathroom cabinet - an ordinary moment,
-    # not a clinician. There is no such photograph in the repo, so this is the
-    # nearest register available (an unused portrait of a man rather than the
-    # white-coat doctor shot that was here). A cabinet/bathroom photo would
-    # match properly - see the README.
-    41: ('stat-hero.jpg', 'A man at home'),
-}
-
-REVEALS = {
-    39: ('List the ED medications you are allergic to.', 'Q_ed_allergy_detail'),
-    40: ('List your allergies to medications, foods, dyes, etc.',
-         'Q_other_allergy_detail'),
-    41: ('List the medications you are currently taking.', 'Q_medication_detail'),
-    42: ('Tell the doctor anything else you would like them to know.',
-         'Q_doctor_note_detail'),
-}
-
-# The reference lists the four molecules under this headline, in two columns,
-# before the Yes/No cards. Column-major, as it reads them out.
-MEDLISTS = {
-    39: ['sildenafil (Viagra)', 'tadalafil (Cialis)',
-         'vardenafil (Levitra)', 'avanafil (Stendra)'],
-}
-
-# Where the reference's headline wraps and ours does not. The break goes in
-# after this text, so the phrase that follows stays together on its own line.
-BREAKS = {
-    39: 'Are you allergic to any of the',
-}
-
-FOOTNOTES = {
-    25: ('Don&rsquo;t know your blood pressure?',
-         'If you&rsquo;re unsure of your blood pressure, get it checked for free at '
-         'most pharmacies or contact your provider for your most recent reading.'),
-}
-
-
-HIGHLIGHTS = {
-    5:  'BRAEVON&rsquo;s 4-in-1',          # set in the screen's own markup
-    16: 'For your safety', 17: 'For your safety', 18: 'For your safety',
-    19: 'For your safety', 20: 'For your safety', 21: 'For your safety',
-    23: 'So far so good!',
-    24: 'diagnosed',
-    25: 'last blood pressure reading?',
-    26: 'last blood pressure reading?',
-    27: 'For your safety',
-    28: 'Thank you',
-    34: 'early sign',
-    35: 'even if only occasionally.',
-    39: 'ED medications',
-    40: 'any other allergies?',
-    41: 'medications',
-}
+    """The "none of these" answer on a multi-answer screen. v1 marks its own
+    with `data-exclusive`, so unlike the reference there is nothing to infer."""
+    return p['exclusive']
 
 
 def highlight(n, title):
@@ -455,7 +384,11 @@ def head(title=None, sub=None, eyebrow=None, lead=False):
 
 
 def option(o, exclusive, goal=False, tile=False, screen=None,
-           excl_first=False, excl_note=None):
+           excl_first=False, excl_note=None, band=False):
+    """`band` is passed rather than inferred from the screen. v1's
+    blood-pressure screen carries two lists - the five bands and, under the
+    warning, a single opt-out checkbox - and keying the droplet treatment off
+    the screen number painted the opt-out as a grey crossed band too."""
     label = esc(brandify(o['label']))
     on = ' selected' if DEFAULTS.get(screen) == o['value'] else ''
     if tile:
@@ -475,7 +408,7 @@ def option(o, exclusive, goal=False, tile=False, screen=None,
         return ('<button class="opt goal%s" data-value="%s"><span class="bubble" '
                 'style="--bub:%s;--gly:%s">%s</span><span class="lbl">%s</span></button>'
                 % (on, attr(o['value']), bub, gly, glyph, label))
-    if screen in BAND_SCREENS:
+    if band:
         bub, gly = BAND_STYLE.get((screen, o['value']), _NOBAND)
         glyph = _DROP if (screen, o['value']) in BAND_STYLE else _CROSS
         note = ('<small style="color:%s">%s</small>' % (gly, esc(brandify(o['note'])))
@@ -525,9 +458,38 @@ def options_block(p):
         if cap:
             out.append('<p class="optcap">%s</p>' % esc(cap))
         note = g.get('exclusive_note') if o['value'] == p['exclusive'] else None
-        out.append(option(o, p['exclusive'], goal, tile, p['n'], excl_first, note))
+        out.append(option(o, p['exclusive'], goal, tile, p['n'], excl_first, note,
+                          band=p['n'] in BAND_SCREENS))
     return ('<div class="opts%s" data-group="%s" data-mode="%s">%s</div>'
             % (' tilegrid' if tile else '', attr(p['group']), p['mode'], ''.join(out)))
+
+
+def options_of(p, block, tile=False):
+    """`options_block()` renders a screen's primary list from the flat record.
+    v1 screens can carry a second list - screen 25's opt-out - and their reveals
+    carry Yes/No pairs of their own, so this renders any one block."""
+    excl = _exclusive_of(block)
+    excl_first = bool(excl)
+    opts = [{'value': o['value'], 'label': o['label'],
+             'type': 'checkbox' if block['mode'] == 'multi' else 'radio',
+             **({'note': o['note']} if o.get('note') else {}),
+             **({'sub': o['sub']} if o.get('sub') else {})}
+            for o in block['options']]
+    if not tile:
+        opts = sorted(opts, key=lambda o: (o['value'] == excl) != excl_first)
+    out = ''.join(option(o, excl, False, tile, p['n'], excl_first, None,
+                         band=bool(block.get('grouped')))
+                  for o in opts)
+    return ('<div class="opts%s" data-group="%s" data-mode="%s"%s>%s</div>'
+            % (' tilegrid' if tile else '', attr(block['group']), block['mode'],
+               ' data-optional="1"' if block.get('optional') else '', out))
+
+
+def _exclusive_of(block):
+    for o in block['options']:
+        if o.get('exclusive'):
+            return o['value']
+    return None
 
 
 def field_block(f, label=None):
@@ -571,7 +533,11 @@ def screen_hero(p):
             '<p class="strip">BRAEVON 4-in-1. Arousal &amp; performance. '
             '<strong>In minutes</strong></p>'
             '<p class="ask">See if <strong>BRAEVON</strong> is right for you.</p>'
-            '<p class="ask-sub">Select your primary goal:</p>'
+            # The screen's own instruction, not a fixed one: the reference asked
+            # for a single primary goal and v1 asks for all that apply, so a
+            # hardcoded "Select your primary goal:" contradicted its own control.
+            + '<p class="ask-sub">%s</p>'
+              % esc(brandify(p['subs'][0] if p['subs'] else 'Select your goal:'))
             + options_block(p) + cta(blocked=p['n'] not in DEFAULTS) + '</div>')
 
 
@@ -624,6 +590,125 @@ def screen_question(p):
     out.append(cta(blocked=p['n'] not in DEFAULTS))
     out.append('</div>')
     return ''.join(out)
+
+
+def screen_v1(p):
+    """A Braevon question screen, rendered in v2's components.
+
+    v1 composes a screen freely - eyebrow, title, a note, a legend, its options,
+    a legend again, a row of fields - and the order carries meaning ("Sex
+    assigned at birth" belongs above the tiles, "Date of birth" above the three
+    selects). So this walks the extracted blocks in document order rather than
+    rebuilding a fixed shape from the flat record, and every piece it emits is
+    v2's own component: `.eyebrow`, `.qhead`, `.sub`, `.note`, `.legend`,
+    `.opts`, `.reveal`, `.field`, `.cta`.
+
+    Nothing here is reference-specific. The screens the reference rendered
+    specially - its hero, its interstitials, its birth-date step, its medical
+    review, its submission page - have no counterpart in this flow; their
+    renderers are below and unreachable.
+    """
+    out = ['<div class="col">']
+    fields = []           # consecutive fields collect into one `.fields` row
+    dob = []              # …and v1's three date selects into `.dob`
+
+    def flush():
+        """Fields are laid out as a row, so they cannot be emitted one at a
+        time: `.field.half` only pairs up inside a `.fields` wrapper."""
+        if dob:
+            out.append('<div class="dob">%s</div>' % ''.join(dob))
+            del dob[:]
+        if fields:
+            out.append('<div class="fields">%s</div>' % ''.join(fields))
+            del fields[:]
+
+    tile = p['n'] in TILE_SCREENS
+    for b in p['blocks']:
+        t = b['t']
+        if t in ('eyebrow', 'title', 'sub', 'legend', 'note', 'options'):
+            flush()
+        if t == 'eyebrow':
+            out.append('<p class="eyebrow">%s</p>' % esc(brandify(b['text'])))
+        elif t == 'title':
+            out.append('<h1 class="qhead">%s</h1>' % esc(brandify(b['text'])))
+        elif t == 'sub':
+            out.append('<p class="sub">%s</p>' % esc(brandify(b['text'])))
+        elif t == 'legend':
+            out.append('<p class="legend">%s</p>' % esc(brandify(b['text'])))
+        elif t == 'note':
+            # v1 keeps `<b>` inside this one - the eligibility panel leans on it
+            # for "male" and "18 years of age", which is the point of the panel.
+            lead = ('<b>%s</b> ' % esc(b['lead'])) if b.get('lead') else ''
+            body = re.sub(r'&lt;(/?b)&gt;', r'<\1>', esc(brandify(b['text'])))
+            out.append('<div class="note">%s<p>%s%s</p></div>'
+                       % (ICON['info'], lead, body))
+        elif t == 'options':
+            out.append(options_of(p, b, tile=tile and b.get('style') == 'tiles'))
+        elif t == 'reveal':
+            out.append(reveal_block(b))
+        elif t == 'field':
+            (dob if b.get('dob') else fields).append(
+                field_block(_field_of(b), b.get('label')))
+    flush()
+    out.append(cta(blocked=p['n'] not in DEFAULTS))
+    out.append('</div>')
+    return ''.join(out)
+
+
+def _field_of(b):
+    """v1's field block into the record `field_block()` reads. The id is kept
+    exactly as v1 wrote it - the engine and the checkout's echoes look controls
+    up by it (`#firstName`, `#state`)."""
+    f = {'tag': b['tag'], 'name': b['id'],
+         'input_type': b.get('input_type'),
+         'placeholder': b.get('placeholder'),
+         'half': bool(b.get('half'))}
+    if b.get('options'):
+        f['options'] = b['options']
+    if b['id'] == 'phone':
+        f['us_phone'] = True
+    return f
+
+
+def reveal_block(b):
+    """A follow-up that opens on a given answer. v1 has three kinds and they all
+    use v2's `.reveal`:
+
+    * a free-text box - the common case;
+    * a **Yes/No question of its own** (`curve-recent`, `curve-pain`,
+      `heart-recent`, `stroke-recent`), which is where four of the six stopping
+      rules actually live, so losing them would have quietly disarmed the
+      safety screens;
+    * the blood-pressure warning, which is a line of copy rather than a control.
+
+    `data-optional` is set on the text boxes: like the reference's, v1's do not
+    gate the step. The Yes/No ones are NOT optional - an open question that can
+    stop the flow has to be answered."""
+    if b.get('kind') == 'bp-warning':
+        return ('<div class="reveal warn" data-bp-warning data-reveal-for="%s" '
+                'data-reveal-on="%s"><p>%s</p></div>'
+                % (attr(b.get('for') or ''), attr(b.get('on') or ''),
+                   esc(brandify(b.get('text') or ''))))
+    inner = ''
+    if b.get('options'):
+        inner = ('<p class="legend">%s</p>' % esc(brandify(b['label']))
+                 if b.get('label') else '')
+        inner += ('<div class="opts tilegrid" data-group="%s" data-mode="%s">%s</div>'
+                  % (attr(b['group']), b.get('mode') or 'single',
+                     ''.join(option({'value': o['value'], 'label': o['label'],
+                                     'type': 'radio'}, None, False, True, None)
+                             for o in b['options'])))
+        optional = ''
+    else:
+        inner = field_block({'tag': b.get('control') or 'textarea',
+                             'name': (b.get('for') or 'answer') + '-detail',
+                             'placeholder': b.get('placeholder') or 'Write here…'},
+                            b.get('label'))
+        optional = ' data-optional="1"'
+    err = ('<p class="err" data-err>%s</p>' % esc(b['error'])) if b.get('error') else ''
+    return ('<div class="reveal"%s data-reveal-for="%s" data-reveal-on="%s">%s%s</div>'
+            % (optional, attr(b.get('for') or ''), attr(b.get('on') or ''),
+               inner, err))
 
 
 def screen_birthdate(p):
@@ -860,56 +945,26 @@ def render(p):
     n = p['n']
     if n == 1:
         return screen_hero(p)
-    if n in INTERSTITIALS:
-        return screen_interstitial(p)
-    if n == 43:
-        return screen_birthdate(p)
-    if n == 45:
-        return screen_review(p)
-    if n == 47:
-        return screen_submission(p)
-    return screen_question(p)
+    return screen_v1(p)
 
 
 def dq_reason(p):
-    """Per-screen copy: "you selected a nitrate" and "your last physical was
-    over three years ago" are not the same message."""
-    n = p['n']
-    if n == 3:
-        return ('This medication is prescribed for men only, which is why the question '
-                'is asked before anything else. We are not able to continue this '
-                'assessment.')
-    if n == 25:
-        return ('A current blood pressure reading is required before this treatment '
-                'can be prescribed. Please have it measured and come back.')
-    if n == 4:
-        return ('This treatment is prescribed for erectile difficulty. Based on your '
-                'answer, this assessment is not the right route for you.')
-    if n == 9:
-        return ('Penile surgery, injections, a vacuum pump or a prosthesis needs a '
-                'clinician who knows your history, so our prescribers cannot assess you '
-                'from this questionnaire.')
-    if n == 23:
-        return ('A physical exam within the last three years is required before an ED '
-                'medication can be prescribed here.')
-    if 16 <= n <= 21:
-        return ('The side effect you selected can be serious, and it means an ED '
-                'medication cannot be safely prescribed to you through this service.')
-    if n == 27:
-        return ('One of the conditions you selected means an ED medication cannot be '
-                'safely prescribed without an in-person assessment.')
-    if n == 29:
-        return ('One of the diagnoses you selected means our prescribers cannot safely '
-                'determine your eligibility from this questionnaire.')
-    if n == 38:
-        return ('Recreational drug use in the last six months can interact dangerously '
-                'with ED medication, so we cannot complete your assessment.')
-    return ('Your safety is our priority. Based on your answer, our clinicians cannot '
-            'safely determine your eligibility.')
+    """v1 writes its own reason on every screen that can stop the flow and the
+    extraction carries it - "you selected a nitrate" and "a tight foreskin needs
+    to be looked at in person" are not the same message. The reference's
+    per-screen copy, which this function used to hold, went with its questions.
+
+    **These rules have never had a prescriber's sign-off.** They are v1's, and
+    v1's own notes say the same of them: the nitrate interaction on screen 17 is
+    a well-established contraindication, the rest are judgement calls. README.
+    """
+    return p['dq_reason'] or (
+        'Your safety is our priority. Based on your answer, our clinicians '
+        'cannot safely determine your eligibility.')
 
 
 # ------------------------------------------------------------------ assemble
-STEPS = [p for p in FLOW if p['n'] != STOP_SCREEN]
+STEPS = list(FLOW)
 QUESTIONS = [p for p in STEPS if p['options'] or p['fields']]
 TOTAL_Q = len(QUESTIONS)
 
@@ -925,10 +980,11 @@ TOTAL_Q = len(QUESTIONS)
 # NOT AUDITED: screens 31, 36 and 37 each carry an "I don't know" answer too,
 # and the same reasoning would apply to them. They are left alone until
 # someone confirms them against the reference - see the README.
-DQ_EXTRA = {
-    3:  ['Female'],
-    25: ["I Don't Know"],
-}
+# The reference kept some of its stopping rules in script the DOM did not
+# expose, so two had to be added here by hand. v1 writes every one of its rules
+# into `data-dq-on` and the extraction reads them all, so there is nothing left
+# to add back.
+DQ_EXTRA = {}
 
 
 def dq_on(p):
@@ -950,10 +1006,19 @@ def sections():
         if p['cond']:
             a += (' data-if="%s" data-if-any="%s"'
                   % (attr(p['cond']['group']), attr('|'.join(p['cond']['any']))))
-        stop = dq_on(p)
-        if stop:
-            a += (' data-dq-on="%s" data-dq="%s"'
-                  % (attr('|'.join(stop)), attr(dq_reason(p))))
+        # A screen can stop the flow two ways and v1 uses both. Named answers
+        # go in `data-dq-on`; a screen with a reason and NO named answers stops
+        # on **anything except its "none of these"**, which is how v1 writes the
+        # nitrate screen - there every answer is a contraindication. Emitting
+        # the reason only when there were named values silently disarmed that
+        # screen, which is the one well-established interaction in the set.
+        if p['dq_reason']:
+            a += ' data-dq="%s"' % attr(dq_reason(p))
+            stop = dq_on(p)
+            if stop:
+                a += ' data-dq-on="%s"' % attr('|'.join(stop))
+            elif p['exclusive']:
+                a += ' data-dq-safe="%s"' % attr(p['exclusive'])
         out.append('<section class="step"%s>%s</section>' % (a, render(p)))
     out.append(checkout_section())
     return out
@@ -968,7 +1033,8 @@ def checkout_section():
     and a countdown bar of its own instead, as the reference does."""
     return ('<section class="step" data-step="%d" data-bare data-checkout>%s</section>'
             % (CHECKOUT_SCREEN,
-               checkout.screen(LOGO, ICON, _ic, STARS, MOLECULES)))
+               checkout.screen(LOGO, ICON, _ic, STARS, MOLECULES,
+                               GOAL_STYLE, attr)))
 
 
 STARS = ('<span class="stars">%s</span>'
@@ -1004,9 +1070,15 @@ DQ = ('<div class="dq" id="dq" role="dialog" aria-modal="true" aria-labelledby="
       '<div class="dq-mark">%s</div>'
       '<h1 id="dqTitle">Eligibility Status</h1>'
       '<p>Based on your last answer, we cannot complete your assessment.</p>'
-      '<p>Your safety is our priority. This treatment has specific medical criteria, '
-      'and your response prevents our clinicians from safely determining your '
-      'eligibility.</p>'
+      # The screen's own reason, filled by `stop()` from its `data-dq`. It was
+      # a fixed sentence until 2026-09-04 - the per-screen copy was being
+      # computed and thrown away, so every stop read the same. v1 writes a real
+      # reason on each of its six ("a tight foreskin needs to be looked at in
+      # person", "you selected a nitrate") and they are worth showing. The
+      # fallback below is what a screen with no reason of its own gets.
+      '<p data-dq-reason>Your safety is our priority. This treatment has specific '
+      'medical criteria, and your response prevents our clinicians from safely '
+      'determining your eligibility.</p>'
       '</div>'
       '<p class="dq-lead">Made a mistake? Review your answer</p>'
       '<button class="dq-back" id="dqBack">Review Your Answer</button>'
@@ -1074,7 +1146,7 @@ def emit_frames():
         counted = p in QUESTIONS
         if counted:
             q += 1
-        lbl = 'Screen %02d &mdash; %s' % (p['n'], esc(p['name']))
+        lbl = 'Screen %02d &mdash; %s' % (p['n'], esc(p.get('label') or p['name']))
         inner = html.replace('<section class="step"', '<section class="step on"', 1)
         # ids are unique per document; 46 frames cannot each carry the
         # interactive build's element ids
@@ -1093,14 +1165,16 @@ def emit_frames():
                   % (CHECKOUT_SCREEN,
                      checkout_html.replace('<section class="step"',
                                            '<section class="step on"', 1)))
-    frames.append('<div class="frame-label">Screen %02d &mdash; Assessment received</div>'
+    frames.append('<div class="frame-label">Assessment received (after checkout)</div>'
                   '<div class="frame"><div class="shell">%s%s</div></div>'
-                  % (len(STEPS) + 2, MASTHEAD,
+                  % (MASTHEAD,
                      DONE.replace('class="dq done"', 'class="dq done on"')
                          .replace(' id="done"', '')))
-    frames.append('<div class="frame-label">Screen %02d &mdash; NO RX (eligibility stop)</div>'
+    # Neither of these is a numbered screen - they are states the flow can enter
+    # from several places - so they are labelled rather than numbered.
+    frames.append('<div class="frame-label">Eligibility stop (any safety screen)</div>'
                   '<div class="frame"><div class="shell">%s%s</div></div>'
-                  % (STOP_SCREEN, MASTHEAD,
+                  % (MASTHEAD,
                      DQ.replace('class="dq"', 'class="dq on"')
                        .replace(' id="dqBack"', '').replace(' id="dqExit"', '')
                        .replace(' id="dq"', '').replace(' id="dqTitle"', '')

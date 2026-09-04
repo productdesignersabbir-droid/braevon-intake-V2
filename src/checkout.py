@@ -48,30 +48,57 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # ---------------------------------------------------------------- money
-# v1's quantity tiers, `QTY_PRICES` in `v1/src/steps.py`, which the client set
-# on 2026-08-17: (uses per month, monthly price, 3-month price). The reference
-# offers exactly two packs, so the two the client calls most popular and best
-# value are the two shown; the 20-use tier is one row away if they want a third.
+# **From the client's own Figma, `Braevon - Checkout page`, node 5-2**, read on
+# 2026-09-04. That file supersedes v1's `QTY_PRICES`, which had three tiers of
+# 6 / 10 / 20 uses at $119 / $159 / $189 and is what this screen shipped with
+# until the client said the packs were wrong. The Figma's two rows are:
 #
-# "coverage" is uses x the 36-hour window this flow already claims on screen 2,
-# which is how the reference derives its own "180 hour" / "360 hour" figures.
-# The badge hues are grounds under 10px white caps, so both are set for
-# contrast rather than for brand brightness - #E6430D and a mid teal are 4.06:1
-# and 3.46:1 against white, and neither clears AA at that size. These are 6.1:1
-# and 5.2:1. See `--accent-deep` in theme.py.
+#     6 tablets/mon    $99.00    $16.50/tab
+#     12 tablets/mon   $132.00   $11.00/tab   [Most popular]  Save 33% per tablet
+#
+# Its bill waives a $100 consultation and $25 shipping, which is where "$125
+# SAVINGS" and the struck $224 / $257 totals come from. This screen has no bill
+# - the reference does not - so only the two prices are used here.
+#
+# The badge is on the **12**, not the 6, because that is where the Figma puts
+# it. That leaves the 6 without one, which is the Figma's own arrangement; the
+# cards are flex siblings so they stay the same height regardless.
+#
+# `sub` is the per-tablet figure rather than the reference's "180 hour
+# coverage". Those hours were a derivation of mine (pack x the 36-hour window);
+# per-tablet price is the client's own number and is what their design leads on.
+# `shown` is the Figma's own string, decimals and all: it prints $99.00 and
+# $132.00 beside $16.50/tab and $11.00/tab, and dropping the cents on one of the
+# pair reads as a typo. `price` stays a number because the CTA strip picks the
+# cheapest from it.
 PACKS = [
-    ('6',  119, 'MOST POPULAR', '#B8300A'),
-    ('10', 159, 'BEST VALUE',   '#0B7A70'),
+    # tablets, price, shown, sub-line, badge, badge hue
+    ('6',  99,  '$99.00',  '$16.50 per tablet', '', ''),
+    ('12', 132, '$132.00', '$11.00 per tablet &middot; save 33%',
+     'MOST POPULAR', '#E6430D'),
 ]
-WINDOW_HRS = 36
-LEAD_PACK = 0            # the one that opens selected, and prices the CTA strip
+# The Figma's "Most popular" opens selected, as the reference's does. The CTA
+# strip says "start at just", so it reads the cheapest pack rather than this one.
+LEAD_PACK = 1
+
+# The group and the field ids the checkout echoes, all of them v1's own from
+# 2026-09-04. They were the reference's (`Q1_primary_goal`, `first_name`) until
+# the questions were swapped; naming them once here means the next swap is one
+# edit rather than a hunt through the markup.
+GOAL_GROUP = 'goals'
+FIRST_NAME_ID = 'firstName'
 
 RATING = '4.6'
 CUSTOMERS = '175,000+'
 
 
 def _price(i):
-    return PACKS[i][1]
+    return PACKS[i][2]
+
+
+def _from_price():
+    """The lowest price on the page - what "prescriptions start at" means."""
+    return min(PACKS, key=lambda p: p[1])[2]
 
 
 # ---------------------------------------------------------------- the chart
@@ -208,23 +235,18 @@ FAQ = [
      'cancelled at any time from your patient portal.'),
 ]
 
-# Block 11. v1's press row, lifted whole from `v1/src/steps.py`. Each mark is
-# **set in type to match the character of the real masthead** - the weight, the
-# serif or the script, the reversed box around LA - and is NOT the publication's
-# own logo artwork. That limit was asked about twice on v1 and answered the same
-# way both times: redrawing a real masthead's logotype reproduces someone else's
-# trademark, and "Braevon was featured here" is a claim the client has to
-# evidence rather than one to manufacture. When they supply the files, drop them
-# into assets/images/press/ and swap each <span> for an <img class="ck-pm">; the
-# row's spacing and grey are already right.
-PRESS = [
-    ('pm-ok', '<i>OK!</i><u>magazine</u>'),
-    ('pm-bal', '<i>The</i><b>Balancing</b><u>Act</u>'),
-    ('pm-mh', "Men&rsquo;s Health"),
-    ('pm-law', '<i>LA</i><b>WEEKLY</b>'),
-    ('pm-lt', 'Lifetime'),
-    ('pm-hu', '<i>Health</i><b>UNCENSORED</b>'),
-]
+# **Block 11 is deliberately empty.** The reference runs a "BACKED BY RESEARCH
+# FROM" row here, with NIH, WebMD, ScienceDaily and Mayo Clinic logos. This slot
+# held v1's "As featured on" row instead - six mastheads set in type - until the
+# client asked on 2026-09-04 for anything the reference does not have to come
+# out, so it did.
+#
+# **Neither version is built now, and the reference's own needs two things
+# first**: the logo files, and evidence that those bodies have researched or
+# endorsed this product. Redrawing a real organisation's logotype reproduces its
+# trademark, and "backed by research from the NIH" is a claim the client has to
+# be able to stand behind. Ask before building it. The slot is between the
+# guarantee and the quotes in `screen()`.
 
 # Placeholder copy written for this concept, not real Braevon reviews - the same
 # caveat `QUOTES` in build.py carries. Say so before showing this to anyone who
@@ -331,10 +353,11 @@ def footer(logo):
 
 
 # ---------------------------------------------------------------- the screen
-def screen(logo, icon, ic, stars, molecules):
+def screen(logo, icon, ic, stars, molecules, goal_style, attr):
     """The whole page. `icon` is build.py's ICON table, `ic` its `_ic` helper,
-    `stars` its five-star mark and `molecules` its `MOLECULES` list, all passed
-    in rather than imported so this module stays a leaf and build.py keeps the
+    `stars` its five-star mark, `molecules` its `MOLECULES` list, `goal_style`
+    its `GOAL_STYLE` table and `attr` its attribute escaper - all passed in
+    rather than imported so this module stays a leaf and build.py keeps the
     single definition of each."""
     tick = icon['check']
     guarantee = (
@@ -352,14 +375,32 @@ def screen(logo, icon, ic, stars, molecules):
             'prescription plan approval!</h1>')
 
     # -- 1 -----------------------------------------------------------------
-    # The reference hardcodes three goal lines. Line one is the patient's own
-    # answer from screen 1, echoed the way the medical review echoes it; the two
-    # under it are Braevon's own goal wording and are static, as the reference's
-    # three are.
+    # The reference hardcodes three goal lines and gives each its own glyph.
+    # Line one is the patient's own answer from screen 1, echoed the way the
+    # medical review echoes it; the two under it are Braevon's own goal wording
+    # and are static, as the reference's three are.
+    #
+    # Because line one is dynamic its glyph has to be too, so all five of
+    # screen 1's icons ship inside it and `fillSummary()` shows the one whose
+    # `data-goal` matches the answer. The first carries `on` so the JS-less
+    # frames render an icon rather than a gap.
+    goal_icons = ''.join(
+        '<i data-goal="%s" style="color:%s"%s>%s</i>'
+        % (attr(k), v[1], ' class="on"' if i == 0 else '', v[2])
+        for i, (k, v) in enumerate(goal_style.items()))
+    # Lines two and three are two more of screen 1's own goals, so they take
+    # that screen's glyph and hue rather than anything invented here. Naming
+    # them from `goal_style` means a change to the question's wording cannot
+    # leave a stale line behind - it raises a KeyError at build time instead.
+    _second, _third = 'Better erections', 'Last longer'
     goal_rows = (
-        '<li>%s<span data-echo="Q1_primary_goal">&mdash;</span></li>'
-        '<li>%sIncrease erection strength</li>'
-        '<li>%sLonger duration &amp; satisfaction</li>' % (tick, tick, tick))
+        '<li><span class="ck-goal-ic" data-echo-icon="%s">%s</span>'
+        '<span data-echo="%s">&mdash;</span></li>'
+        '<li><span style="color:%s;display:flex">%s</span><span>%s</span></li>'
+        '<li><span style="color:%s;display:flex">%s</span><span>%s</span></li>'
+        % (GOAL_GROUP, goal_icons, GOAL_GROUP,
+           goal_style[_second][1], goal_style[_second][2], _second,
+           goal_style[_third][1], goal_style[_third][2], _third))
     goals = ('<div class="ck-goals">'
              '<span class="ck-goals-mark">%s</span>'
              '<div><b>YOUR GOALS</b><ul>%s</ul></div>'
@@ -407,7 +448,8 @@ def screen(logo, icon, ic, stars, molecules):
     # -- 5 -----------------------------------------------------------------
     stack = ''.join('<li><b>%s:</b> %s</li>' % (name, note.rstrip('.'))
                     for name, note, _ in molecules)
-    incl_rows = ''.join('<li>%s%s</li>' % (tick, t) for t in INCLUDED)
+    incl_rows = ''.join('<li>%s<span>%s</span></li>' % (tick, t)
+                        for t in INCLUDED)
     included = ('<div class="ck-incl">'
                 '<h2 class="ck-h2 accent">What&rsquo;s included:</h2>'
                 '<div class="ck-incl-card">'
@@ -432,13 +474,13 @@ def screen(logo, icon, ic, stars, molecules):
 
     # -- 8 -----------------------------------------------------------------
     packs = ''.join(
-        '<button class="ck-pack%s" type="button" data-pack="%s" data-price="%d">'
-        '<span class="ring"></span>'
-        '<em style="background:%s">%s</em>'
-        '<b>%s PACK</b><small>%d hour coverage</small></button>'
-        % (' selected' if i == LEAD_PACK else '', n, price, hue, badge,
-           n, int(n) * WINDOW_HRS)
-        for i, (n, price, badge, hue) in enumerate(PACKS))
+        '<button class="ck-pack%s" type="button" data-pack="%s" data-price="%s">'
+        '<span class="ring"></span>%s'
+        '<b>%s PACK</b><small>%s</small></button>'
+        % (' selected' if i == LEAD_PACK else '', n, shown,
+           ('<em style="background:%s">%s</em>' % (hue, badge)) if badge else '',
+           n, sub)
+        for i, (n, price, shown, sub, badge, hue) in enumerate(PACKS))
     card_lines = [
         ('Powerful 4-in-1 performance stack that targets desire (brain) and '
          'performance (body)'),
@@ -446,10 +488,11 @@ def screen(logo, icon, ic, stars, molecules):
         ('<b>Price includes:</b> doctor consult, unlimited 1:1 medical support, written '
          'prescription, 4 weeks of medicine and free shipping'),
     ]
-    card_rows = ''.join('<li>%s%s</li>' % (tick, t) for t in card_lines)
+    card_rows = ''.join('<li>%s<span>%s</span></li>' % (tick, t)
+                        for t in card_lines)
     product = (
         '<div class="ck-sect">'
-        '<h2 class="ck-h2"><em>Choose</em> your medication preference below:</h2>'
+        '<h2 class="ck-h2 mid"><em>Choose</em> your medication preference below:</h2>'
         '<div class="ck-packs" data-packs>%s</div>'
         '<div class="ck-prod">'
         '<div class="ck-prod-head">'
@@ -460,22 +503,22 @@ def screen(logo, icon, ic, stars, molecules):
         '<div class="ck-prod-shot">'
         '<img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/>'
         '</div>'
-        '<p class="ck-prod-price">Prescribed for only <b data-pack-price>$%d</b></p>'
+        '<p class="ck-prod-price">Prescribed for only <b data-pack-price>%s</b></p>'
         '<ul class="ck-prod-list">%s</ul>'
         '</div></div>'
         % (packs, PACKS[LEAD_PACK][0], stars, CUSTOMERS,
            _price(LEAD_PACK), card_rows))
 
     # -- 9 -----------------------------------------------------------------
-    hipaa = ('<div class="ck-hsa"><span>HSA/FSA eligible</span></div>'
+    hsa_mark = ('<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" '
+                'stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">'
+                '<path d="M26.3 10.5A13 13 0 1 1 19.4 4.8"/>'
+                '<path d="M8 17.6l6.5 6.4L27.6 3"/></svg>')
+    hipaa = ('<div class="ck-hsa">%s<p><b>HSA/FSA</b> Eligible</p></div>'
              '<div class="ck-hipaa">'
              '<p>%sYour data is protected by HIPAA</p>'
              '<span>All transactions are secured and encrypted.</span>'
-             '</div>' % icon['shield'])
-
-    # -- 11 ----------------------------------------------------------------
-    press = ('<div class="ck-press"><p>As featured on</p><div class="ck-press-row">%s</div></div>'
-             % ''.join('<span class="ck-pm %s">%s</span>' % (c, m) for c, m in PRESS))
+             '</div>' % (hsa_mark, icon['shield']))
 
     # -- 12 ----------------------------------------------------------------
     quotes = ''.join(
@@ -495,8 +538,8 @@ def screen(logo, icon, ic, stars, molecules):
         for name, note in READY_INCLUDED)
     stack_rows = ''.join(
         '<div class="ck-ready-pack"><span class="ck-tag">%s Pack</span>'
-        '<b>BRAEVON 4-in-1 prescribed for just</b><em>$%d</em></div>'
-        % (n, price) for n, price, _b, _h in PACKS)
+        '<b>BRAEVON 4-in-1 prescribed for just</b><em>%s</em></div>'
+        % (n, shown) for n, _p, shown, _s, _b, _h in PACKS)
     ready = (
         '<div class="ck-ready">'
         '<span class="ck-ready-tag">Are you ready?</span>'
@@ -504,7 +547,7 @@ def screen(logo, icon, ic, stars, molecules):
         '<div class="ck-ready-rail">'
         '<div class="ck-ready-clock"><span>You&rsquo;re approved for</span>'
         '<b data-countdown>10:00</b></div>'
-        '<div class="ck-ready-strip">Prescriptions start at just <b>$%d</b> '
+        '<div class="ck-ready-strip">Prescriptions start at just <b>%s</b> '
         '&mdash; no insurance needed</div>'
         '<p class="ck-ready-line">The most effective ED programme is right here</p>'
         '</div>'
@@ -515,7 +558,7 @@ def screen(logo, icon, ic, stars, molecules):
         '<p class="ck-ready-note">Pay one month at a time. No contracts, cancel '
         'anytime. <b>Medication is included.</b></p>'
         '<button class="cta cta-next" type="button">Checkout%s</button>'
-        '</div></div>' % (_price(LEAD_PACK), ready_rows, stack_rows, icon['arrow']))
+        '</div></div>' % (_from_price(), ready_rows, stack_rows, icon['arrow']))
 
     # -- 15 ----------------------------------------------------------------
     faq = ''.join(
@@ -529,7 +572,7 @@ def screen(logo, icon, ic, stars, molecules):
             'valid for</span><b data-countdown>10:00</b></div>'
             % logo
             + head + goals + intro + programme + benefits + included + nexts
-            + pill + product + hipaa + guarantee + press + quotes + ready
+            + pill + product + hipaa + guarantee + quotes + ready
             + guarantee + faq
             + footer(logo)
             + '</div>')
