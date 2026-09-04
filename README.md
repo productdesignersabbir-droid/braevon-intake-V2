@@ -568,9 +568,13 @@ privacy on and a commit with the real address is rejected at push time.
   was no screen to lay it over. v1 had one. That is a compliance question, not
   a design one — **raise it before this ships**.
 - **The photograph on floor 23 is the client's own**, supplied 2026-09-04, and
-  replaced a stand-in. It is cropped to a 168px band at `object-position:
-  50% 20%`, tuned to that file (`man-portrait.jpg`, 1045×1400) — retune it in
-  `theme.py` if the photograph is replaced. It is deliberately a separate file
+  replaced a stand-in. Its box is **square** (asked for on 2026-09-04 —
+  the 168px band it replaced cropped a tall portrait down to a strip across the
+  eyes), set with `aspect-ratio` so it stays square at every shell width. The
+  bias is `object-position: 50% 15%`, slightly high because a face sits above
+  the middle of a portrait; tuned to that file (`man-portrait.jpg`, 1045×1400)
+  — retune it in `theme.py` if the photograph is replaced. `.qshot-top` is this
+  screen only; the testimonial figures use `.qshot`, which is untouched. It is deliberately a separate file
   from `stat-hero.jpg`, which is still the testimonial avatar on floor 26.
 - **Buttons have no hover state and there is one orange.** Asked for on
   2026-09-03: `--accent-hover` is gone, so `#E6430D` is the colour at rest, on
