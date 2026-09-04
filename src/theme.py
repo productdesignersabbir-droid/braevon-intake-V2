@@ -378,10 +378,11 @@ img{max-width:100%;display:block}
 
 .qshot-top{margin-bottom:var(--gap-title);border-radius:var(--radius-card);
   overflow:hidden;background:var(--neutral-tint)}
-/* A square portrait cropped to this band would cut the face; bias the crop
-   towards the top so the subject stays in frame. */
+/* A tall portrait cropped to this band would cut the face; bias the crop
+   towards the top so hair, eyes and mouth all stay in frame. 20% is tuned to
+   man-portrait.jpg (1045x1400) - retune it if that photograph is replaced. */
 .qshot-top img{display:block;width:100%;height:168px;object-fit:cover;
-  object-position:50% 28%}
+  object-position:50% 20%}
 
 .reveal{display:none;margin-top:var(--gap-block)}
 .reveal.on{display:block}

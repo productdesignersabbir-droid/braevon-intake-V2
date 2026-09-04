@@ -28,6 +28,7 @@ import json
 import os
 import re
 
+import braevon_q
 import checkout
 from logo import LOGO
 from theme import CSS
@@ -35,12 +36,16 @@ from theme import CSS
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.dirname(HERE)
 FLOW = json.load(open(os.path.join(HERE, 'medvi-flow.json'), encoding='utf-8'))
+# Braevon's own questions, laid over the reference's screens. The layout is
+# untouched - only what each screen asks changes. See braevon_q.py.
+FLOW = braevon_q.apply(FLOW)
 # Where the exclusive answer sits on each multi-answer screen, the line under it
 # when it has one, and the captions that break a long list into groups. Read off
 # the live reference on 2026-09-03, because the DOM extraction flattens all
 # three away. Keyed by screen; the caption is keyed by the label of the option
 # it sits above.
-GROUPS = json.load(open(os.path.join(HERE, 'groups.json'), encoding='utf-8'))
+GROUPS = braevon_q.groups(
+    json.load(open(os.path.join(HERE, 'groups.json'), encoding='utf-8')))
 
 BRAND = 'BRAEVON'
 STOP_SCREEN = 46          # the reference's "NO RX" page; here it is the overlay
@@ -48,7 +53,7 @@ INTERSTITIALS = {2, 5, 8, 32, 33, 44}
 # Screens the reference lays out as two cards side by side rather than a
 # stacked list — measured off the live page, where the option wrapper is
 # flex-direction:row and each card is 208x190 instead of 432x51.
-TILE_SCREENS = {3, 7, 24, 39, 40, 41, 42}
+TILE_SCREENS = {3, 9, 10, 24, 39, 40, 41, 42}
 
 SEGMENTS = 5
 # The medical review replaces the masthead and the bar with its own result
@@ -197,8 +202,9 @@ _CROSS = _ic('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>')
 _TICK_ART  = ('#DFF7E6', '#22C55E', _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>'))
 _CROSS_ART = ('#FEE2E2', '#EF4444', _ic('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'))
 GOOD_ANSWER = {
-    7:  'yes',   # waking with an erection is the reassuring answer
-    39: 'no',    # no allergy, no other allergy, no medication, nothing to add
+    9:  'no',    # no history of ED medication is the uncomplicated answer
+    10: 'no',    # no side effects
+    39: 'no',    # no conditions, no allergy, no medication, nothing to add
     40: 'no',
     41: 'no',
     42: 'no',
@@ -213,7 +219,7 @@ GOOD_ANSWER = {
 # near-black) rather than a grey caption. Checked one by one against the live
 # page - the wording gives no clue which is which ("Select your primary goal:"
 # is grey, "When was your most recent physical exam?" is a heading).
-LEADS = {5, 23, 27}
+LEADS = {5}
 
 # The only screens whose second sub-head is a real legend over the list. The
 # extractor also files section captions and field labels under `subs`, and
@@ -276,28 +282,20 @@ for _p in FLOW:
 
 SCREEN_IMAGE = {
     # The reference uses a man at his bathroom cabinet - an ordinary moment,
-    # not a clinician. There is no such photograph in the repo, so this is the
-    # nearest register available (an unused portrait of a man rather than the
-    # white-coat doctor shot that was here). A cabinet/bathroom photo would
-    # match properly - see the README.
-    41: ('stat-hero.jpg', 'A man at home'),
+    # not a clinician. The client supplied this portrait on 2026-09-04 to
+    # replace the stand-in. It is its own file, not stat-hero.jpg, because
+    # screen 44 still uses that one as a testimonial avatar.
+    41: ('man-portrait.jpg', 'A man at home'),
 }
 
-REVEALS = {
-    39: ('List the ED medications you are allergic to.', 'Q_ed_allergy_detail'),
-    40: ('List your allergies to medications, foods, dyes, etc.',
-         'Q_other_allergy_detail'),
-    41: ('List the medications you are currently taking.', 'Q_medication_detail'),
-    42: ('Tell the doctor anything else you would like them to know.',
-         'Q_doctor_note_detail'),
-}
+# The follow-ups, keyed by screen. Braevon's document writes them out per
+# screen - which answer opens them, what they ask, and whether the answer stops
+# the flow - so they are carried there rather than here.
+REVEALS = braevon_q.reveals()
 
 # The reference lists the four molecules under this headline, in two columns,
 # before the Yes/No cards. Column-major, as it reads them out.
-MEDLISTS = {
-    39: ['sildenafil (Viagra)', 'tadalafil (Cialis)',
-         'vardenafil (Levitra)', 'avanafil (Stendra)'],
-}
+MEDLISTS = {}
 
 # Where the reference's headline wraps and ours does not. The break goes in
 # after this text, so the phrase that follows stays together on its own line.
@@ -554,6 +552,44 @@ def field_block(f, label=None):
             % (' half' if f.get('half') else '', lab, ctrl))
 
 
+def reveal_block(p, r):
+    """A follow-up that opens once a particular answer is picked.
+
+    Two kinds. A `text` box is optional, exactly as the reference's are: it
+    opens, it can be typed into, and it does not gate Next. A `yesno` pair is
+    required once open, because it is asked precisely to decide eligibility -
+    its Yes carries a value of its own which sits on the screen's stopping
+    list, so the engine's existing disqualification check catches it with no
+    new machinery.
+
+    `data-reveal-on="*"` means "any answer but the none-answer", and
+    `data-reveal-none` tells the engine which value that is - it differs per
+    screen ("None of these", "None of these apply to me").
+    """
+    extra = ''
+    if r['on'] == '*' and p['exclusive']:
+        extra = ' data-reveal-none="%s"' % attr(p['exclusive'])
+    if r['kind'] == 'yesno':
+        opts = ''.join(
+            '<button class="opt tile" data-value="%s"><span class="lbl">%s</span>'
+            '</button>' % (attr(r['name'] + suffix), lab)
+            for suffix, lab in (('_no', 'No'), ('_yes', 'Yes')))
+        body = ('<label>%s</label><div class="opts tilegrid" data-group="%s" '
+                'data-mode="single">%s</div>'
+                % (esc(brandify(r['label'])), attr(r['name']), opts))
+    else:
+        extra += ' data-optional="1"'
+        body = ('<label for="%s">%s</label>' % (attr(r['name']),
+                                                esc(brandify(r['label'])))
+                + ('<p class="reveal-sub">%s</p>' % esc(brandify(r['sub']))
+                   if r.get('sub') else '')
+                + field_block({'tag': 'textarea', 'name': r['name'],
+                               'placeholder': r.get('placeholder')
+                                              or 'Write here...'}))
+    return ('<div class="reveal"%s data-reveal-for="%s" data-reveal-on="%s">%s</div>'
+            % (extra, attr(p['group']), attr(r['on']), body))
+
+
 # ------------------------------------------------------------------ screens
 def screen_hero(p):
     """Screen 1 - the reference's opening layout with Braevon's photograph.
@@ -601,13 +637,8 @@ def screen_question(p):
         out.append('<p class="legend">%s</p>' % esc(brandify(p['subs'][1])))
     if p['options']:
         out.append(options_block(p))
-    if p['n'] in REVEALS:
-        legend, name = REVEALS[p['n']]
-        out.append('<div class="reveal" data-optional="1" data-reveal-for="%s" '
-                   'data-reveal-on="yes">%s</div>'
-                   % (attr(p['group']),
-                      field_block({'tag': 'textarea', 'name': name,
-                                   'placeholder': 'Write here...'}, legend)))
+    for r in REVEALS.get(p['n'], []):
+        out.append(reveal_block(p, r))
     if p['n'] in FOOTNOTES:
         title, body = FOOTNOTES[p['n']]
         out.append('<div class="infonote">%s<div><b>%s</b><p>%s</p></div></div>'
@@ -668,7 +699,11 @@ def screen_review(p):
             ('Performance Issues:', 'Q3_problem_getting_or_maintaining_erection',
              ('#F3EBFF', '#A855F7',
               _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>'))),
-            ('Duration Satisfaction:', 'Q4_erection_last_as_long_as_desired',
+            # This row used to read "Duration Satisfaction:". Braevon's
+            # document has no duration question, and the screen behind this
+            # group now asks what affects performance - so the label follows
+            # the question rather than echoing a heading nothing answers.
+            ('Performance Factors:', 'Q4_erection_last_as_long_as_desired',
              ('#FFEDD5', '#F97316',
               _ic('<rect x="2.5" y="7.5" width="15" height="9" rx="2.6"/>'
                   '<path d="M20.5 10.5v3"/><path d="M6 10.5v3"/>'))),
@@ -1094,9 +1129,11 @@ def emit_frames():
                   % (CHECKOUT_SCREEN,
                      checkout_html.replace('<section class="step"',
                                            '<section class="step on"', 1)))
+    # Numbered after the checkout, not off the step count: those two collided
+    # on 48 while the flow happened to be 46 steps long.
     frames.append('<div class="frame-label">Screen %02d &mdash; Assessment received</div>'
                   '<div class="frame"><div class="shell">%s%s</div></div>'
-                  % (len(STEPS) + 2, MASTHEAD,
+                  % (CHECKOUT_SCREEN + 1, MASTHEAD,
                      DONE.replace('class="dq done"', 'class="dq done on"')
                          .replace(' id="done"', '')))
     frames.append('<div class="frame-label">Screen %02d &mdash; NO RX (eligibility stop)</div>'

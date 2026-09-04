@@ -95,8 +95,9 @@
   function syncReveals(){
     [].forEach.call(stage.querySelectorAll('.reveal[data-reveal-for]'), function(r){
       var g=r.dataset.revealFor, on=r.dataset.revealOn, picked=sel(g);
+      var none=r.dataset.revealNone || 'none';
       var show = on==='*'
-        ? picked.some(function(v){ return v!=='none'; })
+        ? picked.some(function(v){ return v!==none; })
         : picked.indexOf(on)>-1;
       r.classList.toggle('on', show);
     });
@@ -243,6 +244,8 @@
     var safe=el.dataset.dqSafe;
     var hit=false;
     [].forEach.call(el.querySelectorAll('.opts'), function(box){
+      var rev=box.closest('.reveal');
+      if(rev && !rev.classList.contains('on')) return;
       [].forEach.call(box.querySelectorAll('.opt.selected'), function(o){
         var v=o.dataset.value;
         if(named ? stop.indexOf(v)>-1 : v!==safe) hit=true;

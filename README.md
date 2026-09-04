@@ -24,8 +24,13 @@ in a browser.
 ├── docs/
 │   └── medvi-reference.md   the reference teardown, with measured numbers
 ├── src/
-│   ├── extract_v1.py   pulls the question set out of a v1 build
-│   ├── questions.json  …into here — the content this site renders
+│   ├── extract_medvi.py  parses the reference into medvi-flow.json
+│   ├── medvi-flow.json   the reference's screens, exactly as extracted
+│   ├── braevon_q.py      Braevon's questions, laid over those screens
+│   ├── groups.json       where the "none of these" sits, per screen
+│   ├── extract_v1.py   pulls v1's question set out of a v1 build
+│   ├── questions.json  …into here. NOT wired in — see the note below
+│   ├── flow_v1.py      reshapes questions.json for the renderer. NOT wired in
 │   ├── logo.py         the Braevon wordmark, lifted from v1
 │   ├── checkout.py     screen 48, the approval / checkout page
 │   ├── chart.svg       the onset chart, as supplied; recoloured on the way out
@@ -86,10 +91,28 @@ Two things it derives rather than takes literally:
   carry one.
 
 `build.py` renders that data. It does not know what any question means — which
-is the point: the content is the reference's, the design is `theme.py`'s.
+is the point: the design is `theme.py`'s, and what the screens ask is data.
 
-v1's question set is no longer rendered. `extract_v1.py` and `questions.json`
-stay in the repo so it can be pulled back a screen at a time.
+**Since 2026-09-04 what they ask is Braevon's own, not the reference's.**
+`braevon_q.py` lays Braevon's questions over the reference's screens —
+headline, sub-head, answers and follow-ups — and nothing else. Screen numbers
+are deliberately untouched, so every per-screen table in `build.py`
+(`TILE_SCREENS`, `BAND_SCREENS`, `GROUPS`, `DEFAULTS`, `SCREEN_IMAGE`, the
+conditionals, the progress bar's step map) still points at the screen it was
+written for. `medvi-flow.json` stays exactly as extracted; the overlay is
+applied on top of it in one line:
+
+```python
+FLOW = braevon_q.apply(FLOW)
+```
+
+Source: *Braevon Intake v2 — All Prototype Questions (for Design)*, 10 August
+2026. Every screen in `braevon_q.py` carries a `doc=` with that document's own
+screen number, so any entry can be checked against it line by line.
+
+`extract_v1.py`, `questions.json` and `flow_v1.py` stay in the repo but are not
+wired in. They are a different, older question set (v1's 24) and are not what
+`braevon_q.py` renders — do not confuse the two.
 
 ## What is not carried across
 
@@ -196,36 +219,116 @@ textarea, .reveal input` in `theme.py` is excluded from the scale and must
 stay excluded. Take room out of padding instead if a value has to fit a
 narrower box.
 
-## The 34 screens
+## The screens
 
-24 numbered questions plus ten interstitials:
+**32 screens, 26 counted questions, 35 frames in `all-screens.html`.**
 
-| # | Screen | # | Screen |
+Not every patient sees 32. Four screens are conditional, so the shortest walk
+through the flow — answering in a way that opens no branch — is **28 screens
+plus the checkout: 29**. That 29 is the number the client works in, and the
+mapping below is written in it.
+
+| Floor | `n` | Screen | Doc |
 |---|---|---|---|
-| 1 | Q1 What are you looking to improve? | 18 | Q14 Recreational drugs |
-| 2 | ▸ 92% prefer BRAEVON | 19 | Q15 Prior diagnoses |
-| 3 | ▸ Trusted by 250k+ men | 20 | Q16 Curve or bend |
-| 4 | Q2 Eligibility — sex, DOB, height, weight, state | 21 | Q17 Tight foreskin |
-| 5 | ▸ Available in your state | 22 | Q18 Conditions, current or past |
-| 6 | ▸ Health intro / HIPAA | 23 | Q19 Cardiovascular symptoms |
-| 7 | Q3 Erection confidence | 24 | Q20 Cardiovascular risk factors |
-| 8 | Q4 Do you get erections? | 25 | Q21 Blood pressure |
-| 9 | Q5 Performance factors | 26 | Q22 Other health concerns |
-| 10 | Q6 Prior ED medication | 27 | Q23 Anything else for your doctor |
-| 11 | Q7 Side effects *(only if Q6 = yes)* | 28 | Q24 Patient info |
-| 12 | Q8 Last use *(conditional)* | 29 | ▸ Consent |
-| 13 | Q9 Physical exam | 30 | ▸ Processing |
-| 14 | Q10 Conditions & surgeries | 31 | ▸ The 4-in-1 |
-| 15 | Q11 Current medications | 32 | ▸ 15 minutes / 89% |
-| 16 | Q12 Allergies | 33 | ▸ Reviewing your assessment |
-| 17 | Q13 Nitrates and alpha blockers | 34 | ▸ Assessment complete |
+| 1 | 1 | Your primary goal | *kept* |
+| 2 | 2 | ▸ 10–15 minutes | *kept* |
+| 3 | 3 | Male or female | *kept* |
+| 4 | 4 | Erection confidence | S7 |
+| 5 | 5 | ▸ How the 4-in-1 works | *kept* |
+| 6 | 6 | Performance factors | S9 |
+| 7 | 7 | Do you get erections? | S8 |
+| 8 | 8 | ▸ The 4-in-1 advantage | *kept* |
+| 9 | 9 | Ever taken ED medication? | S10 |
+| 10 | 23 | Physical exam | S13 |
+| 11 | 24 | Blood pressure diagnosis | *kept* |
+| 12 | 27 | Conditions | S22 |
+| 13 | 28 | Curve & foreskin | S20 + S21 |
+| 14 | 29 | Diagnoses | S19 |
+| 15 | 30 | Cardiovascular risk | S24 |
+| 16 | 32 | ▸ Customer quote | *kept* |
+| 17 | 33 | ▸ 137% | *kept* |
+| 18 | 34 | Cardiovascular symptoms | S23 |
+| 19 | 35 | Medicines (nitrates) | S17 |
+| 20 | 38 | Recreational drugs | S18 |
+| 21 | 39 | Conditions & surgeries | S14 |
+| 22 | 40 | Allergies | S16 |
+| 23 | 41 | Current medications | S15 |
+| 24 | 42 | Doctor notes | S27 |
+| 25 | 43 | Date of birth | *kept* |
+| 26 | 44 | ▸ Customer quote | *kept* |
+| 27 | 45 | Medical review | *kept* |
+| 28 | 47 | Submission | *kept* |
+| 29 | 48 | Approval & checkout | *kept* |
 
-Plus the disqualification screen, which is a state rather than a step and is
-appended as frame 35 in `all-screens.html`.
+The four conditional screens are 10 and 22 (ED side effects and last use,
+behind a Yes on floor 9) and 25 and 26 (the two blood-pressure readings, behind
+a Yes on floor 11). Three more frames sit outside the walk: the checkout is 48,
+"Assessment received" is 49, and the eligibility stop is 46.
 
-**Screens 17, 18, 22 and 23 can stop the flow**, on v1's rules: `data-dq` carries
-the reason, `data-dq-on` narrows what triggers it, and with no `data-dq-on` any
-answer other than the exclusive "None of these" is a contraindication.
+### What changed on 2026-09-04
+
+Sixteen screens took Braevon's questions; thirteen were left exactly as they
+were. The client's own list, in the floor numbering above:
+
+    keep    1 2 3 5 8 11 16 17 25 26 27 28 29
+    change  4 6 7 9 10 12 13 14 15 18 19 20 21 22 23 24
+
+Three things that list did not settle, decided by the client when asked:
+
+- **Floor 12** appeared in both halves of it. It changes.
+- **Document screen 26** ("other health concerns" — weight loss, hair loss,
+  sleep) had no slot left. It is **dropped**, to hold the floor at 29. It is
+  the only question in the document that is not clinical screening.
+- **Floor 24** was in neither half. It takes the document's wording.
+
+**Fourteen conditional screens were dropped**, none of them on the floor:
+
+- **11–21**, the reference's per-drug follow-ups ("How well did Viagra work for
+  you?" and its five siblings, twice over). The document asks one Yes/No on
+  floor 9 and hangs two screens off it instead, which is what 10 and 22 now
+  are. The flow went from 46 screens to 32 on this change alone.
+- **31**, the A1C screen behind diabetes — the document asks it inline on the
+  cardiovascular risk screen, one of that screen's three follow-ups.
+- **36 and 37**, the nitroglycerin and alpha-blocker follow-ups — the document
+  stops the flow on those answers rather than asking more.
+
+### Two pieces of copy here are not the client's
+
+- **Floor 13's headline.** It merges the document's screens 20 and 21 (penile
+  curve, tight foreskin) into the one slot the floor allows, and a merged
+  screen has no headline in the source. Rather than write one, it keeps the
+  headline that screen already had: *"Thank you. Now, please check any of the
+  following that apply."* Worth a look.
+- **The medical review's third read-back row**, which used to read "Duration
+  Satisfaction:". The document has no duration question, and floor 6 now asks
+  what affects performance, so the label follows the question and reads
+  "Performance Factors:". Floor 27 is otherwise untouched.
+
+### Stopping answers
+
+**Six screens can stop the flow**: `data-dq` carries the reason, `data-dq-on`
+narrows what triggers it. Every rule below is transcribed from the document's
+own NOTE lines and **has still never had a prescriber's sign-off** — see
+*Known gaps*.
+
+| Floor | Stops on |
+|---|---|
+| 3 | Female |
+| 4 | "Very confident" |
+| 12 | a heart attack in the last 3 months, or a stroke in the last 6 |
+| 13 | a tight foreskin; active bending in the last 12 months; pain |
+| 19 | any of the five nitrate / alpha-blocker / riociguat answers |
+| 11→25 | "I Don't Know" on the blood-pressure reading |
+
+Two of those are new machinery. On floors 12 and 13 the answer that stops the
+flow is not on the list itself but in a **yes/no follow-up** that opens
+underneath it — ticking "a prior heart attack or heart failure" does not
+disqualify anyone, but answering "Yes" to *"Have you had a heart attack within
+the last three months?"* does. Each such follow-up's Yes carries a value of its
+own (`Q_heart_attack_recent_yes`) which sits on the screen's stopping list, so
+the engine's existing check catches it with no new code. A follow-up that has
+closed again is skipped, so an answer left behind in a hidden reveal cannot
+strand someone on the stop screen.
 
 ## Screen 48 — the approval / checkout page
 
@@ -439,11 +542,25 @@ privacy on and a commit with the real address is rejected at push time.
 - **The testimonial copy is placeholder**, as it was in v1. Three reviews written
   for this concept, not real ones. Say so before showing anyone who might take
   them at face value.
-- **The disqualification rules have never had a prescriber's sign-off.** They are
-  our reading of the reference flow, inherited from v1. The nitrate interaction
-  on screen 17 is a genuine, well-established contraindication; the rest are
-  judgement calls. Get a prescriber to confirm the list and the wording before
-  this goes near a real patient.
+- **The disqualification rules have never had a prescriber's sign-off.** Since
+  2026-09-04 they are transcribed from Braevon's own document's NOTE lines
+  rather than read off the reference, which is an improvement in provenance and
+  no improvement at all in clinical review. The nitrate interaction on floor 19
+  is a genuine, well-established contraindication; the rest are the document's
+  judgement calls, faithfully copied. Get a prescriber to confirm the list and
+  the wording before this goes near a real patient.
+- **Two questions in the document are not built.** Screen 26, "other health
+  concerns", was dropped to hold the floor at 29 — it is a cross-sell question,
+  not a screening one, and it can be added back as a 30th screen in a few
+  minutes if the client wants it. Screen 30, **informed consent**, has no
+  equivalent anywhere in v2: the reference's flow has no consent step, so there
+  was no screen to lay it over. v1 had one. That is a compliance question, not
+  a design one — **raise it before this ships**.
+- **The photograph on floor 23 is the client's own**, supplied 2026-09-04, and
+  replaced a stand-in. It is cropped to a 168px band at `object-position:
+  50% 20%`, tuned to that file (`man-portrait.jpg`, 1045×1400) — retune it in
+  `theme.py` if the photograph is replaced. It is deliberately a separate file
+  from `stat-hero.jpg`, which is still the testimonial avatar on floor 26.
 - **Buttons have no hover state and there is one orange.** Asked for on
   2026-09-03: `--accent-hover` is gone, so `#E6430D` is the colour at rest, on
   hover and while pressed. The only other oranges in the build are
