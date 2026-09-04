@@ -401,7 +401,7 @@
     return picked.length?picked.join(', '):null;
   }
   function fillSummary(el){
-    var fn=document.getElementById('firstName');
+    var fn=document.getElementById('first_name');
     var n=el.querySelector('[data-name-echo]');
     /* "Marcus, how" or "How" — the sentence has to read either way, so the
        echo carries the whole opening rather than just the name. */

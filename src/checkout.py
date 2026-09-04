@@ -85,8 +85,8 @@ LEAD_PACK = 1
 # 2026-09-04. They were the reference's (`Q1_primary_goal`, `first_name`) until
 # the questions were swapped; naming them once here means the next swap is one
 # edit rather than a hunt through the markup.
-GOAL_GROUP = 'goals'
-FIRST_NAME_ID = 'firstName'
+GOAL_GROUP = 'Q1_primary_goal'
+FIRST_NAME_ID = 'first_name'
 
 RATING = '4.6'
 CUSTOMERS = '175,000+'
@@ -388,19 +388,20 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
         '<i data-goal="%s" style="color:%s"%s>%s</i>'
         % (attr(k), v[1], ' class="on"' if i == 0 else '', v[2])
         for i, (k, v) in enumerate(goal_style.items()))
-    # Lines two and three are two more of screen 1's own goals, so they take
-    # that screen's glyph and hue rather than anything invented here. Naming
-    # them from `goal_style` means a change to the question's wording cannot
-    # leave a stale line behind - it raises a KeyError at build time instead.
-    _second, _third = 'Better erections', 'Last longer'
+    # Line two is one of screen 1's own goals, so it takes that screen's glyph
+    # and hue. Line three is not one of the five, so it takes the duration
+    # glyph and the blue the "Last Longer" benefit row uses.
+    _second = 'Increase erection strength'
+    _clock = ic('<rect x="2.5" y="7.5" width="15" height="9" rx="2.6"/>'
+                '<path d="M20.5 10.5v3"/><path d="M6 10.5v3"/>')
     goal_rows = (
         '<li><span class="ck-goal-ic" data-echo-icon="%s">%s</span>'
         '<span data-echo="%s">&mdash;</span></li>'
         '<li><span style="color:%s;display:flex">%s</span><span>%s</span></li>'
-        '<li><span style="color:%s;display:flex">%s</span><span>%s</span></li>'
+        '<li><span style="color:#3B82F6;display:flex">%s</span>'
+        '<span>Longer duration &amp; satisfaction</span></li>'
         % (GOAL_GROUP, goal_icons, GOAL_GROUP,
-           goal_style[_second][1], goal_style[_second][2], _second,
-           goal_style[_third][1], goal_style[_third][2], _third))
+           goal_style[_second][1], goal_style[_second][2], _second, _clock))
     goals = ('<div class="ck-goals">'
              '<span class="ck-goals-mark">%s</span>'
              '<div><b>YOUR GOALS</b><ul>%s</ul></div>'

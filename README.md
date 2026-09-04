@@ -16,7 +16,7 @@ in a browser.
 
 ```
 ├── index.html          the click-through prototype (= interactive.html)
-├── all-screens.html    27 static frames, top to bottom, for the Figma import
+├── all-screens.html    35 static frames, top to bottom, for the Figma import
 ├── assets/
 │   ├── fonts/          Plus Jakarta Sans (variable woff2)
 │   ├── images/         carried over from v1
@@ -26,9 +26,6 @@ in a browser.
 ├── src/
 │   ├── extract_v1.py   pulls the question set out of a v1 build
 │   ├── questions.json  …into here — the content this site renders
-│   ├── flow_v1.py      …reshaped for the renderer, marketing screens dropped
-│   ├── extract_medvi.py / medvi-flow.json / groups.json
-│   │                   the reference's flow — kept, no longer read
 │   ├── logo.py         the Braevon wordmark, lifted from v1
 │   ├── checkout.py     screen 48, the approval / checkout page
 │   ├── chart.svg       the onset chart, as supplied; recoloured on the way out
@@ -63,96 +60,36 @@ python3 -m http.server 4173
 
 ## Where the questions come from
 
-**Braevon's own, from 2026-09-04.** They were the MEDVi QUAD reference's 40
-until then; the client asked for the reference's questions to be replaced with
-v1's 24, keeping v2's design, layout and every component, and for **no screen
-that does not ask something** to be carried over.
-
-```
-v1 build ──extract_v1.py──▶ questions.json ──flow_v1.py──▶ build.py ──▶ HTML
-```
-
-The questions are **parsed, never retyped**, so a change in v1 comes across with
-one command and cannot drift in transcription:
+`extract_medvi.py` parses the reference's server-rendered HTML
+(`../reference/medvi/medvi.html`) into `medvi-flow.json`: 47 screens, each with
+its heading, its options, the note under each option, and the `name` attributes
+the reference uses as field ids. It is a parser rather than a retype, so the
+copy cannot drift and a change over there shows up as a diff:
 
 ```bash
-cd src && python3 extract_v1.py /path/to/a/v1/interactive.html && python3 build.py
+cd src && python3 extract_medvi.py ../../reference/medvi/medvi.html
 ```
 
-`extract_v1.py` also reads a saved copy of the live site, which is how this was
-verified — all 24 question screens came back byte-identical to the copy already
-in the repo.
+Two things it derives rather than takes literally:
 
-### What is in the flow
+- **The branching**, from the reference's own page names. "5.a.1" is the
+  follow-up to option 1 of question 5, "13.a.2" the one behind the alpha
+  blocker on 13. Six branches in all: one "how well did it work" and one
+  side-effect list per ED medication tried, the two blood-pressure readings,
+  the A1C screen behind diabetes, and the nitroglycerin and alpha-blocker
+  follow-ups.
+- **The safety rules**, from the notes under the options. The reference writes
+  them two ways — a note on one answer saying it disqualifies ("Never", "More
+  than 3 years ago"), or a note on the exclusive answer saying everything else
+  does ("Select this to continue. All other answers will make you ineligible").
+  Both flatten into one list of stopping answers per screen. Twelve screens
+  carry one.
 
-24 screens, every one of them a question. v1 has 34; the other ten are
-marketing, consent, processing, approval and checkout pages, and `flow_v1.py`
-drops every screen whose `marketing` flag is set. `_check()` fails the build if
-a screen with nothing to answer ever gets through, so the rule cannot rot.
+`build.py` renders that data. It does not know what any question means — which
+is the point: the content is the reference's, the design is `theme.py`'s.
 
-The reference's own extra screens went with its questions: the interstitials,
-the "LAST STEP" birth-date screen, the medical review and the submission page
-were MEDVi's. v1 asks for the date of birth as part of eligibility (screen 4)
-and collects name, email and phone on screen 28 — those are Braevon's
-equivalents, they are questions, and they stay.
-
-| | | | |
-|---|---|---|---|
-| 1 | Q1 goals | 17 | Q13 nitrates & alpha blockers |
-| 4 | Q2 eligibility — sex, DOB, height, weight, state | 18 | Q14 recreational drugs |
-| 7 | Q3 erection confidence | 19 | Q15 prior diagnoses |
-| 8 | Q4 do you get erections | 20 | Q16 curve or bend |
-| 9 | Q5 performance factors | 21 | Q17 tight foreskin |
-| 10 | Q6 prior ED medication | 22 | Q18 conditions, current or past |
-| 11 | Q7 side effects *(if Q6 = yes)* | 23 | Q19 cardiovascular symptoms |
-| 12 | Q8 last use *(if Q6 = yes)* | 24 | Q20 cardiovascular risk factors |
-| 13 | Q9 physical exam | 25 | Q21 blood pressure |
-| 14 | Q10 conditions & surgeries | 26 | Q22 other health concerns |
-| 15 | Q11 current medications | 27 | Q23 anything else for your doctor |
-| 16 | Q12 allergies | 28 | Q24 patient info |
-
-Then screen 48, the approval / checkout page. The eligibility stop and the
-"assessment received" state are states rather than screens and are appended to
-`all-screens.html` as two extra frames.
-
-### What changed in the swap, and what did not
-
-**Style, layout and every component are v2's** — the masthead, the five-segment
-progress bar, the option cards, the tiles, the fields, the button, the
-disqualification dialog and the checkout are untouched. Only the questions and
-their options moved. Four things had to be handled rather than copied:
-
-- **v1 composes a screen freely** — eyebrow, title, a note, a legend, options, a
-  legend again, a row of fields — and the order carries meaning ("Sex assigned
-  at birth" belongs above the tiles). So `screen_v1()` walks the extracted
-  blocks in document order instead of rebuilding a fixed shape, and every piece
-  it emits is one of v2's own components.
-- **Four of the six stopping rules live inside reveals** — `curve-recent`,
-  `curve-pain`, `heart-recent`, `stroke-recent` are Yes/No questions that open
-  under another answer. `extract_v1.py` was only reading `.opt` buttons and
-  those are drawn as `.tile`, so they came out as empty reveals. Fixed; without
-  it the safety screens would have been quietly disarmed.
-- **A screen can stop the flow two ways.** Named answers go in `data-dq-on`; a
-  screen with a reason and no named answers stops on *anything except its "none
-  of these"*, which is how v1 writes the nitrate screen — there every answer is
-  a contraindication. `sections()` emitted the reason only when there were named
-  values, which disarmed that screen. It now emits `data-dq-safe` instead and
-  the engine reads both forms.
-- **The stop dialog shows the screen's own reason.** v2 computed the per-screen
-  copy and never rendered it, so every stop read the same sentence. v1 writes a
-  real reason on each of its six and they are worth showing; the dialog's design
-  is unchanged.
-
-**Preselection is v1's, not the reference's.** Two screens open answered — "Male"
-on eligibility and "Normal" on the blood-pressure bands — because v1 preselects
-those. The reference opened *every* single-answer screen on its first option,
-which on a safety screen meant clicking through submitted "no allergies, no
-medications, no conditions" unread. That rule is deliberately not carried over.
-
-**`medvi-flow.json`, `groups.json` and `extract_medvi.py` are still here and no
-longer read.** They are the reference's flow and the teardown that produced it,
-kept so a reference screen can be brought back deliberately rather than
-reconstructed.
+v1's question set is no longer rendered. `extract_v1.py` and `questions.json`
+stay in the repo so it can be pulled back a screen at a time.
 
 ## What is not carried across
 
@@ -259,22 +196,36 @@ textarea, .reveal input` in `theme.py` is excluded from the scale and must
 stay excluded. Take room out of padding instead if a value has to fit a
 narrower box.
 
-## The screens
+## The 34 screens
 
-See "What is in the flow" above — 24 question screens plus the checkout. This
-section used to list the reference's 34 and was replaced when the questions were
-swapped on 2026-09-04.
+24 numbered questions plus ten interstitials:
 
-**Six screens can stop the flow**, on v1's own rules: 4 (sex), 7 (erection
-confidence), 17 (nitrates and alpha blockers — any answer but "none"), 20
-(curve, on either follow-up), 21 (tight foreskin) and 22 (heart attack or stroke
-follow-ups). Each carries its own reason copy, which the stop dialog now shows.
+| # | Screen | # | Screen |
+|---|---|---|---|
+| 1 | Q1 What are you looking to improve? | 18 | Q14 Recreational drugs |
+| 2 | ▸ 92% prefer BRAEVON | 19 | Q15 Prior diagnoses |
+| 3 | ▸ Trusted by 250k+ men | 20 | Q16 Curve or bend |
+| 4 | Q2 Eligibility — sex, DOB, height, weight, state | 21 | Q17 Tight foreskin |
+| 5 | ▸ Available in your state | 22 | Q18 Conditions, current or past |
+| 6 | ▸ Health intro / HIPAA | 23 | Q19 Cardiovascular symptoms |
+| 7 | Q3 Erection confidence | 24 | Q20 Cardiovascular risk factors |
+| 8 | Q4 Do you get erections? | 25 | Q21 Blood pressure |
+| 9 | Q5 Performance factors | 26 | Q22 Other health concerns |
+| 10 | Q6 Prior ED medication | 27 | Q23 Anything else for your doctor |
+| 11 | Q7 Side effects *(only if Q6 = yes)* | 28 | Q24 Patient info |
+| 12 | Q8 Last use *(conditional)* | 29 | ▸ Consent |
+| 13 | Q9 Physical exam | 30 | ▸ Processing |
+| 14 | Q10 Conditions & surgeries | 31 | ▸ The 4-in-1 |
+| 15 | Q11 Current medications | 32 | ▸ 15 minutes / 89% |
+| 16 | Q12 Allergies | 33 | ▸ Reviewing your assessment |
+| 17 | Q13 Nitrates and alpha blockers | 34 | ▸ Assessment complete |
 
-> **These rules have never had a prescriber's sign-off.** They are v1's, and
-> v1's own notes say the same of them. The nitrate interaction is a
-> well-established contraindication; the rest are judgement calls. Get a
-> prescriber to confirm the list and the wording before this goes near a real
-> patient.
+Plus the disqualification screen, which is a state rather than a step and is
+appended as frame 35 in `all-screens.html`.
+
+**Screens 17, 18, 22 and 23 can stop the flow**, on v1's rules: `data-dq` carries
+the reason, `data-dq-on` narrows what triggers it, and with no `data-dq-on` any
+answer other than the exclusive "None of these" is a contraindication.
 
 ## Screen 48 — the approval / checkout page
 
@@ -305,11 +256,6 @@ Its sixteen blocks, in order:
 | 6 | what happens next | 14 | cancellation promise (again) |
 | 7 | countdown pill | 15 | FAQ, then the footer |
 
-**Nothing is on this page that the reference does not have.** The client checked
-that on 2026-09-04 and the one block that was ours — the "as featured on" row —
-came out. If a block is added later, it should be because the reference has one
-there.
-
 **Everything inside those blocks is Braevon's**, from v1's own checkout (screen
 34 of `v1/src/steps.py`, built from the client's `Checkout Page 2.pdf`): the
 product, the render (`product-prime.png`, the flat orange tablet from that PDF —
@@ -325,23 +271,11 @@ the rating and the customer count.
 | 12 tablets/mon | $132.00 | $11.00 | **Most popular** · save 33% per tablet |
 
 That file **supersedes v1's `QTY_PRICES`** (three tiers of 6/10/20 uses at
-$119/$159/$189), which is what this screen shipped with for a few hours until
-the client said the packs were wrong. Its bill also waives a $100 consultation
-and $25 shipping — where the "$125 SAVINGS" and the struck $224/$257 totals in
-that file come from. This screen has no bill, so only the two prices are used.
-
-Three things follow from the Figma rather than from the reference:
-
-- **The badge is on the 12, not the 6**, because that is where the Figma puts
-  it. The 6 therefore has no badge at all; the two cards are flex siblings so
-  they stay the same height without a placeholder chip.
-- **The sub-line is the per-tablet price**, not the reference's "180 hour
-  coverage". Those hours were a derivation (pack × the 36-hour window); the
-  per-tablet figure is the client's own number and is what their design leads
-  on.
-- **The rendered price string is the Figma's**, decimals included — `$99.00`
-  beside `$16.50/tab`. `PACKS` carries the numeric price separately, because the
-  "prescriptions start at just…" strip has to pick the cheapest.
+$119/$159/$189), which is what this screen shipped with until the client said
+the packs were wrong. The badge sits on the 12, not the 6, because that is where
+the Figma puts it; the sub-line is the per-tablet price rather than the
+reference's "hour coverage" (those hours were a derivation, pack × the 36-hour
+window); and the rendered string is the Figma's, decimals included.
 
 **The price lives on the card as `data-price`** and the rendered figure is never
 the source of truth, so a change is one edit.
@@ -402,8 +336,7 @@ two social links. `assets/images/footer-seal.png` is the site's own seal file.
 
 ### Where this screen departs from the reference on purpose
 
-Each of these is the client's, all from 2026-09-04, and none should be
-"restored" to the measured reference:
+All the client's, all from 2026-09-04:
 
 | | reference | here |
 |---|---|---|
@@ -415,6 +348,7 @@ Each of these is the client's, all from 2026-09-04, and none should be
 | "reserved for" pill | a blue gradient | **v1's mint** — `#41D8A6` on `#00462F`, from `Approval page.pdf` |
 | "Choose your medication preference" | left, section size | centred, one step smaller |
 | the tablet in "what's included" | 66px | 96px |
+| the HSA mark | a supplied image | drawn as it draws it — a circled tick and the words |
 | block 11 | a research-logo row | empty |
 
 ### Two colour tokens this screen added
@@ -500,9 +434,7 @@ privacy on and a commit with the real address is rejected at push time.
   anything the reference does not have to come out — so it did, styles and all.
   **Neither version is built now**, and the reference's own needs two things
   first: the logo files, and evidence that those bodies have researched or
-  endorsed this product. Redrawing a real organisation's logotype reproduces its
-  trademark, and "backed by research from the NIH" is a claim the client has to
-  stand behind. Ask before building it.
+  endorsed this product. Ask before building it.
 - **`assets/video/hero.mp4` is missing** — screen 1 falls back to its poster.
 - **The testimonial copy is placeholder**, as it was in v1. Three reviews written
   for this concept, not real ones. Say so before showing anyone who might take
