@@ -175,7 +175,10 @@ OVERRIDES = {
                             'Q_physical_exam_detail')]),
 
     # ---------------------------------------------------------- floor 12
-    27: dict(doc=22, name='Conditions - 08', mode='multi',
+    # `excl_first` puts "None of these" at the head of the list rather than at
+    # its foot - asked for on 2026-09-07. It is the longest list in the flow
+    # and the answer most patients want is at the bottom of a scroll.
+    27: dict(doc=22, name='Conditions - 08', mode='multi', excl_first=True,
              title='Do you have now, or have you ever had any of the '
                    'following conditions?',
              subs=['Select all that apply.'],
@@ -459,13 +462,19 @@ def reveals():
 def groups(base):
     """GROUPS with our screens re-recorded.
 
-    Everything in this file follows the document's own convention: the
-    none-answer sits LAST, under a rule, with no note and no section captions.
-    The reference's arrangement - green and first, under a line saying it is
-    the only answer that lets you continue - was recorded per screen and no
-    longer describes these lists."""
+    By default everything in this file follows the document's own convention:
+    the none-answer sits LAST, under a rule, with no note and no section
+    captions. The reference's arrangement - green and first, under a line
+    saying it is the only answer that lets you continue - was recorded per
+    screen and does not describe these lists.
+
+    `excl_first` on a screen overrides that and puts the none-answer at the
+    head of the list. The note stays off either way: on these screens the
+    other answers do NOT make a patient ineligible - only the dated follow-ups
+    do - so the reference's "all other answers will make you ineligible" would
+    be a false statement about Braevon's questions."""
     out = dict(base)
-    for n in OVERRIDES:
-        out[str(n)] = {'exclusive_first': False, 'exclusive_note': None,
-                       'captions': {}}
+    for n, o in OVERRIDES.items():
+        out[str(n)] = {'exclusive_first': o.get('excl_first', False),
+                       'exclusive_note': None, 'captions': {}}
     return out
