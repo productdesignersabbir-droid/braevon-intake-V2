@@ -1259,6 +1259,11 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   gap:12px 22px}
 .ck-research-row span{font-size:14px;font-weight:600;color:#8A93A3;
   letter-spacing:.01em}
+/* A supplied logo, when one exists - see assets/images/research/README.md.
+   Capped by height so five marks of different proportions still sit on one
+   optical line, and desaturated the way the reference greys them. */
+.ck-research-row img{height:26px;width:auto;max-width:118px;object-fit:contain;
+  filter:grayscale(1);opacity:.72}
 
 
 

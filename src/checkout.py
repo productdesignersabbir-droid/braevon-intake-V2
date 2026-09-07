@@ -209,6 +209,21 @@ _CVC_MARK = ('<svg class="ck-cvc" viewBox="0 0 24 16" aria-hidden="true">'
              '<rect x="13" y="9" width="8" height="3.6" rx="1" fill="none" '
              'stroke="currentColor" stroke-width="1.2"/></svg>')
 
+def _research_mark(name, stem, attr):
+    """A logo if one has been supplied, the name set in type if not.
+
+    Looked up at BUILD time rather than guessed at, so the page never ships a
+    broken image: put `mayo-clinic.svg` in `assets/images/research/` and the
+    next build renders it; take it away and the name comes back."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for ext in ('svg', 'png', 'webp'):
+        rel = 'assets/images/research/%s.%s' % (stem, ext)
+        if os.path.exists(os.path.join(here, '..', rel)):
+            return ('<img src="%s" alt="%s" loading="lazy"/>'
+                    % (rel, attr(name)))
+    return '<span>%s</span>' % name
+
+
 # Block 5. Service lines, each one a claim v1's checkout already makes: its bill
 # waives the consultation and the shipping, and its FAQ says a plan can be
 # cancelled from the patient portal at any time.
@@ -704,11 +719,24 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     #    Harvard mark would be worse than not showing one. v1 made the identical
     #    call for its press row. Real artwork has to come from the client, with
     #    permission to use it.
-    RESEARCH = ['Mayo Clinic', 'Stanford Medicine', 'WebMD',
-                'Harvard University', 'National Institutes of Health']
+    # Each row is (name, file stem). Drop artwork at
+    # `assets/images/research/<stem>.svg` (or .png / .webp) and the build picks
+    # it up on the next run - no code change. Until a file is there the name is
+    # type-set, which is what ships today. The reference's own artwork is not
+    # here to copy: `reference/medvi/medvi.html` is the QUESTIONNAIRE page
+    # (canonical `/intake-s`), and this block lives on `/approval`, which was
+    # never saved. Taking the files off MEDVi's CDN would be lifting a
+    # competitor's assets AND republishing five institutions' trademarks, so
+    # the artwork has to come from the client with permission to use it.
+    RESEARCH = [('Mayo Clinic', 'mayo-clinic'),
+                ('Stanford Medicine', 'stanford-medicine'),
+                ('WebMD', 'webmd'),
+                ('Harvard University', 'harvard-university'),
+                ('National Institutes of Health', 'nih')]
     research = ('<div class="ck-research"><p>Backed by research from</p>'
                 '<div class="ck-research-row">%s</div></div>'
-                % ''.join('<span>%s</span>' % r for r in RESEARCH))
+                % ''.join(_research_mark(name, stem, attr)
+                          for name, stem in RESEARCH))
 
     # -- 12 ----------------------------------------------------------------
     quotes = ''.join(
