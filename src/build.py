@@ -382,21 +382,25 @@ MECHANISM = [
 ]
 
 # Placeholder copy written for this concept, not real reviews - see the module
-# docstring. Structure and slot are the reference's.
+# docstring. Structure and slot are the reference's. The quote and the name on
+# screen 32 are the client's own wording, asked for on 2026-09-07; that makes
+# them the client's placeholder rather than ours, and does NOT make them a real
+# review. "Braevon" is title case here on purpose - it is a person speaking,
+# not the masthead. Still needs a genuine, consented review before launch.
 _PINK = ('#FCE7F3', '#EC4899')
 _PURPLE = ('#F3EBFF', '#A855F7')
 _HEART_RED = ('#FEE2E2', '#EF4444')
 _GREEN2 = ('#DFF7E6', '#22C55E')
 
 QUOTES = {
-    32: ('&ldquo;It probably saved my marriage.&rdquo;',
+    32: ('&ldquo;Braevon probably saved my marriage.&rdquo;',
          [('Personal Goal',
            [_PINK + (_ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>'),)],
            'Boost Sex Drive and Desire'),
           ('Benefits',
            [_PURPLE + (_BRAIN,), _HEART_RED + (_HEART,)],
            'Mental Mood and<br/>Lasting Effects')],
-         'Ethan Caldwell &mdash; Kansas City, MO', 'hero-benefits.jpg',
+         'Nicholas Carlos &mdash; Kansas City, MO', 'hero-benefits.jpg',
          ('hero-benefits.jpg', '66% 12%')),
     44: ('&ldquo;The results were almost immediate &mdash; more energy, more desire, '
          'and a stronger performance every time.&rdquo;',
