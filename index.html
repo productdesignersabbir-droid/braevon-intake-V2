@@ -176,7 +176,7 @@ img{max-width:100%;display:block}
   letter-spacing:-.01em; color:var(--title-ink);
 }
 .qhead.big{font-size:26px}
-.sub{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
+.sub{margin:10px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
 .qhead + .sub{margin-top:12px}
 /* On an interstitial the line under the headline is carrying the claim, not
    captioning a question, and the reference sets it as a second heading:
@@ -304,15 +304,15 @@ img{max-width:100%;display:block}
 .opts.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-opt)}
 .opt.tile{flex-direction:column;justify-content:center;align-items:center;
   text-align:center;gap:14px;padding:24px 20px;min-height:170px}
-.opt.tile .lbl{flex:none;font-size:16px;font-weight:500}
-.opt.tile .lbl small{display:block;margin-top:8px;font-size:12px;font-weight:400;
+.opt.tile .lbl{flex:none;font-size:14px;font-weight:500}
+.opt.tile .lbl small{display:block;margin-top:8px;font-size:10px;font-weight:400;
   line-height:1.35;color:var(--muted)}
 /* A Yes/No that opens inside a reveal is a follow-up, not the screen's own
    question, so it takes the tile's shape at a row's height rather than the
    170px card the sex question uses. Without this v1's four safety follow-ups
-   each ate most of a phone viewport. */
+   each ate most of a phone viewport. It sets no font-size of its own - every
+   option label in the build is 14px, whatever shape the card is. */
 .reveal .opts.tilegrid .opt.tile{min-height:56px;padding:14px 16px;gap:0}
-.reveal .opts.tilegrid .opt.tile .lbl{font-size:15px}
 .reveal .legend{margin-top:0}
 .reveal > .legend + .opts{margin-top:12px}
 

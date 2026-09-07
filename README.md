@@ -211,6 +211,29 @@ headline on 34px, the section eyebrow on 10px. This is a deliberate divergence
 from the reference, not drift: measured at matched viewports the two were
 identical before this change.
 
+Audited screen by screen on 2026-09-07, measuring every frame's computed
+styles against the reference's own, read first-hand off
+`reference/medvi/medvi.html` rather than off the teardown. Four values had
+never had the 15% applied and still carried the reference's raw numbers:
+
+| | was | now | why |
+|---|---|---|---|
+| `.opt.tile .lbl` | 16px | 14px | the reference's own option size, unscaled |
+| `.opt.tile .lbl small` | 12px | 10px | the reference's own sub-label, unscaled |
+| reveal tile `.lbl` | 15px | *(rule gone)* | a third size for one role |
+| `.sub` | 16px | 14px | the reference's caption is 16px/400 |
+
+Every option label in the build is now **14px**, whatever shape the card is.
+Only weight varies — 600 on the blood-pressure bands, 700 on the exclusive
+"None of these" — and the reference does the same: its own "None of these"
+measures 14px/700 against 16px/500 for a plain option.
+
+Spacing was never part of the reduction and was already right: 32px between
+blocks, 24px title to first option, 16px between rows, 8px radius, 480px
+column, 24px padding — all matching the teardown. Row height is 45px against
+the reference's 51px because both the type and the padding are scaled
+(16px → 13px), which is the sanctioned trade below.
+
 **One exception, and it is load-bearing: form controls stay at 16px.** iOS
 Safari zooms the page in on any focused `input`, `select` or `textarea` under
 16px and does not zoom back out — a bug the client hit on a real iPhone during
