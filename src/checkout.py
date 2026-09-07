@@ -148,12 +148,33 @@ def chart():
 # Block 4. The reference's five rows, restated against what this flow already
 # claims elsewhere: 10-15 minutes and the 36-hour window are screen 2's own
 # figures, and the four molecules are `MOLECULES` in build.py.
+# The fifth item on each row is the glyph, as an SVG path. The reference gives
+# every goal a mark of its own - bolt, brain, heart, battery, arm - and five
+# identical ticks in five different colours was the wrong reading of it. Paths
+# rather than built icons so this module stays a leaf: `screen()` runs them
+# through build.py's own `ic` helper, so they inherit one stroke treatment.
 BENEFITS = [
-    ('Be Ready in Minutes', 'Results seen within 10&ndash;15 min', '#FFEDD5', '#F97316'),
-    ('Feel Desire Again', 'Primes the brain&rsquo;s arousal pathways', '#F3EBFF', '#A855F7'),
-    ('Boost Performance', 'Supports a strong blood-flow response', '#FEE2E2', '#EF4444'),
-    ('Last Longer', 'Up to 36 hour performance window', '#DFF7E6', '#22C55E'),
-    ('Increased Confidence', 'A 4-in-1 formula for a reliable experience', '#DBEAFE', '#3B82F6'),
+    ('Be Ready in Minutes', 'Results seen within 10&ndash;15 min', '#FFEDD5', '#F97316',
+     '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),
+    ('Feel Desire Again', 'Primes the brain&rsquo;s arousal pathways', '#F3EBFF', '#A855F7',
+     '<path d="M12 6a3.2 3.2 0 0 0-6-1.1A2.7 2.7 0 0 0 4.2 9.4 2.8 2.8 0 0 0 6 14.4'
+     'a3 3 0 0 0 3 2.6"/><path d="M12 6a3.2 3.2 0 0 1 6-1.1 2.7 2.7 0 0 1 1.8 4.5'
+     'A2.8 2.8 0 0 1 18 14.4a3 3 0 0 1-3 2.6"/><path d="M12 6v15"/>'),
+    ('Boost Performance', 'Supports a strong blood-flow response', '#FEE2E2', '#EF4444',
+     '<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5'
+     'c0 5-7 9.5-7 9.5z"/>'),
+    ('Last Longer', 'Up to 36 hour performance window', '#DFF7E6', '#22C55E',
+     '<rect x="7.5" y="5" width="9" height="16" rx="2.4"/><path d="M10 2.5h4"/>'
+     '<path d="M10.5 9.5h3"/>'),
+    # The reference uses a flexed arm here. A stroked bicep does not survive
+    # 18px - two attempts both read as a blob at the size this actually
+    # renders - so this is the shield-and-tick the build already uses for
+    # "Boost confidence" in GOAL_STYLE, which reads at once and matches the
+    # goal icons on screen 1. The one place these five depart from the
+    # reference; see the README.
+    ('Increased Confidence', 'A 4-in-1 formula for a reliable experience', '#DBEAFE', '#3B82F6',
+     '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
+     '<path d="M9 12l2 2 4-4"/>'),
 ]
 
 # Block 5. Service lines, each one a claim v1's checkout already makes: its bill
@@ -360,15 +381,12 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
     rather than imported so this module stays a leaf and build.py keeps the
     single definition of each."""
     tick = icon['check']
-    guarantee = (
-        '<div class="ck-guar">'
-        '<span class="ck-guar-mark">%s</span>'
-        '<div><b>Cancel Anytime</b>'
-        '<p>Plans can be cancelled at any time from your patient portal. No contracts, '
-        'no cancellation fees, and you can come back whenever you want to.</p></div>'
-        '</div>'
-        % ic('<path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8'
-             ' 5.4-.8z"/><path d="M8.6 15.6L6.5 22l5.5-2.6 5.5 2.6-2.1-6.4"/>'))
+    # The "Cancel Anytime" block came out on 2026-09-07 at the client's word.
+    # It had been rendering TWICE - once under the HIPAA line and again before
+    # the FAQ - which is why the page carried the same promise in two places.
+    # The cancellation claim survives in three other spots: the "What's
+    # included" list, the pay-as-you-go note under the CTA, and the FAQ's
+    # shipping and cancellation answer. Flagged for the client.
 
     # -- 0 -----------------------------------------------------------------
     head = ('<h1 class="ck-h1"><span data-fname-echo>Your</span> BRAEVON 4-in-1 '
@@ -440,8 +458,8 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
     rows = ''.join(
         '<div class="ck-benefit"><span class="bubble" style="--bub:%s;--gly:%s">%s</span>'
         '<div><b>%s</b><span>%s</span></div></div>'
-        % (bub, gly, tick, name, note)
-        for name, note, bub, gly in BENEFITS)
+        % (bub, gly, ic(path), name, note)
+        for name, note, bub, gly, path in BENEFITS)
     benefits = ('<div class="ck-sect">'
                 '<h2 class="ck-h2">The goals <em>you will accomplish</em> with your '
                 'plan:</h2><div class="ck-benefits">%s</div></div>' % rows)
@@ -519,7 +537,12 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
              '<div class="ck-hipaa">'
              '<p>%sYour data is protected by HIPAA</p>'
              '<span>All transactions are secured and encrypted.</span>'
-             '</div>' % (hsa_mark, icon['shield']))
+             '</div>'
+             % (hsa_mark,
+                # Not ICON['shield']: that one is a bare outline. The reference
+                # fills the shield and knocks the tick out of it in white.
+                ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
+                   '<path d="M8.6 11.9l2.4 2.4 4.4-4.4"/>')))
 
     # -- 12 ----------------------------------------------------------------
     quotes = ''.join(
@@ -573,7 +596,10 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
             'valid for</span><b data-countdown>10:00</b></div>'
             % logo
             + head + goals + intro + programme + benefits + included + nexts
-            + pill + product + hipaa + guarantee + quotes + ready
-            + guarantee + faq
+            # The checkout block follows the HSA/FSA and HIPAA marks directly,
+            # as the reference orders it - the testimonials used to sit between
+            # them, which put the page's one buying decision below the reviews
+            # rather than above them. Moved 2026-09-07.
+            + pill + product + hipaa + ready + quotes + faq
             + footer(logo)
             + '</div>')

@@ -531,6 +531,20 @@ privacy on and a commit with the real address is rejected at push time.
 
 ## Known gaps
 
+- **"Cancel Anytime" was removed from the checkout on 2026-09-07, but the
+  cancellation claim is still on the page three times.** The block that came
+  out was rendering TWICE (once under the HIPAA line, once before the FAQ),
+  which is why the promise appeared in two places. What remains: the "What's
+  included" list ("Cancel anytime, come back anytime"), the note under the
+  Checkout button ("No contracts, cancel anytime"), and the FAQ's shipping and
+  cancellation answer. **Ask the client whether those three should go too** -
+  removing only the block may not be what they meant.
+- **One checkout icon is not the reference's.** "Increased Confidence" takes
+  the shield-and-tick the build already uses for that goal on screen 1, because
+  the reference's flexed arm does not survive being stroked at 18px - two
+  attempts both read as a blob at the size it actually renders. The other four
+  (bolt, brain, heart, battery) are the reference's.
+
 - **The checkout's operational promises are not signed off.** "Most prescriptions
   are approved in less than 24 hours" and "tracking information within 2 business
   days" are the reference's timings with Braevon's name on them (`NEXT_STEPS` in

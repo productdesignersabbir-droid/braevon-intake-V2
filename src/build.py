@@ -174,6 +174,14 @@ TILE_ICONS = {
                     _ic('<circle cx="12" cy="9" r="6"/><path d="M12 15v7M9 19h6"/>')),
     (24, 'no'):    ('#DFF7E6', '#22C55E', _DROP),
     (24, 'yes'):   ('#FEE2E2', '#EF4444', _DROP),
+    # "Is there anything else you want your doctor to know?" - Yes takes a pen,
+    # not the red cross the tick/cross fallback would give it. Asked for on
+    # 2026-09-07, and right: wanting to tell your doctor something is not an
+    # adverse answer, and the red read as though it were. Blue is the build's
+    # existing informational pair (screen 3's male tile, the review's goal row).
+    (42, 'yes'):   ('#DBEAFE', '#3B82F6',
+                    _ic('<path d="M4 20h4L18.5 9.5a2.8 2.8 0 0 0-4-4L4 16v4z"/>'
+                        '<path d="M13.5 6.5l4 4"/>')),
 }
 
 # The blood-pressure screens read as a scale, and the reference colours them as
@@ -352,6 +360,7 @@ _BRAIN = _ic('<path d="M12 6a3.2 3.2 0 0 0-6-1.1A2.7 2.7 0 0 0 4.2 9.4 2.8 2.8 0
              'A2.8 2.8 0 0 1 18 14.4a3 3 0 0 1-3 2.6"/><path d="M12 6v15"/>')
 _HEART = _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5'
              'c0 5-7 9.5-7 9.5z"/>')
+_BOLT = _ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>')
 
 MOLECULES = [
     ('Sildenafil', 'For getting hard fast', '&mdash;'),
@@ -409,7 +418,7 @@ QUOTES = {
                            '<path d="M12 9v4l2.5 2.5M9 2h6"/>'),)],
            'Improve Stamina and Endurance'),
           ('Benefits',
-           [_GREEN2 + (_ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),), _HEART_RED + (_HEART,)],
+           [_GREEN2 + (_BOLT,), _HEART_RED + (_HEART,)],
            'Quick Effect and<br/>Lasting Performance')],
          # Not the white-coat shot: this is a customer, not a clinician. Shares
          # stat-hero.jpg with screen 41's banner - a 28px avatar and a 168px
@@ -723,9 +732,14 @@ def screen_review(p):
         '<div><b>%s</b><span data-echo="%s">&mdash;</span></div></div>'
         % (art[0], art[1], art[2], label, group)
         for label, group, art in rows)
-    helps = ''.join('<li>%s%s</li>' % (ICON['check'], t) for t in
-                    ('Effects in 10&ndash;15 minutes', 'Boosted Desire',
-                     'Long-Lasting Results'))
+    # The reference gives each line its own mark - a bolt for how fast, a brain
+    # for desire, a heart for how long - rather than three identical ticks.
+    # Matched on 2026-09-07. Three ticks also read as three verified claims,
+    # which these are not.
+    helps = ''.join('<li>%s%s</li>' % (icon, t) for icon, t in
+                    ((_BOLT,  'Effects in 10&ndash;15 minutes'),
+                     (_BRAIN, 'Boosted Desire'),
+                     (_HEART, 'Long-Lasting Results')))
     return ('<div class="col rv">'
             '<div class="rv-head"><div><b>BRAEVON</b><span>ED Treatment</span></div>'
             '<div class="rv-head-r"><span>Assessment Complete</span>'
@@ -754,8 +768,11 @@ def screen_review(p):
               % (field_block(dict(m['first_name'], half=True), 'First Name'),
                  field_block(dict(m['last_name'], half=True), 'Last Name'))
             + field_block(m['state'], 'What state will your medication be shipped to?')
-            + '<p class="foot">Your information is never shared and is protected '
-              'by HIPAA.</p>'
+            # The reference centres this under the field with a shield above
+            # it, rather than leaving it as a grey line hugging the left edge.
+            # Matched on 2026-09-07.
+            + '<div class="rv-hipaa">%s<p>Your information is never shared and '
+              'is protected by HIPAA.</p></div>' % ICON['shield']
             + cta() + '</div>')
 
 

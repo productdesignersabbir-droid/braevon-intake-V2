@@ -68,6 +68,13 @@ CSS = r"""
                               softened; never the accent at full strength  */
   --glow:rgba(230,67,13,.15);   /* the selected row's halo — the resting
                                    shadow, tinted; no second stroke        */
+  /* v1's countdown pair, lifted unchanged from its own approval screen and
+     asked for here on 2026-09-07. Sampled #41D8A6 on #00462F — 9.4:1, so the
+     label and the clock share one ink where white-on-orange needed none.
+     These two are the ONLY greens of their kind in the build; do not reach
+     for them as a general success colour. */
+  --mint:#41D8A6;          /* the countdown bar's ground                 */
+  --mint-ink:#00462F;      /* type on the mint, and only there           */
   --col:480px;             /* the column, at every width                 */
   --pad:24px;              /* its side padding                           */
   --radius:10px;           /* Braevon's one radius — buttons, inputs     */
@@ -196,7 +203,6 @@ img{max-width:100%;display:block}
    20px/600 in near-black, tighter. */
 .sub.lead{font-size:20px;line-height:1.3;font-weight:600;color:var(--ink)}
 .legend{margin:var(--gap-title) 0 10px;font-size:12px;font-weight:700;color:var(--ink)}
-.foot{margin:12px 0 0;font-size:10px;line-height:1.5;color:var(--faint)}
 .hi{color:var(--accent);font-weight:700}
 
 /* Every block that follows the head gets the same gap, so a screen with a
@@ -749,10 +755,17 @@ img{max-width:100%;display:block}
   margin-top:14px}
 .rv-bar i{display:block;height:100%;border-radius:999px;background:#22C55E}
 
-.rvrow{display:flex;align-items:flex-start;gap:12px;padding:12px 0;
-  border-top:1px solid var(--border)}
-.rvrow:first-child{border-top:none;padding-top:0}
-.rvrow:last-child{padding-bottom:0}
+/* The reference gives these rows a good deal more air than a 12px pad, and it
+   starts the rule at the text rather than running it under the icon. Measured
+   off its own review card and matched here on 2026-09-07. */
+.rvrow{position:relative;display:flex;align-items:flex-start;gap:12px;
+  padding:20px 0}
+.rvrow:first-child{padding-top:4px}
+.rvrow:last-child{padding-bottom:4px}
+/* 48px = the 36px bubble plus the 12px gap, so the rule lines up with the
+   label above it. Keep the three in step if any of them changes. */
+.rvrow + .rvrow::before{content:"";position:absolute;top:0;left:48px;right:0;
+  height:1px;background:var(--border)}
 .rvrow .bubble{flex:none;width:36px;height:36px;border-radius:50%;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
 .rvrow .bubble svg{width:19px;height:19px}
@@ -762,6 +775,14 @@ img{max-width:100%;display:block}
   line-height:1.4;color:var(--ink)}
 .rv-verdict b{font-weight:700;color:var(--accent)}
 
+/* The HIPAA line under the state field: shield above, text centred under it,
+   as the reference has it. The width cap is what breaks it over two lines
+   there - without it the line runs the full field and reads as a caption. */
+.rv-hipaa{margin:14px auto 0;text-align:center;color:var(--faint)}
+.rv-hipaa svg{width:16px;height:16px;stroke:currentColor}
+.rv-hipaa p{margin:4px auto 0;max-width:250px;font-size:12px;line-height:1.45;
+  color:var(--faint)}
+
 .rv-help{display:flex;gap:14px;align-items:flex-start;background:#F0FDF4;
   border-radius:var(--radius-card);padding:16px;margin-top:12px}
 .rv-help img{flex:none;width:64px;height:auto;object-fit:contain}
@@ -769,7 +790,9 @@ img{max-width:100%;display:block}
 .rv-help p{margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
 .rv-help ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
 .rv-help li{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink)}
-.rv-help li svg{flex:none;width:16px;height:16px;stroke:#16A34A}
+/* Ink, not the green these were: the reference sets them in its own text
+   colour, and three green ticks read as three verified claims. */
+.rv-help li svg{flex:none;width:16px;height:16px;stroke:var(--ink)}
 
 /* ---------------------------------------------------- disqualification */
 /* The eligibility stop, laid out as the reference lays it out: on white, under
@@ -856,10 +879,13 @@ img{max-width:100%;display:block}
    `body.frames` keeps the column-width bar. Those frames are 480px boxes on a
    grey page for the Figma import, and a viewport-wide band there would run
    across the whole document once per frame. */
+/* Mint, not the accent: the client asked on 2026-09-07 for v1's own treatment
+   of this same clock. v1 runs a mint pill with dark-green type; the bar here
+   is full-bleed rather than a pill, but the pair is v1's, unchanged. */
 .ck-clock{margin:0 calc(var(--pad) * -1);
-  background:var(--accent);
-  color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:15px 16px;font-size:13px;font-weight:600;text-align:center}
+  background:var(--mint);
+  color:var(--mint-ink);display:flex;align-items:center;justify-content:center;
+  gap:6px;padding:15px 16px;font-size:13px;font-weight:600;text-align:center}
 body:not(.frames) .ck-clock{margin-inline:calc(50% - 50vw)}
 /* `clip` rather than `hidden`: it does not make body a scroll container, so
    nothing else changes. It is only here to swallow the scrollbar's width, which
@@ -867,7 +893,7 @@ body:not(.frames) .ck-clock{margin-inline:calc(50% - 50vw)}
 body:not(.frames){overflow-x:clip}
 /* Underlined, which is v1's settled treatment for the same clock - it is the
    one part of the sentence that changes, and weight alone did not carry it. */
-.ck-clock b{font-weight:800;color:#fff;text-decoration:underline;
+.ck-clock b{font-weight:800;color:var(--mint-ink);text-decoration:underline;
   text-underline-offset:3px;font-variant-numeric:tabular-nums}
 
 /* The top margin is stated here rather than left to `.ck > * + *`. That rule
@@ -1009,7 +1035,10 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    This one rule is every tag on the page - the 4-in-1 stack chip, the pack tag
    on the product card and the two in the "what's included" stack - so they
    cannot drift apart. */
-.ck-tag{display:inline-block;background:var(--accent);color:#fff;border-radius:4px;
+/* Mint, not the accent - asked for on 2026-09-07, and it matches the pill
+   further down this same page, which has carried v1's pair all along. */
+.ck-tag{display:inline-block;background:var(--mint);color:var(--mint-ink);
+  border-radius:4px;
   padding:4px 8px;font-size:10px;font-weight:700;letter-spacing:.04em;
   text-transform:uppercase;line-height:1}
 .ck-stack{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:4px}
@@ -1047,7 +1076,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    split - a mint pill on the approval, a different ground on the checkout bar -
    so the two are not meant to be one family. */
 .ck-pill{align-self:center;display:flex;align-items:center;gap:8px;
-  border-radius:4px;padding:9px 16px;color:#00462F;background:#41D8A6;
+  border-radius:4px;padding:9px 16px;color:var(--mint-ink);background:var(--mint);
   font-size:15px;font-weight:600}
 .ck-pill b{font-weight:800;font-variant-numeric:tabular-nums}
 
@@ -1064,16 +1093,18 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   border-radius:50%;border:1.5px solid var(--border);background:#fff}
 .ck-pack.selected .ring{border-color:var(--accent);
   box-shadow:inset 0 0 0 3.5px #fff,inset 0 0 0 9px var(--accent)}
-/* Only the "most popular" card carries a badge - that is where the client's
-   Figma puts it. The pair are flex siblings, so the card without one is still
-   the same height; the margin below the title is what keeps the two titles on
-   the same line rather than a placeholder chip. */
-.ck-pack em{display:inline-block;font-style:normal;border-radius:4px;
+/* Only the "most popular" card carries a badge. Pinned to the top-right corner
+   on 2026-09-07, opposite the radio in the top-left; it used to sit in the flow
+   above the title, which pushed that card's price down and needed a 33px shim
+   on the other card to bring the two titles back onto one line. Out of the flow
+   it needs no shim, and both cards centre the same way on their own. */
+.ck-pack em{position:absolute;top:10px;right:10px;display:inline-block;
+  font-style:normal;border-radius:4px;
   padding:4px 8px;font-size:10px;font-weight:700;color:#fff;letter-spacing:.03em;
   line-height:1}
-.ck-pack b{display:block;margin-top:12px;font-size:18px;font-weight:700;
+/* The badge and the ring both sit in the top 28px, so the title clears them. */
+.ck-pack b{display:block;margin-top:14px;font-size:18px;font-weight:700;
   color:var(--accent);line-height:1.3}
-.ck-pack:not(:has(em)) b{margin-top:33px}
 .ck-pack small{display:block;font-size:13px;line-height:1.35;color:var(--ink)}
 
 .ck-prod{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
@@ -1118,20 +1149,19 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-hsa svg{flex:none;width:30px;height:30px;color:var(--green-ink)}
 .ck-hsa p{margin:0;font-size:17px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
 .ck-hsa b{font-weight:800}
-.ck-hipaa{margin-top:16px !important;background:var(--surface);
-  border-radius:var(--radius-media);box-shadow:var(--shadow);
-  padding:24px 24px 32px;text-align:center}
+/* No card: the reference sets these two lines straight on the page under the
+   HSA/FSA mark, and the white panel with a shadow was ours. Taken off on
+   2026-09-07 at the client's word. */
+.ck-hipaa{margin-top:14px !important;text-align:center}
 .ck-hipaa p{margin:0;display:flex;align-items:center;justify-content:center;gap:5px;
   font-size:12px;color:var(--ink)}
-.ck-hipaa svg{width:16px;height:16px;stroke:#16A34A}
+/* The reference's shield is SOLID green with the tick knocked out of it, not
+   an outline. `fill` paints the body; the tick is stroked in white over it. */
+.ck-hipaa svg{width:16px;height:16px;fill:#16A34A;stroke:#16A34A}
+.ck-hipaa svg path + path{fill:none;stroke:#fff;stroke-width:2.6}
 .ck-hipaa span{display:block;margin-top:3px;font-size:12px;color:var(--ink)}
 
 /* -- 10 / 14 the guarantee ---------------------------------------------- */
-.ck-guar{display:flex;align-items:flex-start;gap:16px}
-.ck-guar-mark{flex:none;width:33px;height:33px;color:var(--accent)}
-.ck-guar-mark svg{width:33px;height:33px}
-.ck-guar b{display:block;font-size:15px;font-weight:500;color:var(--ink)}
-.ck-guar p{margin:2px 0 0;font-size:13px;line-height:1.35;color:var(--ink)}
 
 /* -- 11 -----------------------------------------------------------------
    Nothing here. The reference's "BACKED BY RESEARCH FROM" logo row is not
