@@ -1028,6 +1028,16 @@ def sections():
     return out
 
 
+def _state_options():
+    """The state list, taken from the screen that already asks for it rather
+    than retyped - the checkout's own select has to offer the same 51."""
+    for p in STEPS:
+        for f in p['fields']:
+            if f['name'] == 'state' and f.get('options'):
+                return f['options']
+    return []
+
+
 def checkout_section():
     """The approval / checkout page as the flow's last step.
 
@@ -1038,7 +1048,7 @@ def checkout_section():
     return ('<section class="step" data-step="%d" data-bare data-checkout>%s</section>'
             % (CHECKOUT_SCREEN,
                checkout.screen(LOGO, ICON, _ic, STARS, MOLECULES,
-                               GOAL_STYLE, attr)))
+                               GOAL_STYLE, attr, _state_options())))
 
 
 STARS = ('<span class="stars">%s</span>'

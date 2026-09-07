@@ -567,18 +567,32 @@ privacy on and a commit with the real address is rejected at push time.
   `checkout.py`). Nobody at Braevon has confirmed either. Same for
   "24/7 medical support" and "free express shipping" in `INCLUDED` — those at
   least restate claims v1's own checkout makes.
-- **The reference's money-back guarantee is a cancellation promise here.** A
-  refund is a commercial commitment only the client can make; what Braevon does
-  say, in v1's FAQ, is that a plan can be cancelled from the patient portal at
-  any time. **Ask them which they want** — the block and its ribbon are already
-  the right shape for either.
-- **"BACKED BY RESEARCH FROM" is an empty slot.** The reference runs NIH, WebMD,
-  ScienceDaily and Mayo Clinic logos under that heading. This block held v1's
-  "As featured on" row as a stand-in until 2026-09-04, when the client asked for
-  anything the reference does not have to come out — so it did, styles and all.
-  **Neither version is built now**, and the reference's own needs two things
-  first: the logo files, and evidence that those bodies have researched or
-  endorsed this product. Ask before building it.
+- **The money-back guarantee is now a refund promise, at the client's word
+  (2026-09-07).** This had been an open question: the reference promises money
+  back, a refund is a commercial commitment only the client can make, and what
+  Braevon itself says — in v1's FAQ — is that a plan can be cancelled from the
+  patient portal. The client asked for the reference's wording, so the block on
+  the checkout now says money back. **It is a promise Braevon has to be able to
+  honour and it still needs someone commercial to sign it.**
+- **"BACKED BY RESEARCH FROM" is built (2026-09-07) and asserts something
+  nobody has evidenced yet.** The client asked for it after this block had been
+  left empty on purpose. Two things about it are still open, and both are
+  theirs: (1) it says five real institutions — Mayo Clinic, Stanford Medicine,
+  WebMD, Harvard University and the NIH — back this product. If what is meant is
+  "these bodies have published research on the PDE5 molecules", the heading
+  should say so; as written a reader takes it as Braevon being endorsed. It
+  needs evidence or a rewording. (2) The names are **type-set, not logo files** —
+  those marks are trademarks we do not have, and drawing an approximation of the
+  Mayo Clinic or Harvard mark would be worse than showing none. v1 made the same
+  call for its press row. Real artwork has to come from the client, with
+  permission to use it.
+- **The checkout collects shipping details but takes no payment.** Added
+  2026-09-07. Email, full name, state and phone carry forward from screens 45
+  and 47; address, city and ZIP are asked here. The payment block is a
+  Card / Google Pay / Amazon Pay picker over a **placeholder where Stripe's
+  element mounts** — there are deliberately no card-number or CVV inputs, per
+  the document's own screen 31 ("card fields go to Stripe only — never stored by
+  Braevon"). Nothing in this prototype takes a payment.
 - **The skip-to-checkout control is still in the build.** See the section above.
   It is the one thing here that must not ship.
 - **Screen 1's goals question is a multi-select with one answer pre-ticked.**

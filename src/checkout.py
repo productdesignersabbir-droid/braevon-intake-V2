@@ -10,7 +10,8 @@ same way `reference/medvi/design-notes.md` measured the questionnaire — not
 eyeballed from a screenshot. Its sixteen blocks, in order:
 
      0  headline                       8  pack radios + the product card
-     1  goals card                     9  HSA mark + the HIPAA card
+     1  goals card                     9  HSA mark + the HIPAA line
+                                      9b shipping + payment (2026-09-07)
      2  intro copy + the onset chart  10  satisfaction / cancellation
      3  the programme card            11  "as featured on"
      4  the five benefit rows         12  three quotes
@@ -374,7 +375,7 @@ def footer(logo):
 
 
 # ---------------------------------------------------------------- the screen
-def screen(logo, icon, ic, stars, molecules, goal_style, attr):
+def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     """The whole page. `icon` is build.py's ICON table, `ic` its `_ic` helper,
     `stars` its five-star mark, `molecules` its `MOLECULES` list, `goal_style`
     its `GOAL_STYLE` table and `attr` its attribute escaper - all passed in
@@ -551,6 +552,102 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
                 ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
                    '<path d="M8.6 11.9l2.4 2.4 4.4-4.4"/>')))
 
+    # -- 9b ----------------------------------------------------------------
+    # Shipping and payment. The reference collects both here, and this build had
+    # neither until the client pointed it out on 2026-09-07.
+    #
+    # THE CARD FIELDS ARE DELIBERATELY NOT BUILT. The brief for this block is
+    # the document's own screen 31: "Stripe payment form renders here in the
+    # real build (card fields go to Stripe only - never stored by Braevon)."
+    # So the card option renders the mount point Stripe's element attaches to,
+    # and says so on its face. Drawing realistic card-number and CVV inputs into
+    # a prototype that gets shared around is how a mockup ends up being typed
+    # into; the real thing is Stripe's iframe and it is not ours to imitate.
+    #
+    # Email, name, state and phone are already answered on screens 45 and 47, so
+    # the engine pre-fills them here - see `prefillCheckout` in engine.js.
+    def _fld(fid, label, kind='text', ph='', half=False):
+        return ('<div class="ck-fld%s"><label for="%s">%s</label>'
+                '<input id="%s" type="%s" placeholder="%s" autocomplete="off"/></div>'
+                % (' half' if half else '', fid, label, fid, kind, attr(ph)))
+
+    state_opts = ''.join('<option%s>%s</option>'
+                         % (' value=""' if i == 0 else '', o)
+                         for i, o in enumerate(states))
+    shipping = (
+        '<div class="ck-form">'
+        '<h3>Shipping Information</h3>'
+        + _fld('ck_email', 'Email', 'email')
+        + _fld('ck_name', 'Full name')
+        + _fld('ck_addr1', 'Address line 1')
+        + _fld('ck_addr2', 'Address line 2',
+               ph='Apt., suite, unit number, etc. (optional)')
+        + _fld('ck_city', 'City')
+        + '<div class="ck-fld-row">'
+          '<div class="ck-fld half"><label for="ck_state">State</label>'
+          '<select id="ck_state">%s</select></div>' % state_opts
+        + _fld('ck_zip', 'ZIP code', half=True)
+        + '</div>'
+        + _fld('ck_phone', 'Phone number', 'tel', '(415) 555-1234')
+        + '<label class="ck-check"><input type="checkbox" checked/>'
+          '<span>Billing is same as shipping information</span></label>'
+        '</div>'
+        '<div class="ck-form">'
+        '<h3>Payment Method</h3>'
+        '<div class="ck-pay" data-pay-group>'
+        '<button class="ck-pay-opt selected" type="button" data-pay>Card</button>'
+        '<button class="ck-pay-opt" type="button" data-pay>Google Pay</button>'
+        '<button class="ck-pay-opt" type="button" data-pay>Amazon Pay</button>'
+        '</div>'
+        '<div class="ck-pay-mount">%s<p><b>Stripe&rsquo;s payment fields render here '
+        'in the real build.</b> Card details go straight to Stripe and are never '
+        'stored by Braevon. Nothing on this prototype takes a payment.</p></div>'
+        '</div>' % icon['shield'])
+
+    # -- 10 ----------------------------------------------------------------
+    # The satisfaction guarantee, built 2026-09-07 at the client's word.
+    #
+    # THIS SETTLES AN OPEN QUESTION IN FAVOUR OF A REFUND. The README has
+    # carried a note since this page was built saying the reference promises
+    # money back, that a refund is a commercial commitment only the client can
+    # make, and that what Braevon itself says - in v1's FAQ - is that a plan can
+    # be cancelled from the patient portal. The client has now asked for the
+    # reference's wording, so that is what this is. It is a promise Braevon has
+    # to be able to honour, and it still needs someone commercial to sign it.
+    guarantee = (
+        '<div class="ck-guar">'
+        '<span class="ck-guar-mark">%s</span>'
+        '<div><b>Satisfaction Guarantee</b>'
+        '<p>If you don&rsquo;t experience the full benefits of the BRAEVON '
+        'Performance Program we&rsquo;ll give you your money back. '
+        'It&rsquo;s that simple.</p></div>'
+        '</div>'
+        % ic('<circle cx="12" cy="9" r="6.4"/><path d="M9.4 9.2l1.9 1.9 3.4-3.4"/>'
+             '<path d="M8.2 14.4L6.6 21l5.4-2.6L17.4 21l-1.6-6.6"/>'))
+
+    # -- 11 ----------------------------------------------------------------
+    # "BACKED BY RESEARCH FROM", built 2026-09-07 at the client's word. This
+    # block had been left empty on purpose and the README said to ask first.
+    #
+    # TWO THINGS ABOUT IT ARE STILL UNSETTLED, AND BOTH ARE THE CLIENT'S:
+    #
+    # 1. It asserts that five named institutions - Mayo Clinic, Stanford
+    #    Medicine, WebMD, Harvard University and the NIH - back this product.
+    #    That is an endorsement claim about real organisations. If what is meant
+    #    is "these bodies have published research on the PDE5 molecules", the
+    #    heading should say so; as written a reader takes it as Braevon being
+    #    endorsed. It needs evidence or a rewording before launch.
+    # 2. The names are TYPE-SET, not logo files. Their marks are trademarks and
+    #    we do not have them; drawing an approximation of the Mayo Clinic or
+    #    Harvard mark would be worse than not showing one. v1 made the identical
+    #    call for its press row. Real artwork has to come from the client, with
+    #    permission to use it.
+    RESEARCH = ['Mayo Clinic', 'Stanford Medicine', 'WebMD',
+                'Harvard University', 'National Institutes of Health']
+    research = ('<div class="ck-research"><p>Backed by research from</p>'
+                '<div class="ck-research-row">%s</div></div>'
+                % ''.join('<span>%s</span>' % r for r in RESEARCH))
+
     # -- 12 ----------------------------------------------------------------
     quotes = ''.join(
         '<article class="ck-quote"><div class="ck-quote-top"><h3>%s</h3>%s</div>'
@@ -607,6 +704,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
             # as the reference orders it - the testimonials used to sit between
             # them, which put the page's one buying decision below the reviews
             # rather than above them. Moved 2026-09-07.
-            + pill + product + hipaa + ready + quotes + faq
+            + pill + product + hipaa + shipping + ready
+            + guarantee + research + quotes + faq
             + footer(logo)
             + '</div>')

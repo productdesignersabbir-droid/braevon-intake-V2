@@ -302,9 +302,40 @@
     window.scrollTo({top:0, behavior:'auto'});
     if(el.querySelector('[data-loader]')) runLoader(el);
     if(el.querySelector('[data-name-echo],[data-echo],[data-fname-echo]')) fillSummary(el);
-    if(el.hasAttribute('data-checkout')) startClock(el);
+    if(el.hasAttribute('data-checkout')){ startClock(el); prefillCheckout(el); }
     echoState();
   }
+
+  /* ------------------------------- the checkout's shipping details */
+  /* Email, name, state and phone were answered on the review and submission
+     screens. Carrying them forward is the difference between a checkout and a
+     second form. Anything the patient edits here is left alone on a revisit -
+     `data-touched` is set on first input and never cleared. */
+  function prefillCheckout(el){
+    [['ck_email','email'],['ck_phone','phone_number'],['ck_state','state']]
+      .forEach(function(pair){
+        var dst=el.querySelector('#'+pair[0]), src=document.getElementById(pair[1]);
+        if(dst && src && src.value && !dst.dataset.touched) dst.value=src.value;
+      });
+    var name=el.querySelector('#ck_name');
+    if(name && !name.dataset.touched){
+      var fn=document.getElementById('first_name'), ln=document.getElementById('last_name');
+      var v=[(fn&&fn.value.trim())||'', (ln&&ln.value.trim())||''].join(' ').trim();
+      if(v) name.value=v;
+    }
+  }
+  stage.addEventListener('input', function(e){
+    if(e.target.closest('.ck-fld')) e.target.dataset.touched='1';
+  });
+  /* Card / Google Pay / Amazon Pay. A picker, not a payment - nothing here
+     takes card details; Stripe's element mounts under it in the real build. */
+  stage.addEventListener('click', function(e){
+    var opt=e.target.closest('[data-pay]'); if(!opt) return;
+    var box=opt.closest('[data-pay-group]'); if(!box) return;
+    [].forEach.call(box.querySelectorAll('[data-pay]'), function(o){
+      o.classList.toggle('selected', o===opt);
+    });
+  });
 
   /* ------------------------------------------------- the checkout's clock */
   /* One interval and one deadline, painted onto every [data-countdown] on the

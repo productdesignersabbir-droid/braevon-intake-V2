@@ -1178,7 +1178,70 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-hipaa svg path + path{fill:none;stroke:#fff;stroke-width:2.6}
 .ck-hipaa span{display:block;margin-top:3px;font-size:12px;color:var(--ink)}
 
-/* -- 10 / 14 the guarantee ---------------------------------------------- */
+/* -- 9b shipping + payment ----------------------------------------------- */
+/* A white card per section, label above field, as the reference has it. The
+   inputs borrow the questionnaire's own focus treatment so the two halves of
+   the flow do not feel like two products. */
+.ck-form{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
+  box-shadow:var(--shadow);padding:20px}
+.ck-form h3{margin:0 0 16px;font-size:16px;font-weight:700;color:var(--ink);
+  text-align:center}
+.ck-fld{margin-top:12px}
+.ck-fld:first-of-type{margin-top:0}
+.ck-fld label{display:block;margin:0 0 6px;font-size:13px;color:var(--muted)}
+.ck-fld input,.ck-fld select{width:100%;box-sizing:border-box;height:44px;
+  border:1px solid var(--border);border-radius:8px;padding:0 12px;
+  font-family:inherit;font-size:15px;color:var(--ink);background:#fff}
+.ck-fld input:focus,.ck-fld select:focus{outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--glow)}
+.ck-fld input::placeholder{color:var(--faint)}
+.ck-fld-row{display:flex;gap:12px;margin-top:12px}
+.ck-fld-row .ck-fld{flex:1;min-width:0;margin-top:0}
+.ck-check{display:flex;align-items:center;gap:8px;margin-top:14px;
+  font-size:13px;color:var(--ink);cursor:pointer}
+.ck-check input{width:16px;height:16px;accent-color:var(--accent);flex:none}
+
+.ck-pay{display:flex;gap:8px}
+.ck-pay-opt{flex:1;min-width:0;height:52px;border:1px solid var(--border);
+  border-radius:8px;background:#fff;cursor:pointer;font-family:inherit;
+  font-size:13px;font-weight:600;color:var(--ink)}
+.ck-pay-opt.selected{border-color:var(--accent);
+  box-shadow:inset 0 0 0 1px var(--accent)}
+/* Not a card form. The real fields are Stripe's and mount here at run time -
+   see the note in checkout.py about why this is a placeholder and not a
+   drawing of card inputs. */
+.ck-pay-mount{display:flex;gap:10px;align-items:flex-start;margin-top:14px;
+  border:1px dashed var(--border);border-radius:8px;padding:14px;
+  background:var(--neutral-tint)}
+.ck-pay-mount svg{flex:none;width:16px;height:16px;stroke:#16A34A;margin-top:1px}
+.ck-pay-mount p{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
+.ck-pay-mount b{color:var(--ink)}
+
+/* -- 10 the satisfaction guarantee --------------------------------------- */
+.ck-guar{display:flex;gap:14px;align-items:flex-start;margin-top:32px;
+  padding:0 4px}
+.ck-guar-mark{flex:none;width:38px;height:38px;color:#6366F1}
+.ck-guar-mark svg{width:38px;height:38px}
+.ck-guar b{display:block;font-size:19px;font-weight:700;color:var(--ink)}
+.ck-guar p{margin:6px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
+
+/* -- 11 backed by research ------------------------------------------------
+   Type-set names, not logo files - see the note in checkout.py. The corner
+   brackets are the reference's frame, drawn rather than imaged. */
+.ck-research{position:relative;margin-top:32px;padding:26px 18px}
+.ck-research::before,.ck-research::after{content:"";position:absolute;
+  width:18px;height:18px;border:2px solid var(--border)}
+.ck-research::before{top:0;left:0;border-right:0;border-bottom:0}
+.ck-research::after{bottom:0;right:0;border-left:0;border-top:0}
+.ck-research > p{margin:0 0 18px;text-align:center;font-size:13px;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted)}
+.ck-research-row{display:flex;flex-wrap:wrap;justify-content:center;
+  gap:12px 22px}
+.ck-research-row span{font-size:14px;font-weight:600;color:#8A93A3;
+  letter-spacing:.01em}
+
+
 
 /* -- 11 -----------------------------------------------------------------
    Nothing here. The reference's "BACKED BY RESEARCH FROM" logo row is not
