@@ -149,17 +149,20 @@ ICON = {
 # blue"/"blue 2", "Light red", "light purple"/"purple", "Light Orange"/"Orange".
 # A deliberate exception to the rule that orange carries emphasis: the client
 # asked for these five hues and nothing else in the flow takes them.
+# Keyed by the option's label. Braevon's five goals took over from the
+# reference's on 2026-09-07; the art is carried across one for one, each goal
+# keeping the hue and the glyph of the reference goal it replaces.
 GOAL_STYLE = {
-    'Improve stamina & endurance': ('#DFF7E6', '#22C55E',
-                                    _ic('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/>')),
-    'Increase erection strength':  ('#DBEAFE', '#31ABE8',
-                                    _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>')),
-    'Boost sex drive & desire':    ('#FEE2E2', '#EC4899',
-                                    _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5c0 5-7 9.5-7 9.5z"/>')),
-    'Quicker recovery':            ('#F3EBFF', '#A855F7',
-                                    _ic('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v5h-5"/>')),
-    'Boost confidence':            ('#FFEDD5', '#F97316',
-                                    _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>')),
+    'Last longer':        ('#DFF7E6', '#22C55E',
+                           _ic('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/>')),
+    'Better erections':   ('#DBEAFE', '#31ABE8',
+                           _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>')),
+    'More arousal':       ('#FEE2E2', '#EC4899',
+                           _ic('<path d="M12 21s-7-4.5-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5c0 5-7 9.5-7 9.5z"/>')),
+    'Faster rebound time': ('#F3EBFF', '#A855F7',
+                            _ic('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v5h-5"/>')),
+    'More confidence':    ('#FFEDD5', '#F97316',
+                           _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>')),
 }
 
 _DROP = _ic('<path d="M12 3s6 6.5 6 10.5a6 6 0 0 1-12 0C6 9.5 12 3 12 3z"/>')
@@ -267,7 +270,7 @@ LEGENDS = {25, 26}
 # prescriber's sign-off. See the README.
 DEFAULTS = {p['n']: p['options'][0]['value']
             for p in FLOW if p['mode'] == 'single' and p['options']}
-DEFAULTS[1] = 'Quicker recovery'   # Braevon's choice; the reference has none
+DEFAULTS[1] = 'Faster rebound time'   # Braevon's choice; the reference has none
 
 
 def _none_of(p):
@@ -626,7 +629,11 @@ def screen_hero(p):
             '<p class="strip">BRAEVON 4-in-1. Arousal &amp; performance. '
             '<strong>In minutes</strong></p>'
             '<p class="ask">See if <strong>BRAEVON</strong> is right for you.</p>'
-            '<p class="ask-sub">Select your primary goal:</p>'
+            # The question and its "select all that apply" come from the screen
+            # now, not from this string - Braevon's differ from the reference's.
+            + '<p class="ask-sub">%s</p>' % esc(brandify(p['subs'][0]))
+            + ('<p class="ask-hint">%s</p>' % esc(brandify(p['subs'][1]))
+               if len(p['subs']) > 1 else '')
             + options_block(p) + cta(blocked=p['n'] not in DEFAULTS) + '</div>')
 
 
@@ -711,7 +718,7 @@ def screen_review(p):
     Every figure and read-back below is the reference's, with the echoes wired
     to the patient's real answers. The 94% is NOT ours - see the README."""
     m = {f['name']: f for f in p['fields']}
-    rows = [('Your Primary Goal:', 'Q1_primary_goal',
+    rows = [('Your Goals:', 'Q1_primary_goal',
              ('#DBEAFE', '#3B82F6',
               _ic('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>'
                   '<path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>'))),
@@ -1103,10 +1110,26 @@ def page(title, body, body_class=''):
             % (title, CSS, cls, body))
 
 
+# A REVIEW CONTROL, NOT PATIENT UI. Asked for on 2026-09-07 so the checkout can
+# be looked at without walking the flow to reach it. It is deliberately grey
+# rather than the accent, it says PROTOTYPE on it, and it is emitted ONLY into
+# index.html / interactive.html - never into a frame, and it is the one thing in
+# the build that must come out before this goes near a real patient. Deleting
+# this constant and the line that adds it to `body` is the whole removal.
+SKIP_TO_CHECKOUT = (
+    '<button class="proto-skip" data-proto-skip type="button">'
+    '<span class="proto-skip-tag">PROTOTYPE</span>'
+    '<span>Go to checkout</span>'
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+    'stroke-linecap="round" stroke-linejoin="round">'
+    '<path d="M5 12h13"/><path d="M12 5l7 7-7 7"/></svg></button>')
+
+
 def emit_interactive():
     body = ('<div class="shell">' + MASTHEAD + PROGRESS
             + '<main class="stage" id="stage">%s</main>' % '\n'.join(sections())
             + DQ + DONE + '</div>'
+            + SKIP_TO_CHECKOUT
             + '<script>%s</script>' % SCRIPT.replace('__TOTAL_Q__', str(TOTAL_Q))
                                             .replace('__SEGMENTS__', str(SEGMENTS))
                                             .replace('__SEGMENT_STARTS__',

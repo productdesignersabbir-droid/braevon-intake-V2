@@ -274,6 +274,7 @@
     loaderRun++;   /* cancel any dial still running on the screen we are leaving */
     steps.forEach(function(s,j){ s.classList.toggle('on', j===i); });
     idx=i;
+    if(typeof syncSkip==='function') syncSkip();
     var el=steps[i];
     var q=el.dataset.q?+el.dataset.q:0, pq=progQ[i];
     prog.hidden=!pq;
@@ -495,6 +496,33 @@
   });
   var bpPre=stage.querySelector('.opts[data-group="bp"] .opt.selected');
   if(bpPre && bpPre.dataset.sys) setBP(bpPre.dataset.sys, bpPre.dataset.dia, false);
+
+  /* ------------------------------------- the prototype's skip control */
+  /* NOT PATIENT UI - see SKIP_TO_CHECKOUT in build.py. It calls show()
+     directly rather than advance(), so it walks past every screen without
+     validating or disqualifying on the way; the answers the flow starts with
+     (the defaults seeded just above) are what the checkout echoes back. */
+  var skipBtn=document.querySelector('[data-proto-skip]');
+  if(skipBtn){
+    var checkoutIdx=-1;
+    steps.forEach(function(s,i){
+      if(s.hasAttribute('data-checkout')) checkoutIdx=i;
+    });
+    if(checkoutIdx<0){ skipBtn.hidden=true; }
+    else {
+      skipBtn.addEventListener('click', function(){
+        /* An open stop screen would otherwise stay over the top of it. */
+        if(dq) dq.classList.remove('on');
+        if(done) done.classList.remove('on');
+        show(checkoutIdx);
+        window.scrollTo(0,0);
+      });
+    }
+  }
+  function syncSkip(){
+    if(!skipBtn) return;
+    skipBtn.hidden = steps[idx] && steps[idx].hasAttribute('data-checkout');
+  }
 
   syncReveals();
   show(0);

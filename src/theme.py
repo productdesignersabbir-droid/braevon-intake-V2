@@ -533,6 +533,7 @@ img{max-width:100%;display:block}
 .ask{margin:20px 0 0;font-size:17px;line-height:1.3;font-weight:400;color:var(--ink)}
 .ask strong{font-weight:700}
 .ask-sub{margin:4px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
+.ask-hint{margin:2px 0 0;font-size:12px;color:var(--faint)}
 .ask-sub + .opts{margin-top:20px}
 
 /* Goal rows are taller than an ordinary option and carry a bubble instead of a
@@ -793,6 +794,22 @@ img{max-width:100%;display:block}
 /* Ink, not the green these were: the reference sets them in its own text
    colour, and three green ticks read as three verified claims. */
 .rv-help li svg{flex:none;width:16px;height:16px;stroke:var(--ink)}
+
+/* -- the prototype's skip-to-checkout control ----------------------------- */
+/* NOT PATIENT UI. Grey on purpose - it must not read as part of the flow - and
+   it carries its own PROTOTYPE tag. Remove `SKIP_TO_CHECKOUT` in build.py and
+   this block together when the prototype stops being a prototype. */
+.proto-skip{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;
+  align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;padding:9px 14px 9px 10px;cursor:pointer;
+  background:#26272D;color:#fff;font-family:inherit;font-size:13px;
+  font-weight:600;box-shadow:0 6px 22px rgba(16,20,34,.28)}
+.proto-skip:hover{background:#31333A}
+.proto-skip svg{width:15px;height:15px}
+.proto-skip[hidden]{display:none}
+.proto-skip-tag{border-radius:999px;background:rgba(255,255,255,.16);
+  padding:3px 7px;font-size:9px;font-weight:800;letter-spacing:.06em}
+@media print{.proto-skip{display:none}}
 
 /* ---------------------------------------------------- disqualification */
 /* The eligibility stop, laid out as the reference lays it out: on white, under

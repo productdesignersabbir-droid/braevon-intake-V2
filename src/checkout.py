@@ -409,9 +409,16 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
     # Line two is one of screen 1's own goals, so it takes that screen's glyph
     # and hue. Line three is not one of the five, so it takes the duration
     # glyph and the blue the "Last Longer" benefit row uses.
-    _second = 'Increase erection strength'
+    # Braevon's own goal, not the reference's - the labels changed on
+    # 2026-09-07 and this one is looked up in GOAL_STYLE by name, so a rename
+    # over there is a KeyError over here. `.get` with the first goal as the
+    # fallback keeps a future rename from breaking the build.
+    _second = 'Better erections'
     _clock = ic('<rect x="2.5" y="7.5" width="15" height="9" rx="2.6"/>'
                 '<path d="M20.5 10.5v3"/><path d="M6 10.5v3"/>')
+    _art = goal_style.get(_second) or list(goal_style.values())[0]
+    if _second not in goal_style:
+        _second = list(goal_style.keys())[0]
     goal_rows = (
         '<li><span class="ck-goal-ic" data-echo-icon="%s">%s</span>'
         '<span data-echo="%s">&mdash;</span></li>'
@@ -419,7 +426,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr):
         '<li><span style="color:#3B82F6;display:flex">%s</span>'
         '<span>Longer duration &amp; satisfaction</span></li>'
         % (GOAL_GROUP, goal_icons, GOAL_GROUP,
-           goal_style[_second][1], goal_style[_second][2], _second, _clock))
+           _art[1], _art[2], _second, _clock))
     goals = ('<div class="ck-goals">'
              '<span class="ck-goals-mark">%s</span>'
              '<div><b>YOUR GOALS</b><ul>%s</ul></div>'

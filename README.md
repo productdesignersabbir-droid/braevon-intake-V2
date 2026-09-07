@@ -230,7 +230,7 @@ mapping below is written in it.
 
 | Floor | `n` | Screen | Doc |
 |---|---|---|---|
-| 1 | 1 | Your primary goal | *kept* |
+| 1 | 1 | What are you looking to improve? | S1 |
 | 2 | 2 | ▸ 10–15 minutes | *kept* |
 | 3 | 3 | Male or female | *kept* |
 | 4 | 4 | Erection confidence | S7 |
@@ -264,6 +264,22 @@ The four conditional screens are 10 and 22 (ED side effects and last use,
 behind a Yes on floor 9) and 25 and 26 (the two blood-pressure readings, behind
 a Yes on floor 11). Three more frames sit outside the walk: the checkout is 48,
 "Assessment received" is 49, and the eligibility stop is 46.
+
+### The prototype's skip-to-checkout control
+
+**This must come out before launch.** A grey pill in the bottom-right corner,
+labelled PROTOTYPE, that jumps straight to the checkout so it can be reviewed
+without walking the flow. Asked for on 2026-09-07.
+
+It calls `show()` directly rather than `advance()`, so it walks past every
+screen without validating or disqualifying on the way, and the checkout echoes
+back whatever answers the flow started with (the defaults). It hides itself
+once the checkout is on screen, and it is emitted **only** into `index.html` /
+`interactive.html` - never into a frame.
+
+Removing it is deleting `SKIP_TO_CHECKOUT` in `build.py`, the line that adds it
+to `body` in `emit_interactive()`, the `.proto-skip` block in `theme.py`, and
+the skip block at the foot of `engine.js`. Nothing else refers to it.
 
 ### What changed on 2026-09-04
 
@@ -563,6 +579,15 @@ privacy on and a commit with the real address is rejected at push time.
   **Neither version is built now**, and the reference's own needs two things
   first: the logo files, and evidence that those bodies have researched or
   endorsed this product. Ask before building it.
+- **The skip-to-checkout control is still in the build.** See the section above.
+  It is the one thing here that must not ship.
+- **Screen 1's goals question is a multi-select with one answer pre-ticked.**
+  The document has it as "select all that apply" with no default; the default is
+  kept because the client asked for one on this screen on 2026-09-03, when it was
+  a single-select. It is the only pre-ticked answer in the build that is neither a
+  none-answer nor a single-select's first option. It is a goal rather than a
+  symptom, so it puts no words in a patient's mouth clinically - but it is worth
+  a decision.
 - **`assets/video/hero.mp4` is missing** — screen 1 falls back to its poster.
 - **The testimonial copy is placeholder**, as it was in v1. Three reviews written
   for this concept, not real ones. Say so before showing anyone who might take

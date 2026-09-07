@@ -80,6 +80,27 @@ def _yesno(on, label, name, dq=False):
 
 OVERRIDES = {
 
+    # ---------------------------------------------------------- floor 1
+    # Screen 1 was on the client's keep list; the goals question on it was
+    # swapped separately on 2026-09-07 when the audit showed the document's
+    # own screen 1 was not being asked anywhere. The hero above it - the
+    # photograph, the headline, the strip - is untouched.
+    #
+    # It becomes MULTI here, as the document has it. That makes the default
+    # below the one pre-ticked answer in the build that is neither a
+    # none-answer nor a single-select's first option; it is kept because the
+    # client asked for a default on this screen on 2026-09-03, and it is a
+    # goal rather than a symptom. See the README.
+    1: dict(doc=1, name='Q1_A0 - 01', mode='multi',
+            title='You Deserve a Better Sex Life.',
+            subs=['What are you looking to improve?', 'Select all that apply.'],
+            options=[_opt('Last longer'),
+                     _opt('Better erections'),
+                     _opt('More arousal'),
+                     _opt('Faster rebound time'),
+                     _opt('More confidence')],
+            dq=[], exclusive=None),
+
     # ---------------------------------------------------------- floor 4
     4: dict(doc=7, name='Erection confidence - 03', mode='single',
             title='How confident are you in getting or keeping an erection?',
@@ -415,6 +436,12 @@ OVERRIDES = {
 # Nothing unconditional is dropped, so the floor stays at 29 screens.
 DROP = set(range(11, 22)) | {31, 36, 37}
 
+# Screens the document asks that the reference has no slot for, keyed by the
+# screen they are inserted AFTER. Each value is a complete flow entry, the same
+# shape `medvi-flow.json` carries. Empty for now - the document's screen 26
+# ("other health concerns") and screen 30 (informed consent) go here.
+ADDITIONS = {}
+
 
 def apply(flow):
     """Return `flow` with Braevon's questions in place of the reference's."""
@@ -425,11 +452,10 @@ def apply(flow):
         o = OVERRIDES.get(p['n'])
         if not o:
             out.append(p)
+            out.extend(ADDITIONS.get(p['n'], []))
             continue
         p = dict(p)
         group = p['group']
-        for opt in o['options']:
-            opt = dict(opt)
         # Options carry the screen's group as their control name, the way the
         # extraction does.
         p['options'] = [dict(x, name=group) for x in o['options']]
@@ -444,6 +470,10 @@ def apply(flow):
             p['cond'] = o['cond']
         if 'fields' in o:
             p['fields'] = list(o['fields'])
+        # `fields_add` appends to what the extraction already found on the
+        # screen, where `fields` would replace it.
+        if 'fields_add' in o:
+            p['fields'] = list(p['fields']) + list(o['fields_add'])
         # A yes/no follow-up that stops the flow puts its Yes on the screen's
         # own stopping list, so the engine's existing check catches it without
         # any new machinery.
@@ -451,6 +481,7 @@ def apply(flow):
             if r['kind'] == 'yesno' and r.get('dq'):
                 p['dq_on'] = p['dq_on'] + [r['name'] + '_yes']
         out.append(p)
+        out.extend(ADDITIONS.get(p['n'], []))
     return out
 
 
