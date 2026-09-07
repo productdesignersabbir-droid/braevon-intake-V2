@@ -237,7 +237,7 @@ OVERRIDES = {
              ]),
 
     # ---------------------------------------------------------- floor 14
-    29: dict(doc=19, name='Diagnoses - 10', mode='multi',
+    29: dict(doc=19, name='Diagnoses - 10', mode='multi', excl_first=True,
              title='Have you ever been diagnosed with any of the following?',
              subs=['Select all that apply.'],
              options=[_opt('Prostate cancer'),
