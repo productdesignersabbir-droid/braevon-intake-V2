@@ -53,7 +53,13 @@ INTERSTITIALS = {2, 5, 8, 32, 33, 44}
 # Screens the reference lays out as two cards side by side rather than a
 # stacked list — measured off the live page, where the option wrapper is
 # flex-direction:row and each card is 208x190 instead of 432x51.
-TILE_SCREENS = {3, 9, 10, 24, 39, 40, 41, 42}
+#
+# This is the REFERENCE's list, not a rule about Yes/No screens. 9 and 10 were
+# added here on 2026-09-04 for consistency with the other Yes/No screens and
+# taken out again on 2026-09-07: the reference's own screens at those two
+# positions are stacked lists, and the layout is the reference's to decide.
+# Braevon's question can change; where the reference puts the cards cannot.
+TILE_SCREENS = {3, 24, 39, 40, 41, 42}
 
 SEGMENTS = 5
 # The medical review replaces the masthead and the bar with its own result
@@ -201,9 +207,9 @@ _CROSS = _ic('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>')
 # is per screen.
 _TICK_ART  = ('#DFF7E6', '#22C55E', _ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>'))
 _CROSS_ART = ('#FEE2E2', '#EF4444', _ic('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'))
+# 9 and 10 are NOT here, and must not be: the reference lays both of those
+# out as a stacked list, not as two cards, so they take no tick and no cross.
 GOOD_ANSWER = {
-    9:  'no',    # no history of ED medication is the uncomplicated answer
-    10: 'no',    # no side effects
     39: 'no',    # no conditions, no allergy, no medication, nothing to add
     40: 'no',
     41: 'no',
