@@ -1207,15 +1207,54 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   font-size:13px;font-weight:600;color:var(--ink)}
 .ck-pay-opt.selected{border-color:var(--accent);
   box-shadow:inset 0 0 0 1px var(--accent)}
-/* Not a card form. The real fields are Stripe's and mount here at run time -
-   see the note in checkout.py about why this is a placeholder and not a
-   drawing of card inputs. */
-.ck-pay-mount{display:flex;gap:10px;align-items:flex-start;margin-top:14px;
+.ck-pay-opt{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:5px;padding:8px 4px;height:auto;min-height:56px}
+.ck-pay-opt > span{font-size:12px;font-weight:600}
+.ck-pm{width:22px;height:15px;color:#3B82F6}
+.ck-pm-txt{display:inline-flex;align-items:center;font-size:12px;
+  font-weight:700;color:var(--ink);line-height:1}
+.ck-pm-txt b{font-weight:800}
+.ck-pm-badge{border:1px solid var(--border);border-radius:3px;
+  padding:2px 5px;font-size:10px}
+.ck-pm-apay{flex-direction:column;gap:1px;font-size:13px;color:#232F3E}
+.ck-pm-apay svg{width:26px;height:5px}
+
+/* THE CARD FIELDS ARE A MOCK-UP. They are ordinary inputs with no form, no
+   action and no script behind them - nothing is collected, stored or sent
+   anywhere. Stripe's Element replaces this whole block in the real build, and
+   the card details go to Stripe rather than through this markup. Do not wire
+   these up; see the note in checkout.py. */
+.ck-card{margin-top:16px}
+.ck-link{display:flex;align-items:center;gap:6px;margin:0 0 14px;
+  font-size:13px;font-weight:600;color:#00A67E}
+.ck-link svg{width:15px;height:15px;stroke:currentColor}
+.ck-link svg:last-child{width:13px;height:13px;margin-left:-2px}
+.ck-cardno{position:relative}
+.ck-cardno input{padding-right:110px}
+.ck-brands{position:absolute;top:50%;right:10px;transform:translateY(-50%);
+  display:flex;align-items:center;gap:4px;pointer-events:none}
+.ck-brand{display:flex;align-items:center;justify-content:center;
+  width:26px;height:17px;border-radius:3px;font-style:normal;font-size:7px;
+  font-weight:800;letter-spacing:.02em;color:#fff}
+.ck-brand.visa{background:#1A1F71}
+.ck-brand.amex{background:#2E77BC;font-size:6.5px}
+.ck-brand.disc{background:#E8791B;font-size:6.5px}
+.ck-brand.mc{background:#F4F5F7;gap:0;position:relative}
+.ck-brand.mc em{width:9px;height:9px;border-radius:50%}
+.ck-brand.mc em:first-child{background:#EB001B}
+.ck-brand.mc em:last-child{background:#F79E1B;margin-left:-4px;opacity:.85}
+.ck-cvc{width:22px;height:15px;color:var(--faint)}
+.ck-fld .ck-cardno input{width:100%}
+.ck-pay-terms{margin:14px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+/* Full width, at the foot of the payment card, as the reference has it. */
+.ck-continue{margin-top:16px;width:100%}
+
+.ck-pay-wallet{display:flex;gap:10px;align-items:flex-start;margin-top:16px;
   border:1px dashed var(--border);border-radius:8px;padding:14px;
   background:var(--neutral-tint)}
-.ck-pay-mount svg{flex:none;width:16px;height:16px;stroke:#16A34A;margin-top:1px}
-.ck-pay-mount p{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
-.ck-pay-mount b{color:var(--ink)}
+.ck-pay-wallet[hidden]{display:none}
+.ck-pay-wallet svg{flex:none;width:16px;height:16px;stroke:#16A34A;margin-top:1px}
+.ck-pay-wallet p{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
 
 /* -- 10 the satisfaction guarantee --------------------------------------- */
 .ck-guar{display:flex;gap:14px;align-items:flex-start;margin-top:32px;

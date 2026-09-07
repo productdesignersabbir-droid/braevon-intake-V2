@@ -586,13 +586,22 @@ privacy on and a commit with the real address is rejected at push time.
   Mayo Clinic or Harvard mark would be worse than showing none. v1 made the same
   call for its press row. Real artwork has to come from the client, with
   permission to use it.
-- **The checkout collects shipping details but takes no payment.** Added
-  2026-09-07. Email, full name, state and phone carry forward from screens 45
-  and 47; address, city and ZIP are asked here. The payment block is a
-  Card / Google Pay / Amazon Pay picker over a **placeholder where Stripe's
-  element mounts** — there are deliberately no card-number or CVV inputs, per
-  the document's own screen 31 ("card fields go to Stripe only — never stored by
-  Braevon"). Nothing in this prototype takes a payment.
+- **The checkout's card fields are a mock-up and must be replaced by Stripe's
+  Element.** Added 2026-09-07. Email, full name, state and phone carry forward
+  from screens 45 and 47; address, city and ZIP are asked here. The card number,
+  expiry and CVC are **ordinary inputs with no form, no action and no script** —
+  nothing is collected, stored or sent anywhere, and the page cannot take a
+  payment. They were built at the client's explicit request after being left out
+  once; the document's own screen 31 says the real fields are Stripe's ("card
+  fields go to Stripe only — never stored by Braevon"). **Do not wire these up
+  and do not deploy this page anywhere a real patient could reach it** — a
+  realistic card form is a thing people type into. Swap the block for Stripe's
+  Element before launch.
+- **The payment-method and card-brand marks are type and shapes, not the
+  trademark artwork.** Google Pay, Amazon Pay, Visa, Mastercard, Amex and
+  Discover all publish brand kits with usage rules. What is here says *which*
+  methods are taken without passing off an approximation as the real mark.
+  Swap in the official artwork before launch.
 - **The skip-to-checkout control is still in the build.** See the section above.
   It is the one thing here that must not ship.
 - **Screen 1's goals question is a multi-select with one answer pre-ticked.**

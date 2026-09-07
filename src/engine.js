@@ -306,6 +306,14 @@
     echoState();
   }
 
+  /* The checkout's Continue does not leave the screen - it is the last one.
+     It carries the reader down to the buying decision instead. */
+  stage.addEventListener('click', function(e){
+    var b=e.target.closest('[data-scroll-to]'); if(!b) return;
+    var t=document.querySelector(b.dataset.scrollTo);
+    if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
   /* ------------------------------- the checkout's shipping details */
   /* Email, name, state and phone were answered on the review and submission
      screens. Carrying them forward is the difference between a checkout and a
@@ -334,6 +342,12 @@
     var box=opt.closest('[data-pay-group]'); if(!box) return;
     [].forEach.call(box.querySelectorAll('[data-pay]'), function(o){
       o.classList.toggle('selected', o===opt);
+    });
+    /* Show the panel that belongs to the method picked. The card panel is a
+       mock-up - no form, no action, nothing collected. */
+    var host=box.parentNode;
+    [].forEach.call(host.querySelectorAll('[data-pay-panel]'), function(pane){
+      pane.hidden = pane.dataset.payPanel !== opt.dataset.pay;
     });
   });
 

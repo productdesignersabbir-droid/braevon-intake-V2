@@ -178,6 +178,37 @@ BENEFITS = [
      '<path d="M9 12l2 2 4-4"/>'),
 ]
 
+# The payment-method marks and the card-brand badges. Type and simple shapes
+# rather than the trademark artwork, which we do not have: these say WHICH
+# methods are taken, which is what the row is for, without passing off an
+# approximation of somebody's logo as the real mark. Swap in the official
+# artwork - Google Pay and Amazon Pay both publish brand kits with rules
+# attached - before this ships.
+_CARD_MARK = ('<svg class="ck-pm" viewBox="0 0 24 16" aria-hidden="true">'
+              '<rect x="1" y="1" width="22" height="14" rx="2.5" fill="none" '
+              'stroke="currentColor" stroke-width="1.6"/>'
+              '<rect x="1" y="4.6" width="22" height="2.8" fill="currentColor"/>'
+              '</svg>')
+# The compact "G Pay" badge the reference uses, not the full Google wordmark -
+# the tab already says "Google Pay" underneath it, so the long form said it
+# twice.
+_GPAY_MARK = ('<span class="ck-pm-txt ck-pm-badge">'
+              '<b style="color:#4285F4">G</b>&nbsp;Pay</span>')
+_APAY_MARK = ('<span class="ck-pm-txt ck-pm-apay">pay'
+              '<svg viewBox="0 0 40 8" aria-hidden="true">'
+              '<path d="M2 2c9 6 27 6 36 0" fill="none" stroke="#FF9900" '
+              'stroke-width="2.4" stroke-linecap="round"/></svg></span>')
+_BRANDS = ''.join(
+    '<i class="ck-brand %s">%s</i>' % (c, t) for c, t in
+    (('visa', 'VISA'), ('mc', '<em></em><em></em>'),
+     ('amex', 'AMEX'), ('disc', 'DISC')))
+_CVC_MARK = ('<svg class="ck-cvc" viewBox="0 0 24 16" aria-hidden="true">'
+             '<rect x="1" y="1" width="22" height="14" rx="2.5" fill="none" '
+             'stroke="currentColor" stroke-width="1.4"/>'
+             '<rect x="1" y="4" width="22" height="3" fill="currentColor"/>'
+             '<rect x="13" y="9" width="8" height="3.6" rx="1" fill="none" '
+             'stroke="currentColor" stroke-width="1.2"/></svg>')
+
 # Block 5. Service lines, each one a claim v1's checkout already makes: its bill
 # waives the consultation and the shipping, and its FAQ says a plan can be
 # cancelled from the patient portal at any time.
@@ -595,14 +626,45 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<div class="ck-form">'
         '<h3>Payment Method</h3>'
         '<div class="ck-pay" data-pay-group>'
-        '<button class="ck-pay-opt selected" type="button" data-pay>Card</button>'
-        '<button class="ck-pay-opt" type="button" data-pay>Google Pay</button>'
-        '<button class="ck-pay-opt" type="button" data-pay>Amazon Pay</button>'
+        '<button class="ck-pay-opt selected" type="button" data-pay="card">'
+        '%s<span>Card</span></button>'
+        '<button class="ck-pay-opt" type="button" data-pay="gpay">'
+        '%s<span>Google Pay</span></button>'
+        '<button class="ck-pay-opt" type="button" data-pay="apay">'
+        '%s<span>Amazon Pay</span></button>'
         '</div>'
-        '<div class="ck-pay-mount">%s<p><b>Stripe&rsquo;s payment fields render here '
-        'in the real build.</b> Card details go straight to Stripe and are never '
-        'stored by Braevon. Nothing on this prototype takes a payment.</p></div>'
-        '</div>' % icon['shield'])
+        '<div class="ck-card" data-pay-panel="card">'
+        '<p class="ck-link">%s<b>Secure, fast checkout with Link</b>%s</p>'
+        '<div class="ck-fld"><label for="ck_cardno">Card number</label>'
+        '<div class="ck-cardno">'
+        '<input id="ck_cardno" type="text" inputmode="numeric" '
+        'placeholder="1234 1234 1234 1234" autocomplete="off"/>'
+        '<span class="ck-brands">%s</span></div></div>'
+        '<div class="ck-fld-row">'
+        '<div class="ck-fld half"><label for="ck_exp">Expiry date</label>'
+        '<input id="ck_exp" type="text" inputmode="numeric" placeholder="MM / YY" '
+        'autocomplete="off"/></div>'
+        '<div class="ck-fld half"><label for="ck_cvc">Security code</label>'
+        '<div class="ck-cardno"><input id="ck_cvc" type="text" inputmode="numeric" '
+        'placeholder="CVC" autocomplete="off"/><span class="ck-brands">%s</span>'
+        '</div></div>'
+        '</div>'
+        '<p class="ck-pay-terms">By subscribing, you authorise BRAEVON to charge '
+        'you according to the terms until you cancel.</p>'
+        '<button class="cta ck-continue" type="button" data-scroll-to=".ck-ready">'
+        'Continue</button>'
+        '</div>'
+        '<div class="ck-pay-wallet" data-pay-panel="gpay" hidden>%s'
+        '<p>Google Pay opens in a sheet at checkout. Nothing on this prototype '
+        'takes a payment.</p></div>'
+        '<div class="ck-pay-wallet" data-pay-panel="apay" hidden>%s'
+        '<p>Amazon Pay opens in a sheet at checkout. Nothing on this prototype '
+        'takes a payment.</p></div>'
+        '</div>' % (_CARD_MARK, _GPAY_MARK, _APAY_MARK,
+                    ic('<rect x="4" y="10" width="16" height="10" rx="2"/>'
+                       '<path d="M8 10V7a4 4 0 0 1 8 0v3"/>'),
+                    ic('<path d="M6 9l6 6 6-6"/>'),
+                    _BRANDS, _CVC_MARK, icon['shield'], icon['shield']))
 
     # -- 10 ----------------------------------------------------------------
     # The satisfaction guarantee, built 2026-09-07 at the client's word.
@@ -700,11 +762,12 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
             'valid for</span><b data-countdown>10:00</b></div>'
             % logo
             + head + goals + intro + programme + benefits + included + nexts
-            # The checkout block follows the HSA/FSA and HIPAA marks directly,
-            # as the reference orders it - the testimonials used to sit between
-            # them, which put the page's one buying decision below the reviews
-            # rather than above them. Moved 2026-09-07.
-            + pill + product + hipaa + shipping + ready
-            + guarantee + research + quotes + faq
+            # The reference's own order, restored at the client's word later on
+            # 2026-09-07: shipping and payment, then the guarantee and the
+            # research row, then the reviews, and only then "Are you ready?".
+            # An earlier change this same day had pulled the buying decision
+            # above the reviews; the reference does not.
+            + pill + product + hipaa + shipping
+            + guarantee + research + quotes + ready + faq
             + footer(logo)
             + '</div>')
