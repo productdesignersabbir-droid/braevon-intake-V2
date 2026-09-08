@@ -96,7 +96,7 @@ html,body{margin:0;padding:0}
 body{
   background:var(--page); color:var(--ink);
   font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  font-size:14px; line-height:1.45;
+  font-size:15px; line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
 button{font-family:inherit}
@@ -119,11 +119,11 @@ img{max-width:100%;display:block}
 .logo svg{height:22px;width:auto;display:block}
 
 .rating{display:flex;align-items:center;gap:8px;white-space:nowrap}
-.rating .txt{font-size:11px;font-weight:700;color:var(--ink)}
+.rating .txt{font-size:12px;font-weight:700;color:var(--ink)}
 /* Trustpilot sets its mark as a white glyph on a green tile, not a green
    glyph on the page. The square is the mark; --green is reserved for it. */
 .stars{display:flex;gap:3px}
-.stars i{width:18px;height:18px;border-radius:2px;background:var(--green);
+.stars i{width:18px;height:18px;background:var(--green);
   display:grid;place-items:center}
 .stars i svg{width:12px;height:12px;color:#fff;display:block}
 
@@ -183,26 +183,31 @@ img{max-width:100%;display:block}
 @media (prefers-reduced-motion:reduce){
   .step{animation:none}
   .seg span{transition:none}
+  .track i{animation:none}
 }
 .col{display:flex;flex-direction:column}
 
 /* ----------------------------------------------------------- typography */
 .eyebrow{
-  margin:0 0 8px; font-size:10px; font-weight:700; letter-spacing:.09em;
+  margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:.09em;
   text-transform:uppercase; color:var(--accent);
 }
 .qhead{
-  margin:0; font-size:22px; line-height:1.2; font-weight:600;
+  margin:0; font-size:23px; line-height:1.2; font-weight:600;
   letter-spacing:-.01em; color:var(--title-ink);
 }
-.qhead.big{font-size:26px}
-.sub{margin:10px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
+.qhead.big{font-size:27px}
+.sub{margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
 .qhead + .sub{margin-top:12px}
 /* On an interstitial the line under the headline is carrying the claim, not
    captioning a question, and the reference sets it as a second heading:
-   20px/600 in near-black, tighter. */
+   20px/600 in near-black, tighter. It is the one sub that has to hold its own
+   size against the title rather than take the scale - at 22px against a 23px
+   qhead the two read as one block, so 2026-09-08 took it back 10% and gave the
+   pair a gap the eye can see. An ordinary .sub is 15px and needs neither. */
 .sub.lead{font-size:20px;line-height:1.3;font-weight:600;color:var(--ink)}
-.legend{margin:var(--gap-title) 0 10px;font-size:12px;font-weight:700;color:var(--ink)}
+.qhead + .sub.lead{margin-top:18px}
+.legend{margin:var(--gap-title) 0 10px;font-size:13px;font-weight:700;color:var(--ink)}
 .hi{color:var(--accent);font-weight:700}
 
 /* Every block that follows the head gets the same gap, so a screen with a
@@ -223,8 +228,8 @@ img{max-width:100%;display:block}
   transition:border-color .12s ease,box-shadow .16s ease;
 }
 .opt:hover{border-color:#C9CFDA}
-.opt .lbl{flex:1;font-size:14px;font-weight:500;line-height:1.2}
-.opt .lbl small{display:block;margin-top:5px;font-size:10px;line-height:1.35;
+.opt .lbl{flex:1;font-size:16px;font-weight:500;line-height:1.2}
+.opt .lbl small{display:block;margin-top:5px;font-size:12px;line-height:1.35;
   font-weight:400;color:var(--muted)}
 .inline-note{font-weight:400;color:var(--muted)}
 
@@ -278,9 +283,9 @@ img{max-width:100%;display:block}
 
 /* A caption breaking a long safety list into sections. It is a list heading,
    so it takes the gap above and none below - the row under it is its own. */
-.optcap{margin:18px 0 -2px;font-size:17px;font-weight:700;color:var(--ink)}
+.optcap{margin:18px 0 -2px;font-size:18px;font-weight:700;color:var(--ink)}
 .opts > .optcap:first-child{margin-top:0}
-.opt-note{margin:-4px 0 0;font-size:11px;color:var(--muted);font-weight:600}
+.opt-note{margin:-4px 0 0;font-size:12px;color:var(--muted);font-weight:600}
 
 /* ------------------------------------------------ the fact interstitial */
 /* Screen 2, centred on white the way the reference sets it. */
@@ -300,21 +305,21 @@ img{max-width:100%;display:block}
 .col.fact.solo .fact-pill{margin-top:20px}
 .col.fact.solo .fact-k{margin-top:30px}
 .col.fact.solo .fact-u{margin-top:14px;line-height:1.35}
-.fact-name{margin:8px 0 0;font-size:14px;font-weight:500;color:var(--muted)}
+.fact-name{margin:8px 0 0;font-size:15px;font-weight:500;color:var(--muted)}
 .fact-pill{
   align-self:center;margin:12px 0 0;padding:8px 20px;border-radius:999px;
-  font-size:17px;font-weight:500;color:#fff;
+  font-size:18px;font-weight:500;color:#fff;
   background:linear-gradient(90deg,var(--accent) 0%,var(--accent-tint) 100%);
 }
-.fact-k{margin:16px 0 0;font-size:50px;line-height:1;font-weight:600;color:var(--ink)}
+.fact-k{margin:16px 0 0;font-size:54px;line-height:1;font-weight:600;color:var(--ink)}
 /* "10-15" is a whole accented line; "36 HRS" is a coloured number against ink
    units, so there the span carries it. nth-of-type would count every <p> in
    the column, not just the figures, so the first one is marked explicitly. */
 .qhead .hl{color:var(--accent)}
 .fact-k.accent{color:var(--accent)}
 .fact-k span{color:var(--accent)}
-.fact-u{margin:3px 0 0;font-size:24px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
-.fact-cap{margin:7px 0 0;font-size:17px;line-height:1.4;color:var(--ink)}
+.fact-u{margin:3px 0 0;font-size:26px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.fact-cap{margin:7px 0 0;font-size:18px;line-height:1.4;color:var(--ink)}
 .fact-cap b{font-weight:700;font-style:italic}
 .fact-rule{width:34px;height:2px;background:var(--border);margin:16px auto 0;border-radius:2px}
 
@@ -323,9 +328,9 @@ img{max-width:100%;display:block}
    own male/female question the same way. */
 .opts.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-opt)}
 .opt.tile{flex-direction:column;justify-content:center;align-items:center;
-  text-align:center;gap:14px;padding:24px 20px;min-height:170px}
-.opt.tile .lbl{flex:none;font-size:14px;font-weight:500}
-.opt.tile .lbl small{display:block;margin-top:8px;font-size:10px;font-weight:400;
+  text-align:center;gap:12px;padding:20px 16px;min-height:132px}
+.opt.tile .lbl{flex:none;font-size:16px;font-weight:500}
+.opt.tile .lbl small{display:block;margin-top:8px;font-size:12px;font-weight:400;
   line-height:1.35;color:var(--muted)}
 /* A Yes/No that opens inside a reveal is a follow-up, not the screen's own
    question, so it takes the tile's shape at a row's height rather than the
@@ -344,7 +349,7 @@ img{max-width:100%;display:block}
 .dob + .fields,.fields + .fields,.fields + .dob{margin-top:12px}
 .field{flex:1 1 100%;min-width:0}
 .field.half{flex:1 1 calc(50% - 6px)}
-.field label,.dob-label{display:block;margin:0 0 8px;font-size:17px;font-weight:500;color:var(--ink)}
+.field label,.dob-label{display:block;margin:0 0 8px;font-size:18px;font-weight:500;color:var(--ink)}
 /* The placeholder state, in the reference's own treatment: a select still
    showing its first option reads grey, and turns to ink once a real answer is
    chosen. Without it "January / 01" looks like data the form filled in. */
@@ -353,7 +358,7 @@ img{max-width:100%;display:block}
 .reveal textarea::placeholder{color:var(--faint);opacity:1}
 
 .field input,.field select,.field textarea,.reveal textarea,.reveal input{
-  width:100%;font-family:inherit;font-size:16px;color:var(--ink);
+  width:100%;font-family:inherit;font-size:17px;color:var(--ink);
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius-card);padding:13px 14px;min-height:52px;
   appearance:none;-webkit-appearance:none;
@@ -376,7 +381,7 @@ img{max-width:100%;display:block}
 /* The molecules named under a headline: two columns, bulleted, in the caption
    grey the reference uses. Column-major, so the pairs read down then across. */
 .medlist{margin:14px 0 0;padding:0 0 0 18px;list-style:disc;
-  columns:2;column-gap:20px;font-size:14px;line-height:1.7;color:var(--muted)}
+  columns:2;column-gap:20px;font-size:15px;line-height:1.7;color:var(--muted)}
 .medlist li{break-inside:avoid}
 /* The list is part of the question, so what follows it takes the block gap
    rather than sitting straight against the last bullet. */
@@ -396,9 +401,9 @@ img{max-width:100%;display:block}
 
 .reveal{display:none;margin-top:var(--gap-block)}
 .reveal.on{display:block}
-.reveal label{display:block;margin:0 0 10px;font-size:17px;font-weight:700;color:var(--ink);line-height:1.3}
-.reveal-sub{margin:0 0 8px;font-size:11px;color:var(--muted)}
-.err{margin:8px 0 0;font-size:13px;color:var(--error);font-weight:600}
+.reveal label{display:block;margin:0 0 10px;font-size:18px;font-weight:700;color:var(--ink);line-height:1.3}
+.reveal-sub{margin:0 0 8px;font-size:12px;color:var(--muted)}
+.err{margin:8px 0 0;font-size:14px;color:var(--error);font-weight:600}
 .err[hidden]{display:none}
 /* A field that failed validation carries the message and the outline together,
    so the eye lands on the same place twice. */
@@ -411,7 +416,7 @@ img{max-width:100%;display:block}
 .note{
   display:flex;gap:12px;align-items:flex-start;
   background:var(--neutral-tint);border-radius:var(--radius-card);
-  padding:14px 16px;font-size:14px;line-height:1.45;color:var(--ink);
+  padding:14px 16px;font-size:15px;line-height:1.45;color:var(--ink);
 }
 /* The mark sits on the first line of the text, not on the middle of the block:
    centring it against two wrapped lines is what read as misaligned. The offset
@@ -426,15 +431,15 @@ img{max-width:100%;display:block}
 /* The reference sets "LAST STEP" as a centred gradient pill, not a caption. */
 .steppill{align-self:center;margin:0 0 var(--gap-title);padding:9px 22px;
   border-radius:999px;display:inline-flex;align-items:center;gap:8px;
-  font-size:17px;font-weight:700;letter-spacing:.02em;color:#fff;
+  font-size:18px;font-weight:700;letter-spacing:.02em;color:#fff;
   background:linear-gradient(90deg,var(--accent) 0%,var(--accent-tint) 100%)}
 .steppill svg{width:17px;height:17px;stroke:#fff}
 
 .infonote{display:flex;gap:10px;align-items:flex-start;margin-top:var(--gap-title);
   background:var(--accent-soft);border-radius:var(--radius-card);padding:14px 16px}
 .infonote svg{flex:none;width:18px;height:18px;stroke:var(--accent);margin-top:1px}
-.infonote b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
-.infonote p{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--accent-hover-ink,#8A2F12)}
+.infonote b{display:block;font-size:15px;font-weight:700;color:var(--accent)}
+.infonote p{margin:4px 0 0;font-size:15px;line-height:1.5;color:var(--accent-hover-ink,#8A2F12)}
 .infonote b{color:#8A2F12}
 /* The reference gives the button noticeably more air after one of these than
    after an ordinary block. */
@@ -443,8 +448,8 @@ img{max-width:100%;display:block}
 .note.warn svg{stroke:var(--error)}
 .note b{color:var(--ink)}
 .darknote{background:var(--dark);color:#D7DBE4;border-radius:var(--radius-card);padding:18px}
-.darknote h4{margin:0 0 6px;font-size:13px;color:#fff;font-weight:700}
-.darknote p{margin:0;font-size:11px;line-height:1.5}
+.darknote h4{margin:0 0 6px;font-size:14px;color:#fff;font-weight:700}
+.darknote p{margin:0;font-size:12px;line-height:1.5}
 .darknote b{color:#fff}
 
 /* ------------------------------------------------------------------ cta */
@@ -454,7 +459,7 @@ img{max-width:100%;display:block}
 .cta{
   width:100%;border:none;border-radius:var(--radius);
   background:var(--accent);color:#fff;
-  font-weight:800;font-size:13px;letter-spacing:.01em;
+  font-weight:800;font-size:14px;letter-spacing:.01em;
   padding:17px 18px;min-height:56px;
   display:flex;align-items:center;justify-content:center;gap:9px;
   cursor:pointer;transition:background-color .14s ease;
@@ -472,14 +477,14 @@ img{max-width:100%;display:block}
 .bp{display:flex;align-items:flex-start;justify-content:center;gap:14px;margin-top:var(--gap-opt)}
 .cellwrap{text-align:center}
 .cell{
-  width:96px;text-align:center;font-size:26px;font-weight:800;color:var(--ink);
+  width:96px;text-align:center;font-size:28px;font-weight:800;color:var(--ink);
   border:1px solid var(--border);border-radius:var(--radius);padding:10px 6px;
   background:var(--surface);font-family:inherit;
 }
 .cell:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
-.cap{margin-top:6px;font-size:9px;color:var(--faint)}
-.slash{font-size:24px;color:var(--faint);line-height:1.6}
-.bp-lead{margin:var(--gap-title) 0 0;font-size:11px;color:var(--muted);text-align:center}
+.cap{margin-top:6px;font-size:10px;color:var(--faint)}
+.slash{font-size:26px;color:var(--faint);line-height:1.6}
+.bp-lead{margin:var(--gap-title) 0 0;font-size:12px;color:var(--muted);text-align:center}
 
 /* ----------------------------------------------------- the opening screen */
 /* Screen 1 carries the tallest stack in the flow — hero, two-line h1, claim
@@ -512,7 +517,7 @@ img{max-width:100%;display:block}
 }
 
 .hero-h1{
-  margin:0;font-size:34px;line-height:1.05;font-weight:600;
+  margin:0;font-size:36px;line-height:1.05;font-weight:600;
   letter-spacing:-.02em;color:var(--title-ink);
 }
 .hero-h1 .hi{font-weight:600}
@@ -525,34 +530,35 @@ img{max-width:100%;display:block}
    the room it needs to stay a single line down to the narrow breakpoint. */
 .strip{
   margin:12px 0 0;padding:8px 10px 8px 12px;border-radius:var(--radius-card);
-  font-size:12px;line-height:1.35;color:var(--ink);white-space:nowrap;
+  font-size:13px;line-height:1.35;color:var(--ink);white-space:nowrap;
   background:var(--accent-soft);
 }
 .strip strong{font-weight:700;font-style:italic}
 
-.ask{margin:20px 0 0;font-size:17px;line-height:1.3;font-weight:400;color:var(--ink)}
+.ask{margin:20px 0 0;font-size:18px;line-height:1.3;font-weight:400;color:var(--ink)}
 .ask strong{font-weight:700}
-.ask-sub{margin:4px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
-.ask-hint{margin:2px 0 0;font-size:12px;color:var(--faint)}
+.ask-sub{margin:4px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
+.ask-hint{margin:2px 0 0;font-size:13px;color:var(--faint)}
 .ask-sub + .opts{margin-top:20px}
+.ask-hint + .opts{margin-top:24px}
 
 /* Goal rows are taller than an ordinary option and carry a bubble instead of a
    ring — there is nothing to compare them against yet, so the icon does the
    work the radio would. */
-.opt.goal{padding:11px 16px;gap:14px;min-height:58px}
+.opt.goal{padding:7px 16px;gap:14px;min-height:56px}
 .opt.goal .bubble,.opt.band .bubble{
-  flex:none;width:36px;height:36px;border-radius:50%;
+  flex:none;width:42px;height:42px;border-radius:50%;
   background:var(--bub,var(--accent-soft));color:var(--gly,var(--accent));
   display:grid;place-items:center;
 }
-.opt.goal .bubble svg,.opt.band .bubble svg{width:19px;height:19px}
+.opt.goal .bubble svg,.opt.band .bubble svg{width:22px;height:22px}
 /* A band row is a goal row that also carries a caption, so it keeps the gap
    but not the fixed height. */
-.opt.band{gap:14px}
-.opt.band .lbl{font-size:14px;font-weight:600}
-.bubble.big{width:32px;height:32px;border-radius:50%;flex:none;display:grid;
+.opt.band{gap:14px;padding:10px 16px}
+.opt.band .lbl{font-size:16px;font-weight:600}
+.bubble.big{width:44px;height:44px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
-.bubble.big svg{width:16px;height:16px}
+.bubble.big svg{width:23px;height:23px}
 
 
 /* ------------------------------------------------------------- markety */
@@ -564,17 +570,17 @@ img{max-width:100%;display:block}
   margin:var(--gap-title) calc(var(--pad) * -1) 0;padding:4px var(--pad) 12px}
 .tcard{flex:0 0 268px;scroll-snap-align:start;background:var(--surface);
   border-radius:var(--radius-card);box-shadow:var(--shadow);padding:16px}
-.tcard h3{margin:8px 0 6px;font-size:13px;font-weight:700}
-.tcard p{margin:0;font-size:11px;line-height:1.5;color:var(--muted)}
-.tcard .who{margin-top:10px;font-size:10px;font-weight:700;color:var(--faint)}
-.railnote{margin:0;font-size:10px;color:var(--faint);text-align:right}
+.tcard h3{margin:8px 0 6px;font-size:14px;font-weight:700}
+.tcard p{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
+.tcard .who{margin-top:10px;font-size:11px;font-weight:700;color:var(--faint)}
+.railnote{margin:0;font-size:11px;color:var(--faint);text-align:right}
 
 
 .factcard{background:var(--dark);color:#fff;border-radius:var(--radius-card);
   padding:26px 22px;text-align:center}
-.factcard .k{font-size:39px;font-weight:800;line-height:1;color:var(--accent-tint)}
-.factcard .u{margin-top:6px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#98A0B4}
-.factcard p{margin:10px 0 0;font-size:12px;color:#D7DBE4;line-height:1.5}
+.factcard .k{font-size:42px;font-weight:800;line-height:1;color:var(--accent-tint)}
+.factcard .u{margin-top:6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#98A0B4}
+.factcard p{margin:10px 0 0;font-size:13px;color:#D7DBE4;line-height:1.5}
 
 
 /* The onset comparison on the "4-in-1 advantage" screen. A row per molecule,
@@ -582,11 +588,11 @@ img{max-width:100%;display:block}
 .cmp{display:grid;grid-template-columns:1fr 96px 44px;gap:10px;align-items:center;
   padding:10px 0;border-top:1px solid var(--border)}
 .cmp:first-child{border-top:none}
-.cmp-l b{display:block;font-size:12px;font-weight:700;color:var(--ink)}
-.cmp-l span{display:block;font-size:10px;color:var(--muted)}
+.cmp-l b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.cmp-l span{display:block;font-size:11px;color:var(--muted)}
 .cmp-bar{height:8px;border-radius:4px;background:var(--track);overflow:hidden}
 .cmp-bar i{display:block;height:100%;border-radius:4px;background:var(--accent-tint)}
-.cmp-v{font-size:11px;font-weight:700;color:var(--muted);text-align:right}
+.cmp-v{font-size:12px;font-weight:700;color:var(--muted);text-align:right}
 .cmp.on .cmp-l b,.cmp.on .cmp-v{color:var(--accent)}
 .cmp.on .cmp-bar i{background:var(--accent)}
 
@@ -595,10 +601,10 @@ img{max-width:100%;display:block}
 .dial{width:132px;height:132px;margin:0 auto;position:relative}
 .dial svg{transform:rotate(-90deg)}
 .dial .pct{position:absolute;inset:0;display:grid;place-items:center;
-  font-size:22px;font-weight:800;color:var(--ink)}
-.loader h2{margin:20px 0 0;font-size:16px;font-weight:700;color:var(--title-ink)}
+  font-size:24px;font-weight:800;color:var(--ink)}
+.loader h2{margin:20px 0 0;font-size:17px;font-weight:700;color:var(--title-ink)}
 .checklist{margin:var(--gap-title) 0 0;display:flex;flex-direction:column;gap:10px}
-.checklist div{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.checklist div{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .checklist i{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex:none}
 .checklist div.done i{background:var(--accent);border-color:var(--accent);position:relative}
 .checklist div.done i::after{content:"";position:absolute;inset:0;margin:auto;
@@ -609,20 +615,20 @@ img{max-width:100%;display:block}
 /* the result screen */
 .result-badge{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;background:var(--accent-soft);
   color:var(--accent);border-radius:999px;padding:7px 13px;
-  font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .reviewcard{background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:18px;margin-top:var(--gap-title)}
-.reviewcard h3{margin:0 0 14px;font-size:13px;font-weight:700}
+.reviewcard h3{margin:0 0 14px;font-size:14px;font-weight:700}
 .rrow{display:flex;justify-content:space-between;gap:14px;padding:10px 0;
-  border-top:1px solid var(--border);font-size:12px}
+  border-top:1px solid var(--border);font-size:13px}
 .rrow:first-of-type{border-top:none}
 .rrow span{color:var(--muted)}
 .rrow b{text-align:right;font-weight:700}
 .mol{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid var(--border)}
 .mol:first-child{border-top:none}
-.mol b{font-size:12px}
-.mol span{font-size:10px;color:var(--muted);display:block;font-weight:400}
-.mol .dose{font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
+.mol b{font-size:13px}
+.mol span{font-size:11px;color:var(--muted);display:block;font-weight:400}
+.mol .dose{font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap}
 
 /* Screen 5's benefit rows. Same divided card as .mol, plus the goal screen's
    36px bubble so each benefit carries its own hue, as the reference does. */
@@ -632,8 +638,8 @@ img{max-width:100%;display:block}
 .mech .bubble{flex:none;width:36px;height:36px;border-radius:50%;
   background:var(--bub);color:var(--gly);display:grid;place-items:center}
 .mech .bubble svg{width:19px;height:19px}
-.mech b{font-size:13px;font-weight:700;display:block}
-.mech span:not(.bubble){font-size:12px;line-height:1.5;color:var(--muted);
+.mech b{font-size:14px;font-weight:700;display:block}
+.mech span:not(.bubble){font-size:13px;line-height:1.5;color:var(--muted);
   display:block;font-weight:400;margin-top:3px}
 
 /* ------------------------------------------------ the 4-in-1 advantage */
@@ -641,8 +647,8 @@ img{max-width:100%;display:block}
    lead-in, one shared time axis, a row per single-ingredient pill, and the
    brand block the whole thing builds to. */
 .adv{padding:18px 16px}
-.adv-h{margin:0;font-size:14px;font-weight:800;letter-spacing:.01em;color:var(--ink)}
-.adv-sub{margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+.adv-h{margin:0;font-size:17px;font-weight:800;letter-spacing:.01em;color:var(--ink)}
+.adv-sub{margin:6px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
 
 /* The axis is drawn, not measured — 10m and 15m sit crowded at the left and
    36hr hard against the right, exactly as the reference spaces them. Its marks
@@ -656,35 +662,46 @@ img{max-width:100%;display:block}
 .axis-line i{position:absolute;bottom:0;width:1px;height:6px;background:var(--border);
   transform:translateX(-50%)}
 .axis-line i b{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);
-  font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+  font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
 
 .advrow{margin-top:16px}
 .advrow-t{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-  font-size:12px}
+  font-size:13px}
 .advrow-t b{font-weight:700;color:var(--ink)}
 .advrow-t b span{font-weight:500;color:var(--muted)}
-.advrow-m{font-size:11px;color:var(--muted);text-align:right}
+.advrow-m{font-size:12px;color:var(--muted);text-align:right}
 .track{position:relative;height:12px;border-radius:999px;background:var(--wash);
   margin-top:7px;overflow:hidden}
 .track i{position:absolute;top:0;bottom:0;border-radius:999px}
 .track i.grad{background:linear-gradient(90deg,var(--accent-tint) 0%,var(--accent) 100%)}
+/* Each bar draws itself from its own start mark out to its end, the way the
+   reference plays the comparison rather than printing it. The keyframe carries
+   only a `from`: the implicit end is the bar's own inline width, so the numbers
+   stay in build.py and the animation never has to know them. Each row's delay
+   is inline too, so the four read as a sequence.
+
+   No observer and no JS. A step is `display:none` until it is shown and CSS
+   animations do not run on a hidden subtree - they start at frame zero when it
+   is displayed - which is the same thing this build relies on for `rise`. */
+@keyframes adv-grow{from{width:0}}
+.track i{animation:adv-grow .85s cubic-bezier(.22,.9,.28,1) both}
 
 /* The brand block: the only part of this screen in Braevon orange, because it
    is the only part making Braevon's claim. */
 .fullpot{margin-top:22px;border:1px solid var(--accent-soft);background:#FFF9F6;
   border-radius:var(--radius-card);padding:16px}
 .fp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.fp-name b{display:block;font-size:15px;font-weight:800;color:var(--accent)}
-.fp-name span{display:block;margin-top:2px;font-size:9px;font-weight:800;
+.fp-name b{display:block;font-size:16px;font-weight:800;color:var(--accent)}
+.fp-name span{display:block;margin-top:2px;font-size:10px;font-weight:800;
   letter-spacing:.12em;color:var(--muted)}
 .chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface);
   border:1px solid var(--hairline);border-radius:999px;padding:5px 10px;
-  font-size:10px;font-weight:700;color:var(--ink);white-space:nowrap}
+  font-size:11px;font-weight:700;color:var(--ink);white-space:nowrap}
 .chip svg{width:12px;height:12px;stroke:var(--accent);flex:none}
 .fullpot .axis{margin-top:16px}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .fp-rule{height:1px;background:var(--hairline);margin:14px 0 0}
-.fp-note{margin:12px 0 0;font-size:11px;line-height:1.5;color:var(--muted)}
+.fp-note{margin:12px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
 
 /* ------------------------------------------------------- testimonials */
 /* The reference's testimonial: one tinted panel holding a photo with the stars
@@ -699,22 +716,22 @@ img{max-width:100%;display:block}
   background:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,.52))}
 .qstars{display:flex;gap:5px;color:#FFC531}
 .qstars svg{width:17px;height:17px;display:block}
-.qshot blockquote{margin:0;text-align:center;color:#fff;font-size:19px;
+.qshot blockquote{margin:0;text-align:center;color:#fff;font-size:21px;
   font-weight:700;line-height:1.3;text-wrap:balance}
 
 .qcards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .qcard{background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:14px 12px;text-align:center}
-.qcard b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.qcard b{display:block;font-size:14px;font-weight:700;color:var(--ink)}
 .qbubs{display:flex;justify-content:center;gap:8px;margin:12px 0}
 .qcard .bubble{width:36px;height:36px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
 .qcard .bubble svg{width:19px;height:19px}
-.qcard p{margin:0;font-size:12px;line-height:1.4;color:var(--ink)}
+.qcard p{margin:0;font-size:13px;line-height:1.4;color:var(--ink)}
 
 .qwho{display:flex;align-items:center;justify-content:center;gap:10px;
   margin-top:10px;background:var(--surface);border-radius:var(--radius-card);
-  box-shadow:var(--shadow);padding:12px;font-size:12px;color:var(--ink)}
+  box-shadow:var(--shadow);padding:12px;font-size:13px;color:var(--ink)}
 .qavatar{width:28px;height:28px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:#DBEAFE;color:#3B82F6;
   object-fit:cover;object-position:50% 22%}
@@ -728,21 +745,21 @@ img{max-width:100%;display:block}
 .rv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
   background:var(--accent);color:#fff;
   padding:16px;margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0}
-.rv-head b{display:block;font-size:19px;font-weight:800;letter-spacing:.02em}
-.rv-head span{display:block;font-size:14px;color:#FDE0D4}
+.rv-head b{display:block;font-size:21px;font-weight:800;letter-spacing:.02em}
+.rv-head span{display:block;font-size:15px;color:#FDE0D4}
 .rv-head-r{text-align:right}
 /* Carries .rv-head so it beats the 14px set on that block's spans. */
-.rv-head .rv-ready{font-size:12px;font-weight:700;color:#FFD9C7}
+.rv-head .rv-ready{font-size:13px;font-weight:700;color:#FFD9C7}
 
 .rv-ok{display:flex;gap:10px;align-items:flex-start;background:#F0FDF4;
   padding:14px 16px;margin:0 calc(var(--pad) * -1)}
 .rv-ok svg{flex:none;width:20px;height:20px;stroke:#16A34A;margin-top:1px}
-.rv-ok b{display:block;font-size:14px;font-weight:600;color:#166534}
-.rv-ok p{margin:2px 0 0;font-size:12px;line-height:1.45;color:#16A34A}
+.rv-ok b{display:block;font-size:15px;font-weight:600;color:#166534}
+.rv-ok p{margin:2px 0 0;font-size:13px;line-height:1.45;color:#16A34A}
 
 .rv-panel{background:var(--neutral-tint);border-radius:var(--radius-card);
   padding:20px 16px;margin-top:var(--gap-block)}
-.rv-title{margin:0 0 16px;font-size:26px;line-height:1.2;font-weight:600;
+.rv-title{margin:0 0 16px;font-size:27px;line-height:1.2;font-weight:600;
   color:var(--ink);text-align:center}
 .rv-card{background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:16px}
@@ -750,8 +767,8 @@ img{max-width:100%;display:block}
 /* The reference puts the label and the figure on one line and runs the bar the
    full width underneath, rather than squeezing all three into a row. */
 .rv-prob-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.rv-prob-top span{font-size:16px;color:var(--muted)}
-.rv-prob-top b{font-size:26px;font-weight:800;color:#16A34A;line-height:1}
+.rv-prob-top span{font-size:17px;color:var(--muted)}
+.rv-prob-top b{font-size:28px;font-weight:800;color:#16A34A;line-height:1}
 .rv-bar{height:10px;border-radius:999px;background:var(--wash);overflow:hidden;
   margin-top:14px}
 .rv-bar i{display:block;height:100%;border-radius:999px;background:#22C55E}
@@ -770,9 +787,9 @@ img{max-width:100%;display:block}
 .rvrow .bubble{flex:none;width:36px;height:36px;border-radius:50%;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
 .rvrow .bubble svg{width:19px;height:19px}
-.rvrow b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
-.rvrow > div > span{display:block;margin-top:2px;font-size:14px;color:var(--ink)}
-.rv-verdict{margin:16px 0 0;text-align:center;font-size:17px;font-weight:500;
+.rvrow b{display:block;font-size:17px;font-weight:500;color:var(--ink)}
+.rvrow > div > span{display:block;margin-top:2px;font-size:15px;color:var(--ink)}
+.rv-verdict{margin:16px 0 0;text-align:center;font-size:18px;font-weight:500;
   line-height:1.4;color:var(--ink)}
 .rv-verdict b{font-weight:700;color:var(--accent)}
 
@@ -781,16 +798,16 @@ img{max-width:100%;display:block}
    there - without it the line runs the full field and reads as a caption. */
 .rv-hipaa{margin:14px auto 0;text-align:center;color:var(--faint)}
 .rv-hipaa svg{width:16px;height:16px;stroke:currentColor}
-.rv-hipaa p{margin:4px auto 0;max-width:250px;font-size:12px;line-height:1.45;
+.rv-hipaa p{margin:4px auto 0;max-width:250px;font-size:13px;line-height:1.45;
   color:var(--faint)}
 
 .rv-help{display:flex;gap:14px;align-items:flex-start;background:#F0FDF4;
   border-radius:var(--radius-card);padding:16px;margin-top:12px}
 .rv-help img{flex:none;width:64px;height:auto;object-fit:contain}
-.rv-help b{display:block;font-size:17px;font-weight:700;color:var(--title-ink)}
-.rv-help p{margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
+.rv-help b{display:block;font-size:18px;font-weight:700;color:var(--title-ink)}
+.rv-help p{margin:8px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
 .rv-help ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
-.rv-help li{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink)}
+.rv-help li{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ink)}
 /* Ink, not the green these were: the reference sets them in its own text
    colour, and three green ticks read as three verified claims. */
 .rv-help li svg{flex:none;width:16px;height:16px;stroke:var(--ink)}
@@ -802,13 +819,13 @@ img{max-width:100%;display:block}
 .proto-skip{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;
   align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);
   border-radius:999px;padding:9px 14px 9px 10px;cursor:pointer;
-  background:#26272D;color:#fff;font-family:inherit;font-size:13px;
+  background:#26272D;color:#fff;font-family:inherit;font-size:14px;
   font-weight:600;box-shadow:0 6px 22px rgba(16,20,34,.28)}
 .proto-skip:hover{background:#31333A}
 .proto-skip svg{width:15px;height:15px}
 .proto-skip[hidden]{display:none}
 .proto-skip-tag{border-radius:999px;background:rgba(255,255,255,.16);
-  padding:3px 7px;font-size:9px;font-weight:800;letter-spacing:.06em}
+  padding:3px 7px;font-size:10px;font-weight:800;letter-spacing:.06em}
 @media print{.proto-skip{display:none}}
 
 /* ---------------------------------------------------- disqualification */
@@ -833,17 +850,17 @@ img{max-width:100%;display:block}
 .dq-mark{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);
   display:grid;place-items:center;margin:0 auto 16px}
 .dq-mark svg{width:22px;height:22px;stroke:var(--accent)}
-.dq h1{margin:0;font-size:22px;line-height:1.25;font-weight:700;color:var(--accent)}
-.dq-card p{margin:16px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
+.dq h1{margin:0;font-size:23px;line-height:1.25;font-weight:700;color:var(--accent)}
+.dq-card p{margin:16px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
 /* The two exits. Each is a lead-in line and a button, sized to its label the
    way the reference sizes them - not full-bleed, or they would read as the
    flow's Next and invite a click. */
-.dq-lead{margin:28px 0 0;font-size:15px;font-weight:700;color:var(--ink)}
+.dq-lead{margin:28px 0 0;font-size:16px;font-weight:700;color:var(--ink)}
 .dq-lead.soft{font-weight:500;color:var(--ink);line-height:1.5}
 .dq-rule{height:1px;background:var(--hairline);margin:30px 0 0}
 .dq-back,.dq-ghost{margin:14px auto 0;display:block;min-height:44px;
   padding:0 20px;border-radius:var(--radius);font-family:inherit;
-  font-size:14px;font-weight:700;cursor:pointer}
+  font-size:15px;font-weight:700;cursor:pointer}
 .dq-back{border:none;background:var(--accent);color:#fff}
 .dq-ghost{border:none;background:var(--wash);color:var(--muted)}
 
@@ -902,7 +919,7 @@ img{max-width:100%;display:block}
 .ck-clock{margin:0 calc(var(--pad) * -1);
   background:var(--mint);
   color:var(--mint-ink);display:flex;align-items:center;justify-content:center;
-  gap:6px;padding:15px 16px;font-size:13px;font-weight:600;text-align:center}
+  gap:6px;padding:15px 16px;font-size:14px;font-weight:600;text-align:center}
 body:not(.frames) .ck-clock{margin-inline:calc(50% - 50vw)}
 /* `clip` rather than `hidden`: it does not make body a scroll container, so
    nothing else changes. It is only here to swallow the scrollbar's width, which
@@ -918,18 +935,18 @@ body:not(.frames){overflow-x:clip}
    order, and a bare `margin:0` was landing the headline flush against the
    countdown bar - a real zero-gap bug, not just a tight one. 40px rather than
    the block's 32 because the client asked for more air under the bar. */
-.ck-h1{margin:40px 0 0;font-size:23px;line-height:1.2;font-weight:600;
+.ck-h1{margin:40px 0 0;font-size:24px;line-height:1.2;font-weight:600;
   letter-spacing:-.01em;color:var(--title-ink)}
-.ck-h2{margin:0;font-size:23px;line-height:1.2;font-weight:600;
+.ck-h2{margin:0;font-size:24px;line-height:1.2;font-weight:600;
   letter-spacing:-.01em;color:var(--title-ink)}
 .ck-h2 em{font-style:normal;color:var(--accent)}
 /* One heading takes this - "Choose your medication preference below:" - at the
    client's word on 2026-09-04. Centred and a step down from the section ramp,
    so it reads as the lead-in to the two cards under it rather than as another
    section title. Do not widen it to `.ck-h2`; the rest stay left at 23px. */
-.ck-h2.mid{text-align:center;font-size:20px}
+.ck-h2.mid{text-align:center;font-size:21px}
 .ck-h2.accent{color:var(--accent)}
-.ck-lead{margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
+.ck-lead{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
 .ck-sect > * + *{margin-top:var(--gap-title)}
 .ck-lead + *{margin-top:var(--gap-title)}
 
@@ -944,9 +961,9 @@ body:not(.frames){overflow-x:clip}
   background:linear-gradient(135deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
   display:grid;place-items:center;color:#fff}
 .ck-goals-mark svg{width:28px;height:28px}
-.ck-goals b{display:block;font-size:13px;font-weight:700;color:var(--accent)}
+.ck-goals b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
 .ck-goals ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:2px}
-.ck-goals li{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink)}
+.ck-goals li{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink)}
 /* One glyph per goal rather than three identical ticks, as the reference sets
    them. The hues are `GOAL_STYLE`'s - the five the client picked for screen 1,
    and the documented exception to orange carrying emphasis. */
@@ -960,7 +977,7 @@ body:not(.frames){overflow-x:clip}
 .ck-goal-ic i.on{display:block}
 
 /* -- 2 intro + the onset chart ------------------------------------------ */
-.ck-intro p{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+.ck-intro p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
 .ck-intro p + p{margin-top:16px}
 .ck-intro b{font-weight:700}
 /* The reference gives the chart a 20px-padded box of its own under the copy.
@@ -999,26 +1016,26 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-prog-mark{flex:none;width:48px;height:48px;border-radius:50%;
   background:var(--accent-soft);display:grid;place-items:center;color:var(--accent)}
 .ck-prog-mark svg{width:22px;height:22px}
-.ck-prog-head h2{margin:0;font-size:23px;line-height:1.2;font-weight:600;
+.ck-prog-head h2{margin:0;font-size:24px;line-height:1.2;font-weight:600;
   color:var(--accent)}
 /* Copy left, render right - the reference's own split, and it does not stack:
    the render is 109px wide and the column has 384px to give.
    40px above rather than the reference's 24: the client asked on 2026-09-04 for
    more air between the "BRAEVON 4-in-1" heading and the tablet under it. */
 .ck-prog-body{display:flex;align-items:center;gap:10px;margin-top:40px}
-.ck-prog-body p{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+.ck-prog-body p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
 .ck-prog-body b{font-weight:700}
-.ck-prog-sub{margin-top:16px !important;font-size:13px !important;color:var(--ink) !important}
+.ck-prog-sub{margin-top:16px !important;font-size:14px !important;color:var(--ink) !important}
 .ck-prog-body img{flex:none;width:112px;height:auto;align-self:center}
 .ck-prob{display:flex;align-items:center;gap:16px;margin-top:32px;
   background:linear-gradient(180deg,#FFF3EE 0%,#FFEBE2 100%);
   border-radius:var(--radius-card);padding:24px}
-.ck-prob p{margin:0;flex:1;font-size:13px;line-height:1.2;color:#9A2C06}
+.ck-prob p{margin:0;flex:1;font-size:14px;line-height:1.2;color:#9A2C06}
 .ck-prob b{font-weight:700}
 .ck-prob-fig{flex:none;text-align:center}
-.ck-prob-fig b{display:block;font-size:23px;line-height:1.2;font-weight:800;
+.ck-prob-fig b{display:block;font-size:25px;line-height:1.2;font-weight:800;
   color:var(--accent)}
-.ck-prob-fig span{display:block;font-size:12px;color:var(--ink)}
+.ck-prob-fig span{display:block;font-size:13px;color:var(--ink)}
 
 /* -- 4 the benefit rows -------------------------------------------------- */
 .ck-benefits{display:flex;flex-direction:column;gap:var(--gap-opt)}
@@ -1028,8 +1045,8 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-benefit .bubble{flex:none;width:36px;height:36px;border-radius:50%;
   display:grid;place-items:center;background:var(--bub);color:var(--gly)}
 .ck-benefit .bubble svg{width:18px;height:18px;stroke-width:2.4}
-.ck-benefit b{display:block;font-size:15px;font-weight:500;color:var(--ink)}
-.ck-benefit span{display:block;font-size:13px;color:var(--ink)}
+.ck-benefit b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.ck-benefit span{display:block;font-size:14px;color:var(--ink)}
 
 /* -- 5 what's included --------------------------------------------------- */
 .ck-incl{background:#FFF8F5;border-radius:var(--radius-media);padding:24px 24px 40px}
@@ -1045,7 +1062,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-incl-card > div,.ck-prog-body > div,.ck-prod-head > div,
 .ck-benefit > div,.ck-goals > div{min-width:0}
 .ck-incl-title{display:flex;align-items:center;gap:12px}
-.ck-incl-title b{font-size:18px;line-height:1.3;font-weight:700;color:var(--ink)}
+.ck-incl-title b{font-size:19px;line-height:1.3;font-weight:700;color:var(--ink)}
 /* Primary `--accent`, at the client's word on 2026-09-04 - it was
    `--accent-deep`. Same trade as the countdown bar: white on #E6430D is 4.06:1
    and this cap is 10px, so it is under AA. Their brand call, taken knowingly.
@@ -1056,14 +1073,14 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    further down this same page, which has carried v1's pair all along. */
 .ck-tag{display:inline-block;background:var(--mint);color:var(--mint-ink);
   border-radius:4px;
-  padding:4px 8px;font-size:10px;font-weight:700;letter-spacing:.04em;
+  padding:4px 8px;font-size:11px;font-weight:700;letter-spacing:.04em;
   text-transform:uppercase;line-height:1}
 .ck-stack{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:4px}
-.ck-stack li{font-size:13px;line-height:1.35;color:var(--ink)}
+.ck-stack li{font-size:14px;line-height:1.35;color:var(--ink)}
 .ck-stack b{font-weight:700}
 .ck-incl-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:16px}
 .ck-incl-list li{display:flex;align-items:flex-start;gap:10px;
-  font-size:12px;font-weight:500;line-height:1.3;color:var(--ink)}
+  font-size:13px;font-weight:500;line-height:1.3;color:var(--ink)}
 .ck-incl-list li > span{min-width:0}
 .ck-incl-list svg{flex:none;width:16px;height:16px;stroke:#16A34A;stroke-width:2.6}
 
@@ -1080,10 +1097,10 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-steps li:last-child{border-left-color:transparent;padding-bottom:0}
 .ck-steps li::before{content:"";position:absolute;left:-10px;top:2px;
   width:15px;height:15px;border-radius:50%;background:var(--accent)}
-.ck-step-n{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;
+.ck-step-n{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;
   color:var(--accent)}
-.ck-steps b{display:block;margin-top:8px;font-size:15px;font-weight:600;color:var(--ink)}
-.ck-steps p{margin:6px 0 0;font-size:13px;line-height:1.35;color:var(--muted)}
+.ck-steps b{display:block;margin-top:8px;font-size:16px;font-weight:600;color:var(--ink)}
+.ck-steps p{margin:6px 0 0;font-size:14px;line-height:1.35;color:var(--muted)}
 
 /* -- 7 the countdown pill ------------------------------------------------ */
 /* **v1's mint**, at the client's word on 2026-09-04 - `#41D8A6` ground with
@@ -1094,7 +1111,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    so the two are not meant to be one family. */
 .ck-pill{align-self:center;display:flex;align-items:center;gap:8px;
   border-radius:4px;padding:9px 16px;color:var(--mint-ink);background:var(--mint);
-  font-size:15px;font-weight:600}
+  font-size:16px;font-weight:600}
 .ck-pill b{font-weight:800;font-variant-numeric:tabular-nums}
 
 /* -- 8 the packs and the product card ------------------------------------ */
@@ -1117,26 +1134,26 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    it needs no shim, and both cards centre the same way on their own. */
 .ck-pack em{position:absolute;top:10px;right:10px;display:inline-block;
   font-style:normal;border-radius:4px;
-  padding:4px 8px;font-size:10px;font-weight:700;color:#fff;letter-spacing:.03em;
+  padding:4px 8px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.03em;
   line-height:1}
 /* The badge and the ring both sit in the top 28px, so the title clears them. */
-.ck-pack b{display:block;margin-top:14px;font-size:18px;font-weight:700;
+.ck-pack b{display:block;margin-top:14px;font-size:19px;font-weight:700;
   color:var(--accent);line-height:1.3}
-.ck-pack small{display:block;font-size:13px;line-height:1.35;color:var(--ink)}
+.ck-pack small{display:block;font-size:14px;line-height:1.35;color:var(--ink)}
 
 .ck-prod{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px}
 .ck-prod-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.ck-prod-head b{display:block;margin-top:6px;font-size:18px;font-weight:600;
+.ck-prod-head b{display:block;margin-top:6px;font-size:19px;font-weight:600;
   color:var(--ink);line-height:1.3}
-.ck-prod-head small{display:block;font-size:16px;font-weight:500;color:var(--title-ink)}
+.ck-prod-head small{display:block;font-size:17px;font-weight:500;color:var(--title-ink)}
 .ck-prod-rate{flex:none;text-align:right}
 .ck-prod-rate .stars{justify-content:flex-end}
 /* `:not(.stars)` is load-bearing. The rating mark is itself a `<span class=
    "stars">`, and a bare `.ck-prod-rate span` outranks `.stars`'s own
    `display:flex` on specificity - which turned the five tiles into a vertical
    column. Anything added here that styles `span` needs the same guard. */
-.ck-prod-rate > span:not(.stars){display:block;margin-top:4px;font-size:12px;
+.ck-prod-rate > span:not(.stars){display:block;margin-top:4px;font-size:13px;
   color:var(--ink)}
 /* The render sits on the reference's own wash panel; ours is warmed to the
    brand rather than kept blue. */
@@ -1144,12 +1161,12 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
   display:grid;place-items:center;padding:20px}
 .ck-prod-shot img{width:150px;height:auto}
-.ck-prod-price{margin:24px 0 0;text-align:center;font-size:17px;font-weight:500;
+.ck-prod-price{margin:24px 0 0;text-align:center;font-size:18px;font-weight:500;
   color:var(--title-ink)}
 .ck-prod-price b{font-weight:700;color:var(--green-ink)}
 .ck-prod-list{margin:20px 0 0;padding:0;list-style:none;display:grid;gap:16px}
 .ck-prod-list li{display:flex;align-items:flex-start;gap:10px;
-  font-size:12px;font-weight:500;line-height:1.3;color:var(--ink)}
+  font-size:13px;font-weight:500;line-height:1.3;color:var(--ink)}
 .ck-prod-list svg{flex:none;width:16px;height:16px;stroke:#16A34A;stroke-width:2.6}
 /* The text is one flex item, so a bold lead-in and the sentence after it set as
    a single wrapping paragraph. Without the span the bare text node became a
@@ -1164,19 +1181,19 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    matched on 2026-09-04. The ring is v1's own `hsa` glyph. */
 .ck-hsa{display:flex;align-items:center;justify-content:center;gap:10px}
 .ck-hsa svg{flex:none;width:30px;height:30px;color:var(--green-ink)}
-.ck-hsa p{margin:0;font-size:17px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
+.ck-hsa p{margin:0;font-size:18px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
 .ck-hsa b{font-weight:800}
 /* No card: the reference sets these two lines straight on the page under the
    HSA/FSA mark, and the white panel with a shadow was ours. Taken off on
    2026-09-07 at the client's word. */
 .ck-hipaa{margin-top:14px !important;text-align:center}
 .ck-hipaa p{margin:0;display:flex;align-items:center;justify-content:center;gap:5px;
-  font-size:12px;color:var(--ink)}
+  font-size:13px;color:var(--ink)}
 /* The reference's shield is SOLID green with the tick knocked out of it, not
    an outline. `fill` paints the body; the tick is stroked in white over it. */
 .ck-hipaa svg{width:16px;height:16px;fill:#16A34A;stroke:#16A34A}
 .ck-hipaa svg path + path{fill:none;stroke:#fff;stroke-width:2.6}
-.ck-hipaa span{display:block;margin-top:3px;font-size:12px;color:var(--ink)}
+.ck-hipaa span{display:block;margin-top:3px;font-size:13px;color:var(--ink)}
 
 /* -- 9b shipping + payment ----------------------------------------------- */
 /* A white card per section, label above field, as the reference has it. The
@@ -1184,39 +1201,39 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    the flow do not feel like two products. */
 .ck-form{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:20px}
-.ck-form h3{margin:0 0 16px;font-size:16px;font-weight:700;color:var(--ink);
+.ck-form h3{margin:0 0 16px;font-size:17px;font-weight:700;color:var(--ink);
   text-align:center}
 .ck-fld{margin-top:12px}
 .ck-fld:first-of-type{margin-top:0}
-.ck-fld label{display:block;margin:0 0 6px;font-size:13px;color:var(--muted)}
+.ck-fld label{display:block;margin:0 0 6px;font-size:14px;color:var(--muted)}
 .ck-fld input,.ck-fld select{width:100%;box-sizing:border-box;height:44px;
   border:1px solid var(--border);border-radius:8px;padding:0 12px;
-  font-family:inherit;font-size:15px;color:var(--ink);background:#fff}
+  font-family:inherit;font-size:16px;color:var(--ink);background:#fff}
 .ck-fld input:focus,.ck-fld select:focus{outline:none;border-color:var(--accent);
   box-shadow:0 0 0 3px var(--glow)}
 .ck-fld input::placeholder{color:var(--faint)}
 .ck-fld-row{display:flex;gap:12px;margin-top:12px}
 .ck-fld-row .ck-fld{flex:1;min-width:0;margin-top:0}
 .ck-check{display:flex;align-items:center;gap:8px;margin-top:14px;
-  font-size:13px;color:var(--ink);cursor:pointer}
+  font-size:14px;color:var(--ink);cursor:pointer}
 .ck-check input{width:16px;height:16px;accent-color:var(--accent);flex:none}
 
 .ck-pay{display:flex;gap:8px}
 .ck-pay-opt{flex:1;min-width:0;height:52px;border:1px solid var(--border);
   border-radius:8px;background:#fff;cursor:pointer;font-family:inherit;
-  font-size:13px;font-weight:600;color:var(--ink)}
+  font-size:14px;font-weight:600;color:var(--ink)}
 .ck-pay-opt.selected{border-color:var(--accent);
   box-shadow:inset 0 0 0 1px var(--accent)}
 .ck-pay-opt{display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:5px;padding:8px 4px;height:auto;min-height:56px}
-.ck-pay-opt > span{font-size:12px;font-weight:600}
+.ck-pay-opt > span{font-size:13px;font-weight:600}
 .ck-pm{width:22px;height:15px;color:#3B82F6}
-.ck-pm-txt{display:inline-flex;align-items:center;font-size:12px;
+.ck-pm-txt{display:inline-flex;align-items:center;font-size:13px;
   font-weight:700;color:var(--ink);line-height:1}
 .ck-pm-txt b{font-weight:800}
 .ck-pm-badge{border:1px solid var(--border);border-radius:3px;
-  padding:2px 5px;font-size:10px}
-.ck-pm-apay{flex-direction:column;gap:1px;font-size:13px;color:#232F3E}
+  padding:2px 5px;font-size:11px}
+.ck-pm-apay{flex-direction:column;gap:1px;font-size:14px;color:#232F3E}
 .ck-pm-apay svg{width:26px;height:5px}
 
 /* THE CARD FIELDS ARE A MOCK-UP. They are ordinary inputs with no form, no
@@ -1226,7 +1243,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    these up; see the note in checkout.py. */
 .ck-card{margin-top:16px}
 .ck-link{display:flex;align-items:center;gap:6px;margin:0 0 14px;
-  font-size:13px;font-weight:600;color:#00A67E}
+  font-size:14px;font-weight:600;color:#00A67E}
 .ck-link svg{width:15px;height:15px;stroke:currentColor}
 .ck-link svg:last-child{width:13px;height:13px;margin-left:-2px}
 .ck-cardno{position:relative}
@@ -1234,7 +1251,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-brands{position:absolute;top:50%;right:10px;transform:translateY(-50%);
   display:flex;align-items:center;gap:4px;pointer-events:none}
 .ck-brand{display:flex;align-items:center;justify-content:center;
-  width:26px;height:17px;border-radius:3px;font-style:normal;font-size:7px;
+  width:26px;height:17px;border-radius:3px;font-style:normal;font-size:8px;
   font-weight:800;letter-spacing:.02em;color:#fff}
 .ck-brand.visa{background:#1A1F71}
 .ck-brand.amex{background:#2E77BC;font-size:6.5px}
@@ -1245,7 +1262,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-brand.mc em:last-child{background:#F79E1B;margin-left:-4px;opacity:.85}
 .ck-cvc{width:22px;height:15px;color:var(--faint)}
 .ck-fld .ck-cardno input{width:100%}
-.ck-pay-terms{margin:14px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+.ck-pay-terms{margin:14px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
 /* Full width, at the foot of the payment card, as the reference has it. */
 .ck-continue{margin-top:16px;width:100%}
 
@@ -1254,15 +1271,15 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   background:var(--neutral-tint)}
 .ck-pay-wallet[hidden]{display:none}
 .ck-pay-wallet svg{flex:none;width:16px;height:16px;stroke:#16A34A;margin-top:1px}
-.ck-pay-wallet p{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
+.ck-pay-wallet p{margin:0;font-size:13px;line-height:1.5;color:var(--muted)}
 
 /* -- 10 the satisfaction guarantee --------------------------------------- */
 .ck-guar{display:flex;gap:14px;align-items:flex-start;margin-top:32px;
   padding:0 4px}
 .ck-guar-mark{flex:none;width:38px;height:38px;color:#6366F1}
 .ck-guar-mark svg{width:38px;height:38px}
-.ck-guar b{display:block;font-size:19px;font-weight:700;color:var(--ink)}
-.ck-guar p{margin:6px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
+.ck-guar b{display:block;font-size:21px;font-weight:700;color:var(--ink)}
+.ck-guar p{margin:6px 0 0;font-size:16px;line-height:1.5;color:var(--ink)}
 
 /* -- 11 backed by research ------------------------------------------------
    Type-set names, not logo files - see the note in checkout.py. The corner
@@ -1272,12 +1289,12 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   width:18px;height:18px;border:2px solid var(--border)}
 .ck-research::before{top:0;left:0;border-right:0;border-bottom:0}
 .ck-research::after{bottom:0;right:0;border-left:0;border-top:0}
-.ck-research > p{margin:0 0 18px;text-align:center;font-size:13px;
+.ck-research > p{margin:0 0 18px;text-align:center;font-size:14px;
   font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:var(--muted)}
 .ck-research-row{display:flex;flex-wrap:wrap;justify-content:center;
   gap:12px 22px}
-.ck-research-row span{font-size:14px;font-weight:600;color:#8A93A3;
+.ck-research-row span{font-size:15px;font-weight:600;color:#8A93A3;
   letter-spacing:.01em}
 /* A supplied logo, when one exists - see assets/images/research/README.md.
    Capped by height so five marks of different proportions still sit on one
@@ -1297,27 +1314,27 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-quote{background:linear-gradient(135deg,#FFF7F4 0%,#FFF4F0 100%);
   border-radius:var(--radius-media);padding:24px}
 .ck-quote-top{display:flex;align-items:flex-start;gap:16px}
-.ck-quote-top h3{margin:0;flex:1;font-size:16px;font-weight:500;line-height:1.35;
+.ck-quote-top h3{margin:0;flex:1;font-size:17px;font-weight:500;line-height:1.35;
   color:var(--title-ink)}
 .ck-quote-top .stars{flex:none}
-.ck-quote > p{margin:16px 0 0;font-size:13px;line-height:1.35;color:var(--ink)}
+.ck-quote > p{margin:16px 0 0;font-size:14px;line-height:1.35;color:var(--ink)}
 .ck-who{display:flex;align-items:center;justify-content:space-between;gap:8px;
   margin-top:16px}
-.ck-who b{font-size:15px;font-weight:500;color:var(--ink)}
-.ck-who span{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ink)}
+.ck-who b{font-size:16px;font-weight:500;color:var(--ink)}
+.ck-who span{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink)}
 .ck-who svg{width:15px;height:15px;stroke:#16A34A;stroke-width:2.6}
 
 /* -- 13 are you ready ---------------------------------------------------- */
 .ck-ready > * + *{margin-top:16px}
 .ck-ready-tag{display:inline-block;border-radius:33px;padding:16px 24px;
   background:linear-gradient(90deg,#FFD9C7 0%,rgba(255,217,199,0) 100%);
-  font-size:15px;font-weight:500;color:var(--ink)}
+  font-size:16px;font-weight:500;color:var(--ink)}
 .ck-ready-clock{display:inline-flex;align-items:center;gap:5px;
-  background:var(--surface);padding:6px 8px;font-size:12px;color:var(--muted)}
+  background:var(--surface);padding:6px 8px;font-size:13px;color:var(--muted)}
 .ck-ready-clock b{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
 .ck-ready-strip{display:flex;align-items:center;border-radius:4px;padding:10px 16px;
   background:linear-gradient(90deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
-  color:#fff;font-size:12px}
+  color:#fff;font-size:13px}
 .ck-ready-strip b{font-weight:900}
 /* The reference runs a 4px rule down the left of the clock / strip / line
    group with an arrow head at its foot, pointing at the card below. It is one
@@ -1329,44 +1346,44 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   width:14px;height:14px;border-right:4px solid var(--accent-soft);
   border-bottom:4px solid var(--accent-soft);transform:rotate(45deg);
   border-bottom-right-radius:3px}
-.ck-ready-line{margin:0;font-size:18px;font-weight:600;
+.ck-ready-line{margin:0;font-size:19px;font-weight:600;
   line-height:1.3;color:var(--ink)}
 .ck-ready-card{background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px;margin-top:32px !important}
-.ck-ready-card h3{margin:0;font-size:18px;font-weight:600;color:var(--ink)}
+.ck-ready-card h3{margin:0;font-size:19px;font-weight:600;color:var(--ink)}
 .ck-ready-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:24px}
 .ck-ready-list li{display:flex;align-items:flex-start;gap:16px}
 .ck-ready-list svg{flex:none;width:20px;height:20px;stroke:var(--accent);stroke-width:2.4}
-.ck-ready-list b{display:block;font-size:15px;font-weight:500;color:var(--ink)}
-.ck-ready-list span{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
+.ck-ready-list b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.ck-ready-list span{display:block;margin-top:2px;font-size:13px;color:var(--muted)}
 .ck-ready-packs{display:flex;gap:24px;margin-top:32px;
   background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
   border-radius:var(--radius-card);padding:24px}
 .ck-ready-pack{flex:1;min-width:0}
-.ck-ready-pack b{display:block;margin-top:8px;font-size:18px;font-weight:600;
+.ck-ready-pack b{display:block;margin-top:8px;font-size:19px;font-weight:600;
   line-height:1.3;color:var(--ink)}
-.ck-ready-pack em{display:block;margin-top:8px;font-style:normal;font-size:18px;
+.ck-ready-pack em{display:block;margin-top:8px;font-style:normal;font-size:19px;
   font-weight:700;color:#16A34A}
 .ck-ready-note{margin:24px auto 0;max-width:270px;text-align:center;
-  font-size:12px;line-height:1.3;color:var(--muted)}
+  font-size:13px;line-height:1.3;color:var(--muted)}
 .ck-ready-note b{font-weight:700}
 .ck-ready-card .cta{margin-top:24px}
 
 /* -- 15 the FAQ ---------------------------------------------------------- */
 .ck-faq{background:linear-gradient(180deg,#FFF3EE 0%,#FFF9F7 100%);
   border-radius:12px;padding:32px}
-.ck-faq h2{margin:0 0 24px;text-align:center;font-size:18px;font-weight:600;
+.ck-faq h2{margin:0 0 24px;text-align:center;font-size:19px;font-weight:600;
   color:var(--accent)}
 .ck-faq-item{border-top:1px solid #FFE0D3}
 .ck-faq-item:first-of-type{border-top:none}
 .ck-faq-item summary{display:flex;align-items:flex-start;gap:10px;
   list-style:none;cursor:pointer;padding:14px 0;
-  font-size:13px;line-height:1.35;color:var(--title-ink)}
+  font-size:14px;line-height:1.35;color:var(--title-ink)}
 .ck-faq-item summary::-webkit-details-marker{display:none}
 .ck-faq-item summary svg{order:2;flex:none;width:16px;height:16px;margin-left:auto;
   stroke:var(--accent);transition:transform .16s ease}
 .ck-faq-item[open] summary svg{transform:rotate(180deg)}
-.ck-faq-item p{margin:0 0 16px;font-size:13px;line-height:1.5;color:var(--muted)}
+.ck-faq-item p{margin:0 0 16px;font-size:14px;line-height:1.5;color:var(--muted)}
 
 /* ------------------------------------------------------------- footer */
 /* braevon.com's own footer, its phone variant, in white rather than the site's
@@ -1381,49 +1398,49 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    tall (~132px) keeps it clearly larger than the masthead's 22px without
    turning the footer into a second brand statement. */
 .ft-mark svg{height:34px;width:auto}
-.ft-tag{margin:17px 0 0;font-size:14px;line-height:1.6;letter-spacing:-.02em;
+.ft-tag{margin:17px 0 0;font-size:15px;line-height:1.6;letter-spacing:-.02em;
   color:var(--muted)}
 .ft-contact{margin-top:20px;display:grid;gap:5px}
-.ft-contact span{display:flex;align-items:center;gap:10px;font-size:12px;
+.ft-contact span{display:flex;align-items:center;gap:10px;font-size:13px;
   letter-spacing:-.02em;color:var(--muted)}
 .ft-contact svg{flex:none;width:20px;height:20px;color:var(--faint)}
 .ft-contact a{color:var(--muted);text-decoration:none}
 .ft-contact a:hover{color:var(--accent)}
 .ft-rule{height:1px;background:var(--border)}
-.ft-legal p{margin:0;font-size:13px;line-height:1.4;letter-spacing:-.03em;
+.ft-legal p{margin:0;font-size:14px;line-height:1.4;letter-spacing:-.03em;
   color:var(--muted)}
 .ft-legal p + p{margin-top:10px}
 .ft-bottom{display:flex;flex-direction:column;gap:21px}
 .ft-bot-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
 .ft-seal{flex:none;width:63px;height:auto}
 .ft-links{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
-.ft-links a{font-size:12px;letter-spacing:-.02em;color:var(--muted);text-decoration:none}
+.ft-links a{font-size:13px;letter-spacing:-.02em;color:var(--muted);text-decoration:none}
 .ft-links a:hover{color:var(--accent)}
 .ft-bot-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
-  font-size:12px;letter-spacing:-.03em;color:var(--muted)}
+  font-size:13px;letter-spacing:-.03em;color:var(--muted)}
 .ft-social{display:flex;align-items:center;gap:11px}
 .ft-social a{color:var(--muted);display:block}
 .ft-social a:hover{color:var(--accent)}
 .ft-social svg{width:22px;height:22px;display:block}
 
 /* ------------------------------------------------------------- narrow */
-@media (max-width:420px){ .hero-h1{font-size:31px} .strip{font-size:11px} }
+@media (max-width:420px){ .hero-h1{font-size:33px} .strip{font-size:12px} }
 @media (max-width:379px){
   :root{--pad:18px;--gap-block:26px}
-  .qhead{font-size:20px}
-  .hero-h1{font-size:27px}
+  .qhead{font-size:21px}
+  .hero-h1{font-size:28px}
   .strip{white-space:normal}
   /* The checkout at 320px. Only the three two-column cards need anything: each
      pairs a fixed-width render with a text column, and the text is what runs
      out of room first. The pack pair is left alone - it is two 130px cards at
      this width and still reads. */
-  .ck-h1,.ck-h2,.ck-prog-head h2{font-size:22px}
+  .ck-h1,.ck-h2,.ck-prog-head h2{font-size:23px}
   .ck-incl,.ck-faq{padding:20px}
   .ck-incl-card{gap:16px;padding:18px}
   .ck-incl-card img{width:52px}
   .ck-prog-body img{width:88px}
   .ck-ready-packs{gap:16px;padding:18px}
-  .ck-ready-line{font-size:18px}
+  .ck-ready-line{font-size:19px}
 }
 
 /* ------------------------------------------------- all-screens document */
@@ -1433,7 +1450,11 @@ body.frames{background:#DDE1E7;padding:40px 0}
 body.frames .frame{background:var(--page);width:var(--col);margin:0 auto 40px;
   box-shadow:0 10px 40px rgba(16,20,34,.16)}
 body.frames .frame .step{display:block}
-body.frames .frame-label{max-width:var(--col);margin:0 auto 8px;font-size:10px;
+body.frames .frame-label{max-width:var(--col);margin:0 auto 8px;font-size:11px;
   font-weight:700;color:#5A6377;letter-spacing:.04em}
 body.frames .dq{position:static;display:block}
+/* The export is a still. Every frame is visible at load, so the comparison
+   bars would all play at once and an import taken inside that 1.6s would carry
+   half-drawn bars into Figma. The frames print them finished. */
+body.frames .track i{animation:none}
 """

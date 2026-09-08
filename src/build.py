@@ -253,49 +253,23 @@ LEGENDS = {25, 26}
 # discarding the wordmark: the only other photographs are the hero and the two
 # testimonials. Braevon's own asset stands in; a medicine-cabinet shot like the
 # reference's would sit better, see the README.
-# Every single-answer screen opens on its FIRST option, which is what the
-# reference does. Established by walking it: its sex screen arrives with "Male"
-# already selected and Next enabled, without anything being clicked. Screen 1 is
-# the exception - the reference leaves it unanswered - and carries Braevon's own
-# choice instead, asked for on 2026-09-03.
+# NO SCREEN OPENS ON AN ANSWER. Asked for on 2026-09-08, and it replaces what
+# the reference does: walking it, its sex screen arrives with "Male" already
+# selected and Next enabled without anything being clicked, and every other
+# single-answer screen the same. Screen 1's default ("Faster rebound time",
+# asked for 2026-09-03) is gone with the rest.
 #
-# Multi-answer screens are NOT defaulted: "select all that apply" has no single
-# answer, and ticking the first item would put a real symptom in the patient's
-# mouth.
+# The table stays, empty, because two things read it: `cta(blocked=...)`, which
+# now marks every question screen unanswered, and `_check_defaults()`, which has
+# nothing left to check but costs nothing to run. Refill it and both follow.
 #
-# CLINICAL NOTE: on 24 and 39-42 the first option is "No", so a patient clicking
-# straight through submits "no hypertension, no allergies, no medications"
-# without reading the question. That is the reference's own behaviour and it was
-# asked for explicitly, but it is the thing on this build most in need of a
-# prescriber's sign-off. See the README.
-DEFAULTS = {p['n']: p['options'][0]['value']
-            for p in FLOW if p['mode'] == 'single' and p['options']}
-DEFAULTS[1] = 'Faster rebound time'   # Braevon's choice; the reference has none
-
-
-def _none_of(p):
-    """The 'none of these' answer on a multi-answer screen.
-
-    Usually the screen's own exclusive value. Screen 28 has no exclusive
-    recorded, so its none-answer is found by label instead."""
-    if p['exclusive']:
-        return p['exclusive']
-    for o in p['options']:
-        if re.match(r'^(none\b|no[,\s])', (o['label'] or '').strip(), re.I):
-            return o['value']
-    return None
-
-
-# A multi-answer screen opens on its "none of these", which is what the
-# reference does - nothing else could be a default there, and ticking a real
-# symptom on the patient's behalf would be worse than useless.
-# The final terms checkbox is deliberately absent: agreement is something the
-# patient gives, not something the form assumes on their behalf.
-for _p in FLOW:
-    if _p['mode'] == 'multi' and _p['options'] and _p['n'] != 47:
-        _v = _none_of(_p)
-        if _v:
-            DEFAULTS[_p['n']] = _v
+# This also retires the clinical note that stood here: screens 24 and 39-42 open
+# on "No", so a patient clicking straight through used to submit "no
+# hypertension, no allergies, no medications" without reading. They now have to
+# answer each one. `stepValid()` in engine.js is what enforces it - it refuses to
+# advance a screen whose every `.opts` box has no `.opt.selected` - so nothing
+# beyond this table had to change.
+DEFAULTS = {}
 
 SCREEN_IMAGE = {
     # The reference uses a man at his bathroom cabinet - an ordinary moment,
@@ -477,7 +451,7 @@ def head(title=None, sub=None, eyebrow=None, lead=False):
 def option(o, exclusive, goal=False, tile=False, screen=None,
            excl_first=False, excl_note=None):
     label = esc(brandify(o['label']))
-    on = ' selected' if DEFAULTS.get(screen) == o['value'] else ''
+    on = ' selected' if screen in DEFAULTS and DEFAULTS[screen] == o['value'] else ''
     if tile:
         note = ('<small>%s</small>' % esc(brandify(o['note']))) if o.get('note') else ''
         val = (o['value'] or '').lower()
@@ -856,12 +830,18 @@ def screen_interstitial(p):
                 ('Cialis&reg;', 'Extended Window', 'Tadalafil', '#8B5CF6', 34, 66),
                 ('Other Stacks', 'Standard Combo',
                  'Sildenafil, Tadalafil, Apomorphine', '#D5D9E2', 27, 73)]
+        # The bars draw themselves in - `adv-grow` in theme.py animates each
+        # from nothing out to the width set here. The delay is what makes the
+        # four read as a sequence rather than a single sweep; the brand bar
+        # below waits for all of them and lands last, which is the point the
+        # screen is making.
         rail = ''.join(
             '<div class="advrow"><div class="advrow-t">'
             '<b>%s <span>(%s)</span></b><span class="advrow-m">%s</span></div>'
-            '<div class="track"><i style="left:%d%%;width:%d%%;background:%s"></i></div>'
-            '</div>' % (a, b, mol, x, w, col)
-            for a, b, mol, col, x, w in rows)
+            '<div class="track"><i style="left:%d%%;width:%d%%;background:%s;'
+            'animation-delay:%.2fs"></i></div>'
+            '</div>' % (a, b, mol, x, w, col, .12 + i * .14)
+            for i, (a, b, mol, col, x, w) in enumerate(rows))
 
         chip = '<span class="chip">%s%s</span>'
         return ('<div class="col">'
@@ -880,7 +860,8 @@ def screen_interstitial(p):
                   '<span>FULL POTENTIAL</span></div>'
                 + (chip % (brain, 'Arousal + Performance'))
                 + '</div>' + axis()
-                + '<div class="track"><i class="grad" style="left:10%;width:90%"></i></div>'
+                + '<div class="track"><i class="grad" style="left:10%;width:90%;'
+                  'animation-delay:.74s"></i></div>'
                   '<div class="chips">'
                 + (chip % (bolt, 'Starts at 10m')) + (chip % (peak, 'Peak Power'))
                 + (chip % (clock, '36h Window'))

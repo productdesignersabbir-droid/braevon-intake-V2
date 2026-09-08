@@ -162,7 +162,10 @@ Full teardown with measured numbers in `docs/medvi-reference.md`. In short:
   — a fifth-of-a-fifth sliver on the opening screen reads as broken rather than
   as progress. No "Question N of 24" counter.
 - **Masthead: wordmark left, rating right.** v1's inline SVG mark
-  (`src/logo.py`) and a Trustpilot-style rating.
+  (`src/logo.py`) and a Trustpilot-style rating — a white star on a green tile,
+  the tile square-cornered since 2026-09-08 at the client's ask (it carried a
+  2px radius before). The same `.stars` mark serves the checkout's product
+  rating; the testimonial stars are a different, yellow, untiled one.
 - **The back arrow heads the progress row**, aligned with the wordmark above it,
   with the bar running from there to the rating's right edge — the reference's
   arrangement. It keeps its slot when hidden, so the bar does not shift between
@@ -197,11 +200,23 @@ accent, the tinted claim strip, then the goal list with an icon per row.
   that apply".** The reference asks for one primary goal and pre-picks the
   second; the client asked for both. This is the one place v2 changes a v1
   question's *shape* rather than its dress — the second option arrives already
-  chosen, so the screen is answered on arrival. Revert by dropping the
+  chosen — no longer true as of 2026-09-08, when every default was dropped and
+  the screen began arriving unanswered like the rest. Revert by dropping the
   `dict(goals, mode='single')` line in `hero_screen()`.
 - **Icon bubbles carry the reference's five hues**, read out of its own design
   tokens. A deliberate exception to the orange-carries-emphasis rule, at the
   client's request; nothing else in the flow takes them.
+- **Screen 8's comparison bars draw themselves in**, asked for on 2026-09-08 to
+  match the reference, which plays the comparison rather than printing it. Each
+  bar grows from nothing out to its own width, staggered 140ms apart, and the
+  brand bar lands last at 740ms - the point the screen builds to. It is CSS
+  only: `@keyframes adv-grow` carries a `from{width:0}` and no `to`, so the end
+  is whatever inline width `build.py` set and the numbers stay in one place.
+  No observer is needed - a step is `display:none` until shown and animations
+  start at frame zero when it is displayed, the same thing `rise` relies on.
+  `prefers-reduced-motion` prints the bars instead, and so does `body.frames`:
+  the export is a still, and an import taken inside that 1.6s would otherwise
+  carry half-drawn bars into Figma.
 
 ## Type scale
 
@@ -223,10 +238,30 @@ never had the 15% applied and still carried the reference's raw numbers:
 | reveal tile `.lbl` | 15px | *(rule gone)* | a third size for one role |
 | `.sub` | 16px | 14px | the reference's caption is 16px/400 |
 
-Every option label in the build is now **14px**, whatever shape the card is.
+**Superseded on 2026-09-08.** The client asked for the whole scale up again,
+in four parts: option labels **+2px**, titles **+5%**, description text and
+everything else **+8%** (rounded to whole px). The numbers below are what the
+audit left, not what ships now — read them as the base the bump was applied to.
+Option labels are **16px**, the question head 23px, the hero h1 36px, `.sub`
+15px. The 15% reduction is therefore no longer the relationship to the
+reference; the build now sits a little above it on body copy and a little
+under on headlines.
+
+`.sub.lead` — the interstitial's claim line, set as a second heading rather
+than a caption — is the one exception. The 8% put it at 22px against a 23px
+`.qhead`, near enough that the two read as a single block, so it was taken back
+10% to **20px** and the pair given an 18px gap (`.qhead + .sub.lead`). An
+ordinary `.sub` at 15px against 23px needed neither.
+
+Every option label in the build is now **16px**, whatever shape the card is.
 Only weight varies — 600 on the blood-pressure bands, 700 on the exclusive
 "None of these" — and the reference does the same: its own "None of these"
 measures 14px/700 against 16px/500 for a plain option.
+
+The two-up tiles and the goal rows were retuned at the same time, on the same
+ask — the mark grows, the card gives back the padding: the tile is 132px tall
+(was 170px) around a 44px bubble (was 32px), and a goal row is 56px (was 58px)
+around a 42px bubble (was 36px). Both stay over the 44px touch target.
 
 Spacing was never part of the reduction and was already right: 32px between
 blocks, 24px title to first option, 16px between rows, 8px radius, 480px
@@ -296,7 +331,9 @@ without walking the flow. Asked for on 2026-09-07.
 
 It calls `show()` directly rather than `advance()`, so it walks past every
 screen without validating or disqualifying on the way, and the checkout echoes
-back whatever answers the flow started with (the defaults). It hides itself
+back whatever answers the flow started with — which, since defaults were
+dropped on 2026-09-08, is nothing: skipping to the checkout now lands on a page
+whose echoed goals and answers are em dashes. It hides itself
 once the checkout is on screen, and it is emitted **only** into `index.html` /
 `interactive.html` - never into a frame.
 
@@ -627,13 +664,10 @@ privacy on and a commit with the real address is rejected at push time.
   Swap in the official artwork before launch.
 - **The skip-to-checkout control is still in the build.** See the section above.
   It is the one thing here that must not ship.
-- **Screen 1's goals question is a multi-select with one answer pre-ticked.**
-  The document has it as "select all that apply" with no default; the default is
-  kept because the client asked for one on this screen on 2026-09-03, when it was
-  a single-select. It is the only pre-ticked answer in the build that is neither a
-  none-answer nor a single-select's first option. It is a goal rather than a
-  symptom, so it puts no words in a patient's mouth clinically - but it is worth
-  a decision.
+- ~~**Screen 1's goals question is a multi-select with one answer pre-ticked.**~~
+  **Settled on 2026-09-08**: nothing is pre-ticked anywhere, screen 1 included,
+  so the question now matches the document's own "select all that apply" with no
+  default. This overrides the 2026-09-03 ask for a default on this screen.
 - **`assets/video/hero.mp4` is missing** — screen 1 falls back to its poster.
 - **The testimonial copy is placeholder**, as it was in v1. Three reviews written
   for this concept, not real ones. Say so before showing anyone who might take
@@ -720,22 +754,25 @@ privacy on and a commit with the real address is rejected at push time.
 - **Screen 43's "LAST STEP" is now the reference's gradient pill**, and its
   privacy panel uses the same tinted component as the blood-pressure screen,
   with the reference's own longer HIPAA wording.
-- **Every question screen opens on an answer**, which is what the reference
-  does. Established by walking it: its sex screen arrives with "Male" already
-  selected and Next enabled without anything being clicked. `DEFAULTS` is
-  derived, not hand-written - a single-answer screen takes its FIRST option, a
-  multi-answer screen takes its "none of these". Two exceptions: screen 1,
-  which the reference leaves unanswered and which carries Braevon's own choice
-  ("Quicker recovery"), and the final terms checkbox, because agreement is
-  something the patient gives rather than something the form assumes.
-  A build-time check refuses any default that would itself stop the flow.
+- **No question screen opens on an answer** — asked for on 2026-09-08, and it
+  reverses what the reference does. Walking the reference, its sex screen
+  arrives with "Male" already selected and Next enabled without anything being
+  clicked, and every other single-answer screen the same; a multi-answer screen
+  arrives on its "none of these". `DEFAULTS` is now an empty table. Nothing
+  else had to change: `stepValid()` in `engine.js` already refused to advance a
+  screen with no `.opt.selected`, and `cta(blocked=...)` reads the same table,
+  so every question screen's Next now carries `data-blocked` until it is
+  answered. Refill `DEFAULTS` and both behaviours come back.
 
-  **CLINICAL NOTE.** On screens 24 and 39-42 the first option is "No", and on
-  every safety checklist the default is "none of these". So a patient who
-  clicks straight through submits "no hypertension, no allergies, no
-  medications, no conditions" without having read a single one. That is the
-  reference's own behaviour and it was asked for explicitly, but it is the
-  single thing in this build most in need of a prescriber's sign-off.
+  **This retires the clinical note that stood here.** Screens 24 and 39-42 open
+  on "No" and every safety checklist opened on "none of these", so a patient
+  clicking straight through used to submit "no hypertension, no allergies, no
+  medications, no conditions" without having read a single one. They now have
+  to answer each one. It was the thing in this build most in need of a
+  prescriber's sign-off, and it is gone.
+
+  One consequence for the export: the frames in `all-screens.html` now show
+  every question unanswered, where they used to show the default picked.
 - **Female stops the flow on screen 3.** The medication is male-only and that
   screen's own sub-head says so, so the reference does not carry on into
   questions that cannot apply. The DOM extraction does not carry the rule; it
