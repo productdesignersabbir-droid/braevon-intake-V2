@@ -30,6 +30,7 @@ import re
 
 import braevon_q
 import checkout
+import consent
 from logo import LOGO
 from theme import CSS
 
@@ -75,6 +76,15 @@ BARE_SCREEN = 45
 # `data-bare` too.
 CHECKOUT_SCREEN = 48
 
+# Informed consent, added on 2026-09-08. Like the checkout it is not in
+# `medvi-flow.json` - the reference has no consent step, so there was no screen
+# to lay it over - and it is numbered outside the extracted range for the same
+# reason, after the checkout (48) and the received page (49). Its POSITION is
+# what matters: it is spliced into the flow straight after the date of birth
+# (43), where the client asked for it, and everything downstream keys off list
+# order rather than off the number. Copy and rationale are in consent.py.
+CONSENT_SCREEN = 50
+
 # The reference numbers its own steps - every screen name ends in one ("A2 - 03",
 # "Blood Pressure 2 - 07.a", "Birth Date - 20"), running 1 to 21. Its bar is
 # divided over those steps, not over our question count, which is why an even
@@ -111,6 +121,19 @@ def segment_of(step):
             at = i
     return at
 
+
+# The consent screen, spliced in after the date of birth. It goes into FLOW
+# rather than into `sections()` so that every table built off the flow - the
+# step map, the frame export, the progress bar - picks it up without a special
+# case. It carries no options and no fields of its own (the tick is rendered by
+# consent.py), so `QUESTIONS` does not count it and the bar holds the number the
+# date of birth reached, exactly as it does through an interstitial. Its name
+# carries no step number, so `step_of()` returns None and `STEP_AT` holds the
+# reference's step 20 across it too.
+CONSENT_STEP = dict(n=CONSENT_SCREEN, name='Consent', title='', subs=[],
+                    options=[], fields=[], group=None, mode=None, cond=None,
+                    exclusive=None, dq_on=[], dq_kind=None)
+FLOW.insert([i for i, _p in enumerate(FLOW) if _p['n'] == 43][0] + 1, CONSENT_STEP)
 
 # Every screen's step, with the interstitials holding the step before them -
 # which is what the reference's own bar does as you pass through one.
@@ -667,8 +690,11 @@ def screen_birthdate(p):
     month = dict(m['birth_month'], options=MONTHS)
     day = dict(m['birth_day'], options=['%02d' % i for i in range(1, 32)])
     year = dict(m['birth_year'], placeholder='1985')
+    # The reference's LAST STEP pill came off here on 2026-09-08, when the
+    # consent screen was added after this one and made the claim false. It is
+    # not moved onto the consent screen either: that screen says "One last step"
+    # in its own headline, and the pill under it would say it twice.
     return ('<div class="col">'
-            + '<p class="steppill">%s LAST STEP</p>' % ICON['clock']
             + head('What is your date of birth?',
                    'We need to verify your age for medical review purposes.')
             + '<div class="dob">%s%s%s</div>'
@@ -914,6 +940,8 @@ def render(p):
         return screen_interstitial(p)
     if n == 43:
         return screen_birthdate(p)
+    if n == CONSENT_SCREEN:
+        return consent.screen(ICON, _ic, cta)
     if n == 45:
         return screen_review(p)
     if n == 47:

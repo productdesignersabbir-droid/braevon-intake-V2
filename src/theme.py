@@ -703,6 +703,48 @@ img{max-width:100%;display:block}
 .fp-rule{height:1px;background:var(--hairline);margin:14px 0 0}
 .fp-note{margin:12px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
 
+/* ------------------------------------------------------ consent (50) */
+/* v1's consent screen in v2's dress. Nothing here is a new component: the card
+   is `.reviewcard`, the tick is the checkbox `.opts` box every other screen
+   uses, the footer line is `.rv-hipaa`. These rules only set the copy inside
+   the card, which is longer and more sectioned than any other card in the
+   build. */
+.cs-card{padding:20px 18px}
+.cs-sec + .cs-sec{margin-top:16px}
+.cs-sec h3{margin:0;font-size:15px;font-weight:700;color:var(--ink)}
+.cs-sec p{margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--muted)}
+.cs-sec ul{margin:8px 0 0;padding-left:20px;font-size:15px;line-height:1.6;
+  color:var(--muted)}
+.cs-sec li + li{margin-top:2px}
+
+/* The document, behind one disclosure. Its summary is the only orange type on
+   the screen, because opening it is the only thing on the card to do. The rule
+   above it separates the summary from the document proper, the way the divider
+   in v1's card did. */
+.cs-doc{margin-top:20px;border-top:1px solid var(--hairline)}
+.cs-doc summary{display:flex;align-items:center;gap:10px;list-style:none;
+  cursor:pointer;padding:16px 0 0;font-size:15px;font-weight:700;
+  color:var(--accent)}
+.cs-doc summary::-webkit-details-marker{display:none}
+.cs-doc summary svg{flex:none;width:18px;height:18px;margin-left:auto;
+  stroke:var(--accent);transition:transform .16s ease}
+.cs-doc[open] summary svg{transform:rotate(180deg)}
+.cs-doc-body{padding-top:4px}
+.cs-doc-body > .cs-sec:first-child{margin-top:12px}
+.cs-doc-body > .cs-sec:first-child + .cs-sec{margin-top:16px}
+@media (prefers-reduced-motion:reduce){ .cs-doc summary svg{transition:none} }
+
+/* The tick reads as a statement the patient is making, not as one more option
+   in a list, so it sits on the page's own tint rather than on a raised card -
+   which is also how v1 set it. */
+.cs-agree{margin-top:var(--gap-block)}
+.cs-agree .opt{background:var(--neutral-tint);box-shadow:none;
+  border-color:transparent;align-items:center}
+.cs-agree .opt .lbl{font-weight:500;line-height:1.4}
+.cs-agree .opt.selected{background:var(--accent-soft)}
+.cs-hipaa{margin-top:16px}
+.cs-hipaa p{max-width:none}
+
 /* ------------------------------------------------------- testimonials */
 /* The reference's testimonial: one tinted panel holding a photo with the stars
    and the quote over it, two cards, and the person on a row of their own. */

@@ -33,6 +33,7 @@ in a browser.
 │   ├── flow_v1.py      reshapes questions.json for the renderer. NOT wired in
 │   ├── logo.py         the Braevon wordmark, lifted from v1
 │   ├── checkout.py     screen 48, the approval / checkout page
+│   ├── consent.py      screen 50, informed consent — v1's copy, v2's dress
 │   ├── chart.svg       the onset chart, as supplied; recoloured on the way out
 │   ├── theme.py        the stylesheet
 │   └── build.py        renders the two HTML files
@@ -279,12 +280,14 @@ narrower box.
 
 ## The screens
 
-**32 screens, 26 counted questions, 35 frames in `all-screens.html`.**
+**33 screens, 26 counted questions, 36 frames in `all-screens.html`.**
 
-Not every patient sees 32. Four screens are conditional, so the shortest walk
-through the flow — answering in a way that opens no branch — is **28 screens
-plus the checkout: 29**. That 29 is the number the client works in, and the
-mapping below is written in it.
+Not every patient sees 33. Four screens are conditional, so the shortest walk
+through the flow — answering in a way that opens no branch — is **29 screens
+plus the checkout: 30**. The floor was 29 until the consent screen was added on
+2026-09-08; that number is the one the client works in, and the mapping below is
+written in it. Consent is a screen but not a question, so the counted-question
+total is unchanged at 26.
 
 | Floor | `n` | Screen | Doc |
 |---|---|---|---|
@@ -313,10 +316,11 @@ mapping below is written in it.
 | 23 | 41 | Current medications | S15 |
 | 24 | 42 | Doctor notes | S27 |
 | 25 | 43 | Date of birth | *kept* |
-| 26 | 44 | ▸ Customer quote | *kept* |
-| 27 | 45 | Medical review | *kept* |
-| 28 | 47 | Submission | *kept* |
-| 29 | 48 | Approval & checkout | *kept* |
+| 26 | 50 | Informed consent | S30 |
+| 27 | 44 | ▸ Customer quote | *kept* |
+| 28 | 45 | Medical review | *kept* |
+| 29 | 47 | Submission | *kept* |
+| 30 | 48 | Approval & checkout | *kept* |
 
 The four conditional screens are 10 and 22 (ED side effects and last use,
 behind a Yes on floor 9) and 25 and 26 (the two blood-pressure readings, behind
@@ -679,13 +683,18 @@ privacy on and a commit with the real address is rejected at push time.
   is a genuine, well-established contraindication; the rest are the document's
   judgement calls, faithfully copied. Get a prescriber to confirm the list and
   the wording before this goes near a real patient.
-- **Two questions in the document are not built.** Screen 26, "other health
+- **One question in the document is not built.** Screen 26, "other health
   concerns", was dropped to hold the floor at 29 — it is a cross-sell question,
-  not a screening one, and it can be added back as a 30th screen in a few
-  minutes if the client wants it. Screen 30, **informed consent**, has no
-  equivalent anywhere in v2: the reference's flow has no consent step, so there
-  was no screen to lay it over. v1 had one. That is a compliance question, not
-  a design one — **raise it before this ships**.
+  not a screening one, and it can be added back in a few minutes if the client
+  wants it.
+
+  ~~Screen 30, **informed consent**, has no equivalent anywhere in v2.~~
+  **Built on 2026-09-08** and now floor 26, `n` 50. The reference's flow has no
+  consent step, so there was no screen to lay it over; it is v1's screen, copy
+  verbatim, in v2's components. See `src/consent.py`, and the two content
+  questions recorded in its docstring — the contraindications sit behind a tap,
+  and the two side-effect sections say the same thing twice. Both are inherited
+  from the client's own `Consent box.pdf` and both are still worth a decision.
 - **The photograph on floor 23 is the client's own**, supplied 2026-09-04, and
   replaced a stand-in. Its box is **square** (asked for on 2026-09-04 —
   the 168px band it replaced cropped a tall portrait down to a strip across the
@@ -751,9 +760,13 @@ privacy on and a commit with the real address is rejected at push time.
   The quotes and the names on them (Ethan Caldwell, Ryan Mitchell) are written
   for this concept and are not real people or real reviews - say so before
   showing anyone who might take them at face value.
-- **Screen 43's "LAST STEP" is now the reference's gradient pill**, and its
-  privacy panel uses the same tinted component as the blood-pressure screen,
-  with the reference's own longer HIPAA wording.
+- ~~**Screen 43's "LAST STEP" is now the reference's gradient pill.**~~ The pill
+  came off on 2026-09-08, when the consent screen was added after it and made
+  the claim false. It is not moved onto the consent screen either: that screen's
+  own headline is "One last step — your consent", and a pill under it would say
+  the same thing twice. Screen 43 keeps its privacy panel — the same tinted
+  component the blood-pressure screen uses, with the reference's longer HIPAA
+  wording.
 - **No question screen opens on an answer** — asked for on 2026-09-08, and it
   reverses what the reference does. Walking the reference, its sex screen
   arrives with "Male" already selected and Next enabled without anything being
