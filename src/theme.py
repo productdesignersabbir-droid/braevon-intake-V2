@@ -270,6 +270,17 @@ img{max-width:100%;display:block}
 .opt:not(.checkbox).selected .ring::after{
   width:6px;height:6px;border:none;border-radius:50%;background:#fff;transform:none;
 }
+/* The terms row on the submission screen. Small print, not an answer: a size
+   down from an option label, in the caption grey, and - because it runs to four
+   lines - with the box against the first line instead of the middle of the
+   paragraph. The 2px nudge puts the 16px box on the cap height of a 13px line
+   rather than on its top edge. */
+.opts.terms{margin-top:16px}
+.opts.terms .opt{align-items:flex-start;gap:14px}
+.opts.terms .opt .ring{margin-top:2px}
+.opts.terms .opt .lbl{font-size:13px;line-height:1.5;font-weight:400;
+  color:var(--muted)}
+
 /* Where the exclusive answer sits is per screen - see GROUPS. Trailing, it is
    split off by a rule in the gap above. Leading, the reference gives it a green
    card: this is the answer that lets you continue, and green says so where
@@ -1007,9 +1018,13 @@ body:not(.frames){overflow-x:clip}
   background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px;
   display:flex;align-items:center;gap:16px}
+/* Soft orange, asked for on 2026-09-09 - it was the deep-to-deeper gradient the
+   checkout's darker chrome uses. On the tint the white glyph would disappear, so
+   the glyph takes the accent: the same soft-ground/accent-glyph pair every other
+   bubble in the build is built from. */
 .ck-goals-mark{flex:none;width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
-  display:grid;place-items:center;color:#fff}
+  background:var(--accent-soft);
+  display:grid;place-items:center;color:var(--accent)}
 .ck-goals-mark svg{width:28px;height:28px}
 .ck-goals b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
 .ck-goals ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:2px}
@@ -1077,10 +1092,14 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-prog-body b{font-weight:700}
 .ck-prog-sub{margin-top:16px !important;font-size:14px !important;color:var(--ink) !important}
 .ck-prog-body img{flex:none;width:112px;height:auto;align-self:center}
+/* The same very soft grey the other panels take, in place of the warm gradient
+   - 2026-09-09. The copy comes off #9A2C06 with it: a rust paragraph on a grey
+   ground reads as a leftover tint. The figure keeps the accent, because it is
+   the one thing in the panel doing the emphasising. */
 .ck-prob{display:flex;align-items:center;gap:16px;margin-top:32px;
-  background:linear-gradient(180deg,#FFF3EE 0%,#FFEBE2 100%);
+  background:var(--neutral-tint);
   border-radius:var(--radius-card);padding:24px}
-.ck-prob p{margin:0;flex:1;font-size:14px;line-height:1.2;color:#9A2C06}
+.ck-prob p{margin:0;flex:1;font-size:14px;line-height:1.2;color:var(--ink)}
 .ck-prob b{font-weight:700}
 .ck-prob-fig{flex:none;text-align:center}
 .ck-prob-fig b{display:block;font-size:25px;line-height:1.2;font-weight:800;
@@ -1168,28 +1187,39 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-packs{display:flex;gap:16px}
 /* Two cards, side by side, at every width - the reference never stacks them and
    208px each fits the 432px column with its 16px between. */
+/* The two cards centre their own content and share a height, so the titles and
+   the sub-lines line up across the pair whether or not a card carries a badge -
+   2026-09-09. It used to be a top shim on the title, which only lined up while
+   both sub-lines ran to the same number of lines. */
 .ck-pack{flex:1;min-width:0;position:relative;background:var(--surface);
   border:1px solid var(--hairline);border-radius:var(--radius-card);
-  box-shadow:var(--shadow);padding:24px 12px 20px;cursor:pointer;
+  box-shadow:var(--shadow);padding:34px 12px 22px;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:center;
   font-family:inherit;text-align:center;transition:box-shadow .14s ease,border-color .14s ease}
 .ck-pack.selected{border-color:var(--accent-line);box-shadow:0 4px 20px var(--glow)}
-.ck-pack .ring{position:absolute;top:10px;left:10px;width:16px;height:16px;
-  border-radius:50%;border:1.5px solid var(--border);background:#fff}
-.ck-pack.selected .ring{border-color:var(--accent);
-  box-shadow:inset 0 0 0 3.5px #fff,inset 0 0 0 9px var(--accent)}
 /* Only the "most popular" card carries a badge. Pinned to the top-right corner
-   on 2026-09-07, opposite the radio in the top-left; it used to sit in the flow
-   above the title, which pushed that card's price down and needed a 33px shim
-   on the other card to bring the two titles back onto one line. Out of the flow
-   it needs no shim, and both cards centre the same way on their own. */
-.ck-pack em{position:absolute;top:10px;right:10px;display:inline-block;
-  font-style:normal;border-radius:4px;
-  padding:4px 8px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.03em;
-  line-height:1}
-/* The badge and the ring both sit in the top 28px, so the title clears them. */
-.ck-pack b{display:block;margin-top:14px;font-size:19px;font-weight:700;
+   on 2026-09-07; it used to sit in the flow above the title, which pushed that
+   card's price down and needed a 33px shim on the other card to bring the two
+   titles back onto one line. Out of the flow it needs no shim, and both cards
+   centre the same way on their own. The radio that used to sit opposite it in
+   the top-left came off on 2026-09-09 - the outline and the glow are the
+   selected state, as they are on an option row. */
+/* Green, and small enough to sit inside the card's own stroke rather than
+   crowding it - 2026-09-09. It takes the countdown's mint pair, the same one
+   the pack tag on the closing card wears, so the two badges match. */
+.ck-pack em{position:absolute;top:7px;right:7px;display:inline-block;
+  font-style:normal;border-radius:4px;background:var(--mint);
+  padding:3px 6px;font-size:10px;font-weight:700;color:var(--mint-ink);
+  letter-spacing:.03em;line-height:1}
+/* No shim on the title any more: the card's own top padding clears the badge
+   and the flex centring keeps the pair aligned. */
+.ck-pack b{display:block;font-size:19px;font-weight:700;
   color:var(--accent);line-height:1.3}
-.ck-pack small{display:block;font-size:14px;line-height:1.35;color:var(--ink)}
+/* 13px, and `nowrap`: the sub-line is abbreviated to hold one line, and this
+   makes that a rule rather than a hope - if a longer one is ever set here it
+   will overflow visibly instead of quietly wrapping the cards out of step. */
+.ck-pack small{display:block;margin-top:2px;font-size:13px;line-height:1.35;
+  color:var(--ink);white-space:nowrap}
 
 .ck-prod{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px}
@@ -1205,10 +1235,11 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    column. Anything added here that styles `span` needs the same guard. */
 .ck-prod-rate > span:not(.stars){display:block;margin-top:4px;font-size:13px;
   color:var(--ink)}
-/* The render sits on the reference's own wash panel; ours is warmed to the
-   brand rather than kept blue. */
+/* The render sits on the reference's own wash panel. Ours was warmed to the
+   brand; on 2026-09-09 it went to the same very soft grey the other panels
+   take, which also stops the copper tablet sitting on a tint of its own hue. */
 .ck-prod-shot{margin-top:24px;border-radius:var(--radius-card);
-  background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
+  background:var(--neutral-tint);
   display:grid;place-items:center;padding:20px}
 .ck-prod-shot img{width:150px;height:auto}
 .ck-prod-price{margin:24px 0 0;text-align:center;font-size:18px;font-weight:500;
@@ -1272,8 +1303,11 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-pay-opt{flex:1;min-width:0;height:52px;border:1px solid var(--border);
   border-radius:8px;background:#fff;cursor:pointer;font-family:inherit;
   font-size:14px;font-weight:600;color:var(--ink)}
-.ck-pay-opt.selected{border-color:var(--accent);
-  box-shadow:inset 0 0 0 1px var(--accent)}
+/* The chosen method is its own 1px border turned accent, and nothing else. It
+   used to double that with an inset 1px ring, which read as a 2px stroke against
+   the 1px hairlines beside it; halved on 2026-09-09. Same trade the option rows
+   already make - the selected row is the same row, in colour. */
+.ck-pay-opt.selected{border-color:var(--accent)}
 .ck-pay-opt{display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:5px;padding:8px 4px;height:auto;min-height:56px}
 .ck-pay-opt > span{font-size:13px;font-weight:600}
@@ -1328,8 +1362,12 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   padding:0 4px}
 .ck-guar-mark{flex:none;width:38px;height:38px;color:#6366F1}
 .ck-guar-mark svg{width:38px;height:38px}
-.ck-guar b{display:block;font-size:21px;font-weight:700;color:var(--ink)}
-.ck-guar p{margin:6px 0 0;font-size:16px;line-height:1.5;color:var(--ink)}
+/* Down 20% on 2026-09-09. At 21/16 this block set larger than the checkout's
+   own section headings and read as the loudest thing on the page, which is not
+   what a guarantee note is for. 17/13 puts the heading under a .ck-h2 and the
+   body on the page's ordinary copy size. */
+.ck-guar b{display:block;font-size:17px;font-weight:700;color:var(--ink)}
+.ck-guar p{margin:6px 0 0;font-size:13px;line-height:1.5;color:var(--ink)}
 
 /* -- 11 backed by research ------------------------------------------------
    Type-set names, not logo files - see the note in checkout.py. The corner
@@ -1351,6 +1389,10 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    optical line, and desaturated the way the reference greys them. */
 .ck-research-row img{height:26px;width:auto;max-width:118px;object-fit:contain;
   filter:grayscale(1);opacity:.72}
+/* The whole row supplied as one strip instead of five files: it spans the
+   block and keeps its own proportions, so no height cap and no per-mark
+   max-width. Still greyed, like the individual marks. */
+.ck-research-strip img{height:auto;width:100%;max-width:none}
 
 
 
@@ -1361,7 +1403,12 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 
 /* -- 12 the quotes ------------------------------------------------------- */
 .ck-quotes{display:flex;flex-direction:column;gap:24px}
-.ck-quote{background:linear-gradient(135deg,#FFF7F4 0%,#FFF4F0 100%);
+/* A very soft grey, asked for on 2026-09-09 - these were a warm off-white
+   gradient, close enough to --accent-soft that three of them stacked read as
+   the page going orange. --neutral-tint is the build's own soft grey, the one
+   the testimonial panel and the consent tick already sit on, so this is the
+   same ground rather than a fourth near-white. */
+.ck-quote{background:var(--neutral-tint);
   border-radius:var(--radius-media);padding:24px}
 .ck-quote-top{display:flex;align-items:flex-start;gap:16px}
 .ck-quote-top h3{margin:0;flex:1;font-size:17px;font-weight:500;line-height:1.35;
@@ -1372,19 +1419,39 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   margin-top:16px}
 .ck-who b{font-size:16px;font-weight:500;color:var(--ink)}
 .ck-who span{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink)}
-.ck-who svg{width:15px;height:15px;stroke:#16A34A;stroke-width:2.6}
+/* The disc carries the colour and the check is knocked out of it in white.
+   Written as two rules rather than as fill/stroke attributes on the SVG,
+   because a CSS rule beats a presentation attribute and the old bare-tick rule
+   would otherwise repaint the check green on green. */
+.ck-verified{width:16px;height:16px;flex:none;color:#16A34A}
+.ck-verified circle{fill:currentColor}
+.ck-verified path{fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;
+  stroke-linejoin:round}
 
 /* -- 13 are you ready ---------------------------------------------------- */
 .ck-ready > * + *{margin-top:16px}
+/* One soft orange rather than a fade to nothing, asked for on 2026-09-09. The
+   gradient left the pill with no right edge, so it read as a torn shape at the
+   end of the sentence instead of a tag. --accent-soft is the build's own tint,
+   the one the selected row and the claim strip already sit on. */
 .ck-ready-tag{display:inline-block;border-radius:33px;padding:16px 24px;
-  background:linear-gradient(90deg,#FFD9C7 0%,rgba(255,217,199,0) 100%);
+  background:var(--accent-soft);
   font-size:16px;font-weight:500;color:var(--ink)}
 .ck-ready-clock{display:inline-flex;align-items:center;gap:5px;
   background:var(--surface);padding:6px 8px;font-size:13px;color:var(--muted)}
 .ck-ready-clock b{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
-.ck-ready-strip{display:flex;align-items:center;border-radius:4px;padding:10px 16px;
-  background:linear-gradient(90deg,var(--accent-deep) 0%,var(--accent-deeper) 100%);
-  color:#fff;font-size:13px}
+/* The countdown's own pair, asked for on 2026-09-09 - it was the deep-to-deeper
+   orange gradient. This widens the standing rule that --mint / --mint-ink are
+   the clock's alone: they are now the clock's AND this strip's, and still not a
+   general success colour. Sampled 9.4:1, so the 13px type clears AA where
+   white on the deep orange did not. */
+/* `display:block`, not flex. As a flex container each text run and the <b>
+   became their own anonymous flex item and the whitespace between them
+   collapsed, so the line read "just$99.00— no insurance needed". Nothing needed
+   centring here: it is one line of text in a padded box. */
+.ck-ready-strip{border-radius:4px;padding:10px 16px;
+  background:var(--mint);
+  color:var(--mint-ink);font-size:13px}
 .ck-ready-strip b{font-weight:900}
 /* The reference runs a 4px rule down the left of the clock / strip / line
    group with an arrow head at its foot, pointing at the card below. It is one
@@ -1396,35 +1463,88 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   width:14px;height:14px;border-right:4px solid var(--accent-soft);
   border-bottom:4px solid var(--accent-soft);transform:rotate(45deg);
   border-bottom-right-radius:3px}
+/* The rail runs 16px between its three parts; the claim under the strip takes
+   more, asked for on 2026-09-09 - it is the payoff line rather than a third
+   item in a stack, and at 16 it sat against the green edge. */
+.ck-ready-strip + .ck-ready-line{margin-top:24px}
 .ck-ready-line{margin:0;font-size:19px;font-weight:600;
   line-height:1.3;color:var(--ink)}
 .ck-ready-card{background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px;margin-top:32px !important}
 .ck-ready-card h3{margin:0;font-size:19px;font-weight:600;color:var(--ink)}
-.ck-ready-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:24px}
+/* The promo code, carried over from v1's checkout on 2026-09-09. One row: the
+   tag mark, the field, and Apply as text rather than a second button shape -
+   the card already has one button and it is the Checkout. */
+.ck-promo{display:flex;align-items:center;gap:10px;margin-top:20px;
+  border:1px solid var(--border);border-radius:var(--radius);padding:0 14px;
+  min-height:52px;background:var(--surface)}
+.ck-promo svg{flex:none;width:18px;height:18px;stroke:var(--faint)}
+.ck-promo input{flex:1;min-width:0;border:0;outline:none;background:none;
+  font-family:inherit;font-size:16px;color:var(--ink)}
+.ck-promo input::placeholder{color:var(--faint)}
+.ck-promo-apply{flex:none;border:0;background:none;cursor:pointer;
+  font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--accent);padding:4px}
+.ck-promo.applied{border-color:var(--green-ink)}
+.ck-promo.applied .ck-promo-apply{color:var(--green-ink);cursor:default}
+/* The confirmation sits directly under the field, as v1's does, so the field
+   explains the line beneath it. */
+.ck-promo-note{display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:10px 0 0;border-radius:var(--radius);background:var(--green-ink);
+  padding:12px 14px;color:#fff;font-size:14px;font-weight:600}
+.ck-promo-note svg{flex:none;width:16px;height:16px;stroke:#fff;stroke-width:2.4}
+/* The list price, struck, beside the figure the code replaced. */
+.ck-prod-price s,.ck-ready-pack s{color:var(--faint);font-weight:500;
+  text-decoration-thickness:1px}
+.ck-ready-pack s{display:block;margin-top:8px;font-size:15px}
+.ck-ready-pack s + em{margin-top:0}
+
+/* 16px between rows, down from 24 on 2026-09-09: at 24 the four lines read as
+   four separate blocks rather than one list. */
+.ck-ready-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:16px}
 .ck-ready-list li{display:flex;align-items:flex-start;gap:16px}
-.ck-ready-list svg{flex:none;width:20px;height:20px;stroke:var(--accent);stroke-width:2.4}
+/* Each row now carries its own glyph instead of a tick, so the stroke comes
+   back to the build's ordinary 1.8 - 2.4 was the weight a lone check needed. */
+.ck-ready-list svg{flex:none;width:22px;height:22px;stroke:var(--accent);
+  stroke-width:1.8}
 .ck-ready-list b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
 .ck-ready-list span{display:block;margin-top:2px;font-size:13px;color:var(--muted)}
-.ck-ready-packs{display:flex;gap:24px;margin-top:32px;
-  background:linear-gradient(180deg,#FAFAFA 0%,#FFEFE8 100%);
+/* One pack rather than two since 2026-09-09, so the panel holds a single row:
+   the render on the left at the size the reference gives its bottle, the tag,
+   the line and the price on the right. */
+.ck-ready-packs{margin-top:32px;
+  background:var(--neutral-tint);
   border-radius:var(--radius-card);padding:24px}
-.ck-ready-pack{flex:1;min-width:0}
-.ck-ready-pack b{display:block;margin-top:8px;font-size:19px;font-weight:600;
+.ck-ready-pack{display:flex;align-items:center;gap:20px;min-width:0}
+.ck-ready-pack > div{flex:1;min-width:0}
+/* The render is a cut-out PNG, so its lift is a drop-shadow filter and never a
+   box-shadow - a box-shadow paints a rectangle behind the transparency. */
+.ck-ready-pack img{flex:none;width:96px;height:auto;
+  filter:drop-shadow(0 12px 22px rgba(16,20,34,.18))}
+/* 17px, down from 19 on 2026-09-09: the line sets on two rather than three
+   beside the render, and it no longer outweighs the .ck-h2 above it. The price
+   holds 19 - it is the figure the card is here to show. */
+.ck-ready-pack b{display:block;margin-top:8px;font-size:17px;font-weight:600;
   line-height:1.3;color:var(--ink)}
-.ck-ready-pack em{display:block;margin-top:8px;font-style:normal;font-size:19px;
-  font-weight:700;color:#16A34A}
+/* 26px, up from 19 on 2026-09-09. The card exists to show this figure, and at
+   the title's old 19 the two carried the same weight; now the price leads and
+   the line above it introduces. */
+.ck-ready-pack em{display:block;margin-top:8px;font-style:normal;font-size:26px;
+  font-weight:700;line-height:1.15;color:#16A34A}
 .ck-ready-note{margin:24px auto 0;max-width:270px;text-align:center;
-  font-size:13px;line-height:1.3;color:var(--muted)}
+  font-size:12px;line-height:1.35;color:var(--muted)}
 .ck-ready-note b{font-weight:700}
 .ck-ready-card .cta{margin-top:24px}
 
 /* -- 15 the FAQ ---------------------------------------------------------- */
-.ck-faq{background:linear-gradient(180deg,#FFF3EE 0%,#FFF9F7 100%);
+/* The same very soft grey the testimonial cards and the pack panel take, in
+   place of the warm gradient - 2026-09-09. The rules between the questions come
+   with it: a warm hairline on a grey ground reads as a stray tint. */
+.ck-faq{background:var(--neutral-tint);
   border-radius:12px;padding:32px}
 .ck-faq h2{margin:0 0 24px;text-align:center;font-size:19px;font-weight:600;
   color:var(--accent)}
-.ck-faq-item{border-top:1px solid #FFE0D3}
+.ck-faq-item{border-top:1px solid var(--border)}
 .ck-faq-item:first-of-type{border-top:none}
 .ck-faq-item summary{display:flex;align-items:flex-start;gap:10px;
   list-style:none;cursor:pointer;padding:14px 0;
@@ -1489,7 +1609,9 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   .ck-incl-card{gap:16px;padding:18px}
   .ck-incl-card img{width:52px}
   .ck-prog-body img{width:88px}
-  .ck-ready-packs{gap:16px;padding:18px}
+  .ck-ready-packs{padding:18px}
+  .ck-ready-pack{gap:14px}
+  .ck-ready-pack img{width:74px}
   .ck-ready-line{font-size:19px}
 }
 

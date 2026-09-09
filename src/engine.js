@@ -386,14 +386,66 @@
     var box=pack.closest('[data-packs]'); if(!box) return;
     [].forEach.call(box.querySelectorAll('.ck-pack'), function(p){
       p.classList.remove('selected');
+      p.setAttribute('aria-pressed','false');
     });
     pack.classList.add('selected');
+    pack.setAttribute('aria-pressed','true');
+    /* Two blocks echo the pick now - the product card and the closing card -
+       so this walks every hook rather than the first one it finds. */
     var card=pack.closest('.step');
-    var tag=card.querySelector('[data-pack-tag]');
-    var price=card.querySelector('[data-pack-price]');
-    if(tag) tag.textContent=pack.dataset.pack+' PACK';
-    if(price) price.textContent=pack.dataset.price;
+    [].forEach.call(card.querySelectorAll('[data-pack-tag]'), function(t){
+      t.textContent=pack.dataset.pack+' PACK';
+    });
+    /* The price goes through paintPrice() rather than being written here, so a
+       pack switched AFTER a code was applied restates the discount instead of
+       leaving the list price under a claimed 25% off. */
+    paintPrice(card);
   });
+  /* ------------------------------------------------------- the promo code */
+  /* Any non-empty code is accepted - see the note in checkout.py. It is one
+     boolean and one paint: `promoOn` is the whole state, and every figure the
+     code touches is written from the selected pack's own `data-price`, so the
+     bill, the product card and the closing card cannot disagree about whether
+     a discount is on. */
+  var DISCOUNT_PCT=__DISCOUNT_PCT__, promoOn=false;
+  function money(n){ return '$'+n.toFixed(2); }
+  function paintPrice(card){
+    var sel=card.querySelector('.ck-pack.selected'); if(!sel) return;
+    var list=parseFloat(String(sel.dataset.price).replace(/[^0-9.]/g,''));
+    if(isNaN(list)) return;
+    var now=promoOn ? list*(1-DISCOUNT_PCT/100) : list;
+    [].forEach.call(card.querySelectorAll('[data-pack-price]'), function(p){
+      p.textContent=money(now);
+    });
+    [].forEach.call(card.querySelectorAll('[data-pack-was]'), function(w){
+      w.textContent=money(list); w.hidden=!promoOn;
+    });
+  }
+  function claimPromo(box){
+    var input=box.querySelector('[data-promo-input]');
+    var btn=box.querySelector('[data-promo-apply]');
+    if(!input.value.trim()){ input.focus(); return; }
+    promoOn=true;
+    box.classList.add('applied');
+    input.disabled=true; btn.disabled=true; btn.textContent='Applied';
+    var card=box.closest('.step');
+    var note=card.querySelector('[data-promo-note]');
+    if(note) note.hidden=false;
+    paintPrice(card);
+  }
+  stage.addEventListener('click', function(e){
+    var btn=e.target.closest('[data-promo-apply]'); if(!btn) return;
+    claimPromo(btn.closest('.ck-promo'));
+  });
+  /* Enter applies it. There is no <form> around the field - one inside the flow
+     would submit the page on Enter and reload it, losing every answer. */
+  stage.addEventListener('keydown', function(e){
+    if(e.key!=='Enter') return;
+    var input=e.target.closest('[data-promo-input]'); if(!input) return;
+    e.preventDefault();
+    claimPromo(input.closest('.ck-promo'));
+  });
+
   function advance(){
     var el=steps[idx];
     if(!stepValid(el)){ showError(el); return; }
@@ -467,8 +519,24 @@
     var fn=document.getElementById('first_name');
     var n=el.querySelector('[data-name-echo]');
     /* "Marcus, how" or "How" — the sentence has to read either way, so the
-       echo carries the whole opening rather than just the name. */
-    if(n) n.textContent = (fn&&fn.value.trim()) ? fn.value.trim()+', how' : 'How';
+       echo carries the whole opening rather than just the name.
+       The NAME takes the accent and the rest of the clause does not, which the
+       reference does too (2026-09-09). Built out of nodes rather than a string:
+       the name is whatever the patient typed, and innerHTML would make that
+       markup. textContent on a child span cannot. */
+    if(n){
+      n.textContent='';
+      var typed=fn&&fn.value.trim();
+      if(typed){
+        var mark=document.createElement('span');
+        mark.className='hi';
+        mark.textContent=typed;
+        n.appendChild(mark);
+        n.appendChild(document.createTextNode(', how'));
+      } else {
+        n.textContent='How';
+      }
+    }
     /* The checkout's headline and its clock bar both open on the patient's
        name in the possessive - "Marcus's approval is valid for". A separate
        hook from [data-name-echo] because that one carries a whole clause. */

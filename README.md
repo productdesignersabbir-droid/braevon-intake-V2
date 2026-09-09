@@ -204,6 +204,16 @@ accent, the tinted claim strip, then the goal list with an icon per row.
   chosen — no longer true as of 2026-09-08, when every default was dropped and
   the screen began arriving unanswered like the rest. Revert by dropping the
   `dict(goals, mode='single')` line in `hero_screen()`.
+- **The patient's name carries the accent where it is echoed back.** Screen 47
+  opens "SABBIR, how can you be reached if necessary?" with the name in orange
+  and the rest of the clause in the title ink — the reference marks the name the
+  same way in its own blue. `fillSummary()` in `engine.js` builds it out of
+  nodes rather than a string: the name is whatever the patient typed, and
+  `innerHTML` would make that markup.
+- **The terms row on 47 is small print, not an answer.** 13px in the caption
+  grey against the 16px an option label takes, and the box sits against the
+  first line rather than the middle of the four-line paragraph. `.opts.terms`,
+  and it is that screen's alone.
 - **Icon bubbles carry the reference's five hues**, read out of its own design
   tokens. A deliberate exception to the orange-carries-emphasis rule, at the
   client's request; nothing else in the flow takes them.
@@ -685,6 +695,21 @@ privacy on and a commit with the real address is rejected at push time.
   Swap in the official artwork before launch.
 - **The skip-to-checkout control is still in the build.** See the section above.
   It is the one thing here that must not ship.
+- **The promo field takes ANY non-empty code and gives 25% off.** Carried over
+  from v1's checkout on 2026-09-09; the reference has no code field, so this is
+  Braevon's own. There is no backend here to validate a code against, and a
+  prototype that rejects what the client types in a demo is worse than one that
+  takes anything — but it means the page will discount itself for `asdf`. Wire
+  it to a real validator before a patient sees it. `DISCOUNT_PCT` in
+  `checkout.py` is the percentage; `claimPromo()`/`paintPrice()` in `engine.js`
+  are the whole behaviour. Every figure it touches is written from the selected
+  pack's own `data-price`, so switching packs after claiming restates the
+  discount rather than leaving a list price under a claimed 25% off.
+- **The checkout's warm panels are grey since 2026-09-09.** The testimonial
+  cards, the FAQ, the pack panel, the product shot and the success-probability
+  panel all sat on their own warm off-white gradients; stacked, they read as the
+  page going orange. They share `--neutral-tint` now. Orange is left where it is
+  carrying something — the CTA, the figures, the marks.
 - ~~**Screen 1's goals question is a multi-select with one answer pre-ticked.**~~
   **Settled on 2026-09-08**: nothing is pre-ticked anywhere, screen 1 included,
   so the question now matches the document's own "select all that apply" with no
@@ -755,9 +780,15 @@ privacy on and a commit with the real address is rejected at push time.
 - **The 94% success probability is the reference's number, not Braevon's** -
   same problem as the 137%. Screen 45 presents it as a result of this
   assessment; nothing computes it. It needs a source or it should come out.
-- **Submit walks onto the checkout; the checkout's own button ends the flow.**
-  Screen 47's Submit shows screen 48; that page's "Checkout" shows the
-  "Assessment Received" state. **Nothing is charged and nothing is posted** —
+- **Screen 47's button walks onto the checkout; the checkout's own button ends
+  the flow.** It reads **"Check Eligibility"** — the reference's own label,
+  asked for on 2026-09-09; it said "Submit" until then. Its terms line names the
+  button, so that moved with it: "By clicking Check Eligibility, I agree…". The
+  reference does NOT do that — its own small print still says 'By clicking
+  "Submit,"' under a Check Eligibility button — so this is one place v2 is
+  deliberately more consistent than what it copies. Put "Submit" back in both
+  places if the client wants the reference's wording exactly. Screen 47 shows
+  screen 48; that page's "Checkout" shows the "Assessment Received" state. **Nothing is charged and nothing is posted** —
   there is no backend here and no payment step at all. The reference hands off
   to Stripe at this point; wiring that up is separate work.
 - **Screen 41's photograph is a stand-in.** The reference opens that one

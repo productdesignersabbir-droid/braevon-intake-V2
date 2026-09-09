@@ -803,13 +803,22 @@ def screen_submission(p):
                  field_block(dict(m['phone_number'], input_type='tel',
                                   placeholder='(555) 123-4567', us_phone=True),
                              'Phone Number'))
-            + '<div class="opts" data-group="final_submission_terms_agreement" '
-              'data-mode="multi" style="margin-top:16px">'
+            # The terms row is the one option in the build that is small print
+            # rather than an answer to read - the reference sets it a size down,
+            # in the caption grey, with the box against the FIRST LINE rather
+            # than the middle of the paragraph. `.opts.terms` is that, and it is
+            # this screen's alone.
+            + '<div class="opts terms" data-group="final_submission_terms_agreement" '
+              'data-mode="multi">'
               '<button class="opt checkbox" data-value="yes"><span class="lbl">'
-              'By clicking Submit, I agree to receive emails, customer support text '
-              'messages and phone calls from Braevon, and I agree to the Terms of '
-              'Service and Privacy Policy.</span><span class="ring"></span></button></div>'
-            + cta('Submit') + '</div>')
+              'By clicking Check Eligibility, I agree to receive emails, customer '
+              'support text messages and phone calls from Braevon, and I agree to '
+              'the Terms of Service and Privacy Policy.'
+              '</span><span class="ring"></span></button></div>'
+            # "Check Eligibility", not "Submit", at the client's word on
+            # 2026-09-09 - it is the reference's own label for this button, and
+            # it says what the next screen does rather than what the form does.
+            + cta('Check Eligibility') + '</div>')
 
 
 def screen_interstitial(p):
@@ -1167,7 +1176,11 @@ def emit_interactive():
                                             .replace('__SEGMENT_STARTS__',
                                                      json.dumps(SEGMENT_STARTS))
                                             .replace('__STEP_AT__',
-                                                     json.dumps(STEP_AT)))
+                                                     json.dumps(STEP_AT))
+                                            # the discount lives in checkout.py,
+                                            # beside the packs it comes off
+                                            .replace('__DISCOUNT_PCT__',
+                                                     str(checkout.DISCOUNT_PCT)))
     html = page('Braevon &mdash; Intake Assessment v2', body)
     for name in ('index.html', 'interactive.html'):
         open(os.path.join(OUT, name), 'w', encoding='utf-8').write(html)

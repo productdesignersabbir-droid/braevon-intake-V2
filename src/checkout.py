@@ -73,14 +73,27 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # pair reads as a typo. `price` stays a number because the CTA strip picks the
 # cheapest from it.
 PACKS = [
-    # tablets, price, shown, sub-line, badge, badge hue
-    ('6',  99,  '$99.00',  '$16.50 per tablet', '', ''),
-    ('12', 132, '$132.00', '$11.00 per tablet &middot; save 33%',
-     'MOST POPULAR', '#E6430D'),
+    # tablets, price, shown, sub-line, badge
+    # The sub-line is abbreviated - "$16.50/tab", not "$16.50 per tablet" - so
+    # both cards hold it on ONE line at the column's width. Asked for on
+    # 2026-09-09; spelled out, the 12-pack's ran to two and pushed the two cards
+    # out of alignment with each other.
+    ('6',  99,  '$99.00',  '$16.50/tab', ''),
+    ('12', 132, '$132.00', '$11.00/tab &middot; save 33%', 'MOST POPULAR'),
 ]
 # The Figma's "Most popular" opens selected, as the reference's does. The CTA
 # strip says "start at just", so it reads the cheapest pack rather than this one.
 LEAD_PACK = 1
+
+# The promo code, carried over from v1's checkout at the client's word on
+# 2026-09-09 - the reference has no code field, this is Braevon's own.
+#
+# **ANY non-empty code is accepted**, exactly as v1's does. There is no backend
+# here to validate one against, and a prototype that rejects what the client
+# types in a demo is worse than one that takes anything: what this is for is
+# showing the discounted state, not enforcing a code. Wire it to a real
+# validator before this goes near a patient.
+DISCOUNT_PCT = 25
 
 # The group and the field ids the checkout echoes, all of them v1's own from
 # 2026-09-04. They were the reference's (`Q1_primary_goal`, `first_name`) until
@@ -209,6 +222,22 @@ _CVC_MARK = ('<svg class="ck-cvc" viewBox="0 0 24 16" aria-hidden="true">'
              '<rect x="13" y="9" width="8" height="3.6" rx="1" fill="none" '
              'stroke="currentColor" stroke-width="1.2"/></svg>')
 
+def _research_row_image():
+    """The whole row as one supplied image, if there is one.
+
+    The reference renders these five marks as a single strip, and a client who
+    has that strip - rather than five separate files - can drop it in as
+    `assets/images/research/row.(svg|png|webp)` and it replaces the type-set
+    names wholesale. Five individual files still win when they exist, because
+    they stay sharp at any width and the names stay in the alt text."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for ext in ('svg', 'png', 'webp'):
+        rel = 'assets/images/research/row.%s' % ext
+        if os.path.exists(os.path.join(here, '..', rel)):
+            return rel
+    return None
+
+
 def _research_mark(name, stem, attr):
     """A logo if one has been supplied, the name set in type if not.
 
@@ -261,11 +290,36 @@ NEXT_STEPS = [
 ]
 
 # Block 13's "What's Included?" card - the reference's four lines.
+# The third field is the row's own glyph, drawn rather than ticked. The
+# reference gives each line an icon that says what it is - a vial, a piggy bank,
+# a certification seal, a clinician - instead of four identical checks, and the
+# client asked for the same on 2026-09-09. These are v2's line icons, not the
+# reference's filled ones; the meaning is copied, the drawing is not. Paths only,
+# because `ic()` (the 1.8-stroke wrapper) is not in scope out here.
 READY_INCLUDED = [
-    ('4-in-1 ED medication', 'Cost of medication is included'),
-    ('No insurance necessary', ''),
-    ('Board-certified doctor review', ''),
-    ('1:1 physician guidance', ''),
+    ('4-in-1 ED medication', 'Cost of medication is included',
+     # a medicine bottle: capped body, dose cross
+     '<path d="M9 3h6v3.6H9z"/>'
+     '<path d="M7.4 10.2a3.6 3.6 0 0 1 2.2-3.3l.2-.1h4.4l.2.1a3.6 3.6 0 0 1 2.2 3.3V19a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2z"/>'
+     '<path d="M12 12.4v4M10 14.4h4"/>'),
+    ('No insurance necessary', '',
+     # a piggy bank: savings, which is the claim the line is making. The ear and
+     # the coin slot are what make it read as one at 22px - without them the
+     # body alone is a blob.
+     '<path d="M4 13a5 5 0 0 1 5-5h4.2a5 5 0 0 1 4.6 3l2.2.8v2.9l-2 .6a5 5 0 0 1-1.8 2.2V19h-2.5v-1.2H9.5V19H7v-1.8A5 5 0 0 1 4 13z"/>'
+     '<path d="M9.6 8.1 8.4 5.4l2.9 1.2"/>'
+     '<path d="M11 10.6h3"/>'
+     '<path d="M16.6 12.4h.01"/>'),
+    ('Board-certified doctor review', '',
+     # a certification seal with the check inside it
+     '<path d="M12 2.6l2.4 1.7 2.9.2 1 2.8 2 2.1-1 2.8-.2 2.9-2.8 1-2.1 2-2.8-1-2.9.5"/>'
+     '<path d="M12 2.6L9.6 4.3l-2.9.2-1 2.8-2 2.1 1 2.8.2 2.9 2.8 1 2.1 2 2.8-1"/>'
+     '<path d="M9.3 11.8l2 2 3.7-3.8"/>'),
+    ('1:1 physician guidance', '',
+     # a clinician: the person mark the build already uses, with a dose cross
+     '<circle cx="12" cy="6.8" r="3.3"/>'
+     '<path d="M5.4 20.4a6.6 6.6 0 0 1 13.2 0"/>'
+     '<path d="M12 14.6v3.2M10.4 16.2h3.2"/>'),
 ]
 
 # Block 15. v1's five checkout questions, verbatim from `ck_faq` in
@@ -546,14 +600,18 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
             '<b data-countdown>10:00</b></div>')
 
     # -- 8 -----------------------------------------------------------------
+    # No radio in the corner since 2026-09-09, at the client's word: the chosen
+    # card is the one with the accent outline and the glow, the same way a
+    # chosen option row is. `aria-pressed` carries the state that the ring used
+    # to carry visually, so it is still announced.
     packs = ''.join(
-        '<button class="ck-pack%s" type="button" data-pack="%s" data-price="%s">'
-        '<span class="ring"></span>%s'
+        '<button class="ck-pack%s" type="button" data-pack="%s" data-price="%s" '
+        'aria-pressed="%s">%s'
         '<b>%s PACK</b><small>%s</small></button>'
         % (' selected' if i == LEAD_PACK else '', n, shown,
-           ('<em style="background:%s">%s</em>' % (hue, badge)) if badge else '',
-           n, sub)
-        for i, (n, price, shown, sub, badge, hue) in enumerate(PACKS))
+           'true' if i == LEAD_PACK else 'false',
+           ('<em>%s</em>' % badge) if badge else '', n, sub)
+        for i, (n, price, shown, sub, badge) in enumerate(PACKS))
     card_lines = [
         ('Powerful 4-in-1 performance stack that targets desire (brain) and '
          'performance (body)'),
@@ -576,7 +634,8 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<div class="ck-prod-shot">'
         '<img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/>'
         '</div>'
-        '<p class="ck-prod-price">Prescribed for only <b data-pack-price>%s</b></p>'
+        '<p class="ck-prod-price">Prescribed for only '
+        '<s data-pack-was hidden></s> <b data-pack-price>%s</b></p>'
         '<ul class="ck-prod-list">%s</ul>'
         '</div></div>'
         % (packs, PACKS[LEAD_PACK][0], stars, CUSTOMERS,
@@ -733,16 +792,32 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
                 ('WebMD', 'webmd'),
                 ('Harvard University', 'harvard-university'),
                 ('National Institutes of Health', 'nih')]
+    # One supplied strip if there is one, five marks-or-names if not.
+    _row = _research_row_image()
     research = ('<div class="ck-research"><p>Backed by research from</p>'
-                '<div class="ck-research-row">%s</div></div>'
-                % ''.join(_research_mark(name, stem, attr)
-                          for name, stem in RESEARCH))
+                '<div class="ck-research-row%s">%s</div></div>'
+                % ((' ck-research-strip',
+                    '<img src="%s" alt="%s" loading="lazy"/>'
+                    % (_row, attr('Mayo Clinic, Stanford Medicine, WebMD, '
+                                  'Harvard University and the National '
+                                  'Institutes of Health')))
+                   if _row else
+                   ('', ''.join(_research_mark(name, stem, attr)
+                                for name, stem in RESEARCH))))
 
     # -- 12 ----------------------------------------------------------------
+    # The verified mark is a badge - a disc with the check inside it - not the
+    # bare tick the rest of the page uses for a list item. Asked for on
+    # 2026-09-09, and it is its own SVG rather than ICON['tick'] because that
+    # one is a stroked path with no shape behind it and it is shared with two
+    # other blocks.
+    badge = ('<svg class="ck-verified" viewBox="0 0 20 20" aria-hidden="true">'
+             '<circle cx="10" cy="10" r="9"/>'
+             '<path d="M6 10.3l2.7 2.7L14.1 7.6"/></svg>')
     quotes = ''.join(
         '<article class="ck-quote"><div class="ck-quote-top"><h3>%s</h3>%s</div>'
         '<p>%s</p><div class="ck-who"><b>%s</b><span>%s Verified customer</span></div>'
-        '</article>' % (title, stars, body, who, icon['tick'])
+        '</article>' % (title, stars, body, who, badge)
         for title, body, who in TESTIMONIALS)
     quotes = ('<div class="ck-sect">'
               '<h2 class="ck-h2">The <em>results</em> speak for themselves!</h2>'
@@ -752,12 +827,21 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     # -- 13 ----------------------------------------------------------------
     ready_rows = ''.join(
         '<li>%s<div><b>%s</b>%s</div></li>'
-        % (tick, name, '<span>%s</span>' % note if note else '')
-        for name, note in READY_INCLUDED)
-    stack_rows = ''.join(
-        '<div class="ck-ready-pack"><span class="ck-tag">%s Pack</span>'
-        '<b>BRAEVON 4-in-1 prescribed for just</b><em>%s</em></div>'
-        % (n, shown) for n, _p, shown, _s, _b, _h in PACKS)
+        % (ic(paths), name, '<span>%s</span>' % note if note else '')
+        for name, note, paths in READY_INCLUDED)
+    # ONE pack, not both, and it is the one chosen up the page - the reference
+    # closes on a single card, the pack the patient picked, with the product
+    # beside it. Asked for on 2026-09-09. The tag and the price carry the same
+    # `data-pack-*` hooks the product card uses, so the pick drives both; with
+    # no script (the frames) it renders LEAD_PACK, which is also what opens
+    # selected in the picker.
+    stack_rows = (
+        '<div class="ck-ready-pack">'
+        '<img src="assets/images/product-tablet.png" alt="The BRAEVON 4-in-1 tablet"/>'
+        '<div><span class="ck-tag" data-pack-tag>%s PACK</span>'
+        '<b>BRAEVON 4-in-1 prescribed for just</b>'
+        '<s data-pack-was hidden></s><em data-pack-price>%s</em></div>'
+        '</div>' % (PACKS[LEAD_PACK][0], _price(LEAD_PACK)))
     ready = (
         '<div class="ck-ready">'
         '<span class="ck-ready-tag">Are you ready?</span>'
@@ -771,12 +855,29 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '</div>'
         '<div class="ck-ready-card">'
         '<h3>What&rsquo;s included?</h3>'
+        '<div class="ck-promo">%s'
+        '<input type="text" data-promo-input placeholder="Enter promo code" '
+        'aria-label="Promo code" autocomplete="off" spellcheck="false"/>'
+        '<button class="ck-promo-apply" type="button" data-promo-apply>Apply</button>'
+        '</div>'
+        '<p class="ck-promo-note" data-promo-note hidden role="status" '
+        'aria-live="polite">%s<span>%d%% discount added successfully</span></p>'
         '<ul class="ck-ready-list">%s</ul>'
         '<div class="ck-ready-packs">%s</div>'
         '<p class="ck-ready-note">Pay one month at a time. No contracts, cancel '
         'anytime. <b>Medication is included.</b></p>'
         '<button class="cta cta-next" type="button">Checkout%s</button>'
-        '</div></div>' % (_from_price(), ready_rows, stack_rows, icon['arrow']))
+        '</div></div>'
+        # In document order: the strip's price, the tag mark in front of the
+        # code field, the tick and the percentage in its confirmation, the
+        # included rows, the pack card, the button's arrow.
+        % (_from_price(),
+           # a luggage-tag mark, the same one v1 puts in front of its field
+           ic('<path d="M3 12.4V4.5a1.5 1.5 0 0 1 1.5-1.5h7.9a1.5 1.5 0 0 1 1 .4l8.2 8.2'
+              'a1.5 1.5 0 0 1 0 2.1l-7.9 7.9a1.5 1.5 0 0 1-2.1 0L3.4 13.4a1.5 1.5 0 0 1-.4-1z"/>'
+              '<path d="M7.4 7.4h.01"/>'),
+           icon['check'], DISCOUNT_PCT,
+           ready_rows, stack_rows, icon['arrow']))
 
     # -- 15 ----------------------------------------------------------------
     faq = ''.join(
@@ -796,6 +897,11 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
             # An earlier change this same day had pulled the buying decision
             # above the reviews; the reference does not.
             + pill + product + hipaa + shipping
-            + guarantee + research + quotes + ready + faq
+            # The guarantee runs TWICE, which is the reference's own doing: it
+            # sits under the payment card and again under the closing Checkout,
+            # so the reassurance is beside each of the two conversion points
+            # rather than only the first. Asked for on 2026-09-09. It is the
+            # same markup both times - no ids inside it, so it repeats safely.
+            + guarantee + research + quotes + ready + guarantee + faq
             + footer(logo)
             + '</div>')
