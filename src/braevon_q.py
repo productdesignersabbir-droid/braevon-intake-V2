@@ -245,16 +245,17 @@ OVERRIDES = {
              # doc screen 21: "'Yes' routes the patient to the Disqualify
              # screen." doc screen 20: the main answer alone does NOT.
              dq=['A tight foreskin'], exclusive='None of these',
+             # The pain question left this screen on 2026-09-09 at the client's
+             # word and is now a screen of its own - PAIN_SCREEN in build.py,
+             # asked of everyone rather than only of the patients who report a
+             # curve. Its stopping answer went with it, which is why this
+             # screen's `dq` no longer names Q_curve_pain_yes.
              reveals=[
                  _yesno('A curve or bend in the penis that interferes with sex, '
                         "or Peyronie's disease",
                         'Have you had active bending of your penis within '
                         'the last 12 months?',
                         'Q_curve_active', dq=True),
-                 _yesno('A curve or bend in the penis that interferes with sex, '
-                        "or Peyronie's disease",
-                        'Do you experience pain with erections or with ejaculation?',
-                        'Q_curve_pain', dq=True),
              ]),
 
     # ---------------------------------------------------------- floor 14

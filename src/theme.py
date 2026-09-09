@@ -996,7 +996,10 @@ body:not(.frames){overflow-x:clip}
    order, and a bare `margin:0` was landing the headline flush against the
    countdown bar - a real zero-gap bug, not just a tight one. 40px rather than
    the block's 32 because the client asked for more air under the bar. */
-.ck-h1{margin:40px 0 0;font-size:24px;line-height:1.2;font-weight:600;
+/* Centred, asked for on 2026-09-09. It is the page's own title above a centred
+   goals card, and it was the one thing in that stack still ranging left. The
+   section heads below it (.ck-h2) stay left - they head blocks, not the page. */
+.ck-h1{margin:40px 0 0;text-align:center;font-size:24px;line-height:1.2;font-weight:600;
   letter-spacing:-.01em;color:var(--title-ink)}
 .ck-h2{margin:0;font-size:24px;line-height:1.2;font-weight:600;
   letter-spacing:-.01em;color:var(--title-ink)}
@@ -1591,32 +1594,6 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   .ck-ready-pack{gap:14px}
   .ck-ready-pack img{width:74px}
   .ck-ready-line{font-size:19px}
-}
-
-/* ------------------------------------- the checkout, on a wide screen ----
-   The flow is one 480px column at every width and that stays true of the
-   QUESTIONNAIRE - it is the reference's own layout and the reason this build
-   has no breakpoint tiers. The checkout is the exception, asked for on
-   2026-09-09: it is a separate page in the reference too (`/approval`), it
-   carries its own chrome rather than the masthead and the bar, and it is the
-   one screen that is read rather than answered. On a desktop it gets room.
-
-   Below 940px nothing here applies and the checkout is the same 480px column
-   every other screen is.
-
-   PROSE DOES NOT GET THE FULL WIDTH. A paragraph set across 860px is a bad
-   line to read whatever the box around it is doing, so the running copy keeps a
-   measure and centres inside the wider column; the cards, the lists and the
-   panels are what actually spread. */
-@media (min-width:940px){
-  .shell:has(.step[data-checkout].on){max-width:860px}
-  body.frames .frame:has(.step[data-checkout]){width:860px}
-  body.frames .frame:has(.step[data-checkout]) .shell{max-width:860px}
-  .ck-intro,.ck-lead,.ck-prog-body p,.ck-hipaa,.ck-pay-terms,.ck-research > p,
-  .ck-guar,.ck-ready-line{max-width:620px;margin-inline:auto}
-  /* Centred blocks that are already narrow keep their own alignment. */
-  .ck-h1,.ck-h2,.ck-ready-line{text-align:left}
-  .ck-h2.mid,.ck-research > p{text-align:center}
 }
 
 /* ------------------------------------------------- all-screens document */

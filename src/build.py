@@ -85,6 +85,22 @@ CHECKOUT_SCREEN = 48
 # order rather than off the number. Copy and rationale are in consent.py.
 CONSENT_SCREEN = 50
 
+# "Do you experience pain with erections or with ejaculation?", promoted to a
+# screen of its own on 2026-09-09 at the client's word. It was a follow-up
+# revealed by the curve / Peyronie's answer on 28, which is where both the
+# client's own document (its screens 20 and 21) and v1 put it; the reference
+# does not have it as a screen either, only as one checkbox among five on 28.
+# So it is numbered outside the extracted range like the others.
+#
+# **THIS WIDENS A STOPPING RULE AND THAT IS THE POINT TO CHECK.** Yes still ends
+# the assessment, as it did as a follow-up - but it used to be asked only of
+# patients who had reported a curve or Peyronie's, and it is now asked of
+# everyone. Anyone answering Yes is stopped, not just that cohort. Dropping the
+# stop instead would have been the other silent change, and the narrower one:
+# the patients it already covered would stop being caught. Neither direction is
+# a design decision - see the README.
+PAIN_SCREEN = 51
+
 # The reference numbers its own steps - every screen name ends in one ("A2 - 03",
 # "Blood Pressure 2 - 07.a", "Birth Date - 20"), running 1 to 21. Its bar is
 # divided over those steps, not over our question count, which is why an even
@@ -134,6 +150,20 @@ CONSENT_STEP = dict(n=CONSENT_SCREEN, name='Consent', title='', subs=[],
                     options=[], fields=[], group=None, mode=None, cond=None,
                     exclusive=None, dq_on=[], dq_kind=None)
 FLOW.insert([i for i, _p in enumerate(FLOW) if _p['n'] == 43][0] + 1, CONSENT_STEP)
+
+# It is an ordinary single-answer question, so it goes in as one: `render()`
+# needs no branch for it, `QUESTIONS` counts it, and the engine's own
+# disqualification check reads `dq_on` the way it does on every other screen.
+# It sits straight after 28, the screen it used to hang off.
+_PAIN_OPT = [{'value': 'No', 'label': 'No', 'type': 'radio', 'name': None},
+             {'value': 'Yes', 'label': 'Yes', 'type': 'radio', 'name': None,
+              'note': 'This answer will disqualify you from medication'}]
+PAIN_STEP = dict(n=PAIN_SCREEN, name='Pain with erections - 09.a',
+                 title='Do you experience pain with erections or with ejaculation?',
+                 subs=[], options=_PAIN_OPT, fields=[],
+                 group='Q_curve_pain', mode='single', cond=None,
+                 exclusive=None, dq_on=['Yes'], dq_kind=None)
+FLOW.insert([i for i, _p in enumerate(FLOW) if _p['n'] == 28][0] + 1, PAIN_STEP)
 
 # Every screen's step, with the interstitials holding the step before them -
 # which is what the reference's own bar does as you pass through one.
@@ -975,6 +1005,12 @@ def dq_reason(p):
     """Per-screen copy: "you selected a nitrate" and "your last physical was
     over three years ago" are not the same message."""
     n = p['n']
+    if n == PAIN_SCREEN:
+        # v1's wording for the same stop, minus the bending half of it - that
+        # half is still asked on 28 and still carries its own message there.
+        return ('Pain with erections or ejaculation needs to be assessed in person '
+                'before any ED medication is prescribed. Based on your answer, '
+                'BRAEVON may not be right for you right now.')
     if n == 3:
         return ('This medication is prescribed for men only, which is why the question '
                 'is asked before anything else. We are not able to continue this '
@@ -1115,9 +1151,20 @@ DQ = ('<div class="dq" id="dq" role="dialog" aria-modal="true" aria-labelledby="
       '<div class="dq-mark">%s</div>'
       '<h1 id="dqTitle">Eligibility Status</h1>'
       '<p>Based on your last answer, we cannot complete your assessment.</p>'
-      '<p>Your safety is our priority. This treatment has specific medical criteria, '
-      'and your response prevents our clinicians from safely determining your '
-      'eligibility.</p>'
+      # The per-screen reason lands here. `stop()` in engine.js looks for
+      # `[data-dq-reason]`, keeps whatever it finds as the fallback, and swaps in
+      # the stopping screen's own `data-dq` copy - so the patient is told which
+      # answer ended the assessment rather than being told nothing.
+      #
+      # THE SLOT WAS MISSING UNTIL 2026-09-09. Every screen's `dq_reason()` copy
+      # was written, emitted onto the section as `data-dq`, read by the engine
+      # and then dropped, because `querySelector` found nothing to write it
+      # into. Twenty-odd specific messages - the nitrate one, the blood
+      # pressure one, the male-only one - had never once been shown. The text
+      # below is what they all fell back to and is still the fallback.
+      '<p data-dq-reason>Your safety is our priority. This treatment has specific '
+      'medical criteria, and your response prevents our clinicians from safely '
+      'determining your eligibility.</p>'
       '</div>'
       '<p class="dq-lead">Made a mistake? Review your answer</p>'
       '<button class="dq-back" id="dqBack">Review Your Answer</button>'

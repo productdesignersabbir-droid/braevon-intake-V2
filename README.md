@@ -307,14 +307,15 @@ narrower box.
 
 ## The screens
 
-**33 screens, 26 counted questions, 36 frames in `all-screens.html`.**
+**34 screens, 27 counted questions, 37 frames in `all-screens.html`.**
 
 Not every patient sees 33. Four screens are conditional, so the shortest walk
 through the flow — answering in a way that opens no branch — is **29 screens
-plus the checkout: 30**. The floor was 29 until the consent screen was added on
-2026-09-08; that number is the one the client works in, and the mapping below is
-written in it. Consent is a screen but not a question, so the counted-question
-total is unchanged at 26.
+plus the checkout: 31**. The floor was 29 until the consent screen was added on
+2026-09-08 and 30 until the pain question was promoted to a screen of its own on
+2026-09-09; that number is the one the client works in, and the mapping below is
+written in it. Consent is a screen but not a question, so it does not move the
+counted-question total; the pain screen does, and that total is 27.
 
 | Floor | `n` | Screen | Doc |
 |---|---|---|---|
@@ -331,23 +332,24 @@ total is unchanged at 26.
 | 11 | 24 | Blood pressure diagnosis | *kept* |
 | 12 | 27 | Conditions | S22 |
 | 13 | 28 | Curve & foreskin | S20 + S21 |
-| 14 | 29 | Diagnoses | S19 |
-| 15 | 30 | Cardiovascular risk | S24 |
-| 16 | 32 | ▸ Customer quote | *kept* |
-| 17 | 33 | ▸ 137% | *kept* |
-| 18 | 34 | Cardiovascular symptoms | S23 |
-| 19 | 35 | Medicines (nitrates) | S17 |
-| 20 | 38 | Recreational drugs | S18 |
-| 21 | 39 | Conditions & surgeries | S14 |
-| 22 | 40 | Allergies | S16 |
-| 23 | 41 | Current medications | S15 |
-| 24 | 42 | Doctor notes | S27 |
-| 25 | 43 | Date of birth | *kept* |
-| 26 | 50 | Informed consent | S30 |
-| 27 | 44 | ▸ Customer quote | *kept* |
-| 28 | 45 | Medical review | *kept* |
-| 29 | 47 | Submission | *kept* |
-| 30 | 48 | Approval & checkout | *kept* |
+| 14 | 51 | Pain with erections or ejaculation | S20 |
+| 15 | 29 | Diagnoses | S19 |
+| 16 | 30 | Cardiovascular risk | S24 |
+| 17 | 32 | ▸ Customer quote | *kept* |
+| 18 | 33 | ▸ 137% | *kept* |
+| 19 | 34 | Cardiovascular symptoms | S23 |
+| 20 | 35 | Medicines (nitrates) | S17 |
+| 21 | 38 | Recreational drugs | S18 |
+| 22 | 39 | Conditions & surgeries | S14 |
+| 23 | 40 | Allergies | S16 |
+| 24 | 41 | Current medications | S15 |
+| 25 | 42 | Doctor notes | S27 |
+| 26 | 43 | Date of birth | *kept* |
+| 27 | 50 | Informed consent | S30 |
+| 28 | 44 | ▸ Customer quote | *kept* |
+| 29 | 45 | Medical review | *kept* |
+| 30 | 47 | Submission | *kept* |
+| 31 | 48 | Approval & checkout | *kept* |
 
 The four conditional screens are 10 and 22 (ED side effects and last use,
 behind a Yes on floor 9) and 25 and 26 (the two blood-pressure readings, behind
@@ -423,8 +425,9 @@ own NOTE lines and **has still never had a prescriber's sign-off** — see
 | 3 | Female |
 | 4 | "Very confident" |
 | 12 | a heart attack in the last 3 months, or a stroke in the last 6 |
-| 13 | a tight foreskin; active bending in the last 12 months; pain |
-| 19 | any of the five nitrate / alpha-blocker / riociguat answers |
+| 13 | a tight foreskin; active bending in the last 12 months |
+| 14 | pain with erections or ejaculation — **asked of everyone since 2026-09-09** |
+| 20 | any of the five nitrate / alpha-blocker / riociguat answers |
 | 11→25 | "I Don't Know" on the blood-pressure reading |
 
 Two of those are new machinery. On floors 12 and 13 the answer that stops the
@@ -688,6 +691,10 @@ privacy on and a commit with the real address is rejected at push time.
   and do not deploy this page anywhere a real patient could reach it** — a
   realistic card form is a thing people type into. Swap the block for Stripe's
   Element before launch.
+- ~~**The checkout spreads to 860px on a wide screen.**~~ Reverted on
+  2026-09-09, the same day it went in: the checkout is the 480px column again,
+  like every other screen. One column at every width is back to being true of
+  the whole build with no exceptions.
 - **The research row now renders the client's supplied logo strip**
   (`assets/images/research/row.png`, added 2026-09-09), not the type-set names.
   It is a screenshot of the reference's own row, cropped to the marks and capped
@@ -701,6 +708,25 @@ privacy on and a commit with the real address is rejected at push time.
   Swap in the official artwork before launch.
 - **The skip-to-checkout control is still in the build.** See the section above.
   It is the one thing here that must not ship.
+- **The pain question now stops the flow for everyone, and that is a widened
+  rule.** "Do you experience pain with erections or with ejaculation?" was a
+  follow-up revealed by the curve / Peyronie's answer on floor 13 — where the
+  client's own document (screens 20 and 21) and v1 both put it, and where the
+  reference has it as one checkbox among five. It became a screen of its own on
+  2026-09-09 at the client's word. Yes still ends the assessment, as it did as a
+  follow-up, but it is now asked of every patient rather than only of the ones
+  reporting a curve, so **anyone answering Yes is stopped**. Dropping the stop
+  instead would have been the other silent change and the narrower one: the
+  patients it already covered would stop being caught. Neither direction is a
+  design call — put it in front of the prescriber with the rest of the rules.
+- **Every per-screen stop message was invisible until 2026-09-09.** The overlay
+  had no `[data-dq-reason]` slot, so `stop()` in `engine.js` looked for one,
+  found nothing, and silently kept the generic fallback. Around twenty specific
+  messages — the nitrate one, the blood-pressure one, the male-only one — had
+  been written, emitted onto each section as `data-dq`, read by the engine and
+  dropped. The slot exists now and the copy reaches the patient. **Worth
+  re-reading those messages with fresh eyes before launch: they have never
+  actually been seen on screen.**
 - **The checkout's warm panels are grey since 2026-09-09.** The testimonial
   cards, the FAQ, the pack panel, the product shot and the success-probability
   panel all sat on their own warm off-white gradients; stacked, they read as the
