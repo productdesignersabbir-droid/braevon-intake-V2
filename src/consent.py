@@ -143,8 +143,10 @@ def screen(icon, ic, cta):
            + ''.join(_sec(t, b) for t, b in CS_DOC)
            + _sec('Your acknowledgement', '<p>%s</p>' % CS_ATTEST))
 
+    # v1's "CONSENT" eyebrow came off on 2026-09-08 at the client's word. The
+    # headline names the screen on its own, and no other screen in v2 carries an
+    # eyebrow - it was the one thing here still wearing v1's chrome.
     return ('<div class="col">'
-            '<p class="eyebrow">Consent</p>'
             '<h1 class="qhead">One last step &mdash; your consent</h1>'
             '<p class="sub">Quick summary below. The full document is one tap '
             'away.</p>'

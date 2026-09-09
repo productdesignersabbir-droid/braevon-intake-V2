@@ -197,6 +197,9 @@ img{max-width:100%;display:block}
   letter-spacing:-.01em; color:var(--title-ink);
 }
 .qhead.big{font-size:27px}
+/* One step down, for a headline long enough to leave an orphan on a third line
+   at the column's width. Applied per title in build.py, never globally. */
+.qhead.tight{font-size:22px}
 .sub{margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
 .qhead + .sub{margin-top:12px}
 /* On an interstitial the line under the headline is carrying the claim, not
@@ -838,10 +841,15 @@ img{max-width:100%;display:block}
 /* The HIPAA line under the state field: shield above, text centred under it,
    as the reference has it. The width cap is what breaks it over two lines
    there - without it the line runs the full field and reads as a caption. */
-.rv-hipaa{margin:14px auto 0;text-align:center;color:var(--faint)}
-.rv-hipaa svg{width:16px;height:16px;stroke:currentColor}
-.rv-hipaa p{margin:4px auto 0;max-width:250px;font-size:13px;line-height:1.45;
-  color:var(--faint)}
+/* The lock line reads as one sentence with a mark in front of it, so it sets on
+   one row rather than as an icon centred over two centred lines - asked for on
+   2026-09-09, for every screen that carries it. The `max-width` that used to
+   force the break is gone; below about 400px the text still wraps under itself
+   and the icon holds its place at the start. */
+.rv-hipaa{display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:14px auto 0;color:var(--faint)}
+.rv-hipaa svg{width:16px;height:16px;stroke:currentColor;flex:none}
+.rv-hipaa p{margin:0;font-size:13px;line-height:1.45;color:var(--faint)}
 
 .rv-help{display:flex;gap:14px;align-items:flex-start;background:#F0FDF4;
   border-radius:var(--radius-card);padding:16px;margin-top:12px}

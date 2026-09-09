@@ -248,6 +248,23 @@ Option labels are **16px**, the question head 23px, the hero h1 36px, `.sub`
 reference; the build now sits a little above it on body copy and a little
 under on headlines.
 
+**Measure on the SERVED page, never on the file.** `.claude/serve.py` (port
+4173) exists for this. Opening `index.html` straight from disk — or through a
+tool that renders it as a `data:` URL — fails the `@font-face`, because its src
+is relative and does not resolve; the page then falls back to the system font,
+whose metrics are narrower than Plus Jakarta Sans. Every line-count and wrap
+measurement taken that way is wrong, and wrong in the optimistic direction: a
+headline that measures two lines off the file can be three on the real page.
+`document.fonts.check('21px "Plus Jakarta Sans"')` tells you which one you are
+looking at in one line.
+
+`.qhead.tight` (22px) is the answer to a headline long enough to leave an orphan
+on a third line — screen 8's is the only one so far, and it went on at the
+client's word on 2026-09-09. It is applied per title through `head(tight=True)`,
+never globally. It fixes the 480px column; **below about 448px that headline
+still takes three lines**, and pulling it onto two there would need about 17px,
+under the 16px option label. That is a copy question rather than a type one.
+
 `.sub.lead` — the interstitial's claim line, set as a second heading rather
 than a caption — is the one exception. The 8% put it at 22px against a 23px
 `.qhead`, near enough that the two read as a single block, so it was taken back

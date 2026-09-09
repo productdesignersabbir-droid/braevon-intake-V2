@@ -414,6 +414,16 @@
   stage.addEventListener('click', function(e){
     if(e.target.closest('.cta-next')) advance();
   });
+  /* A <summary> keeps focus after a pointer click, and several browsers paint
+     :focus-visible on it - which leaves an accent box drawn around the row for
+     as long as the document is open, reading as a selection rather than as
+     focus. Preventing the default on mousedown stops the focus without
+     stopping the toggle: opening and closing is the click's own activation
+     behaviour, not the mousedown's. Keyboard focus is untouched, so tabbing to
+     the control still shows its ring. */
+  stage.addEventListener('mousedown', function(e){
+    if(e.target.closest('summary')) e.preventDefault();
+  });
   backBtn.addEventListener('click', function(){
     if(!history.length) return;
     show(history.pop());

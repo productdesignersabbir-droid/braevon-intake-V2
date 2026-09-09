@@ -458,14 +458,23 @@ def cta(label='Next', blocked=True):
             % (' data-blocked="1"' if blocked else '', esc(label), ICON['arrow']))
 
 
-def head(title=None, sub=None, eyebrow=None, lead=False):
+def head(title=None, sub=None, eyebrow=None, lead=False, tight=False):
     """`lead` marks a sub-head that is carrying the claim rather than
-    captioning a question - the reference sets those as a second heading."""
+    captioning a question - the reference sets those as a second heading.
+
+    `tight` takes a headline down one step so it sets on two lines instead of
+    three. It is for a title that is long enough to leave an orphan at the
+    column's width, and it is a per-title decision, not a rule - measure before
+    reaching for it, WITH THE REAL FONT LOADED. Measuring a local file opened
+    straight from disk gives the wrong answer: the @font-face URL is relative,
+    it does not resolve, and the fallback's metrics are narrower than Plus
+    Jakarta Sans. Serve the folder (`.claude/serve.py`, port 4173) and measure
+    there."""
     out = ''
     if eyebrow:
         out += '<p class="eyebrow">%s</p>' % eyebrow
     if title:
-        out += '<h1 class="qhead">%s</h1>' % title
+        out += '<h1 class="qhead%s">%s</h1>' % (' tight' if tight else '', title)
     if sub:
         out += '<p class="sub%s">%s</p>' % (' lead' if lead else '', sub)
     return out
@@ -871,8 +880,12 @@ def screen_interstitial(p):
 
         chip = '<span class="chip">%s%s</span>'
         return ('<div class="col">'
+                # 23px sets this on three lines at the 480 column, with "to"
+                # alone on the last. 22px is the whole fix - measured on the
+                # served page, not on the file. See `head(tight=...)`.
                 + head('You deserve a solution <span class="hl">that starts in '
-                       'minutes</span> and lasts as long as you need it to')
+                       'minutes</span> and lasts as long as you need it to',
+                       tight=True)
                 + '<div class="reviewcard adv">'
                   '<p class="adv-h">THE 4-IN-1 ADVANTAGE</p>'
                   '<p class="adv-sub">See how the BRAEVON 4-in-1 stack compares to '
