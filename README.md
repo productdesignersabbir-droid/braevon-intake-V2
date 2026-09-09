@@ -688,6 +688,12 @@ privacy on and a commit with the real address is rejected at push time.
   and do not deploy this page anywhere a real patient could reach it** — a
   realistic card form is a thing people type into. Swap the block for Stripe's
   Element before launch.
+- **The research row now renders the client's supplied logo strip**
+  (`assets/images/research/row.png`, added 2026-09-09), not the type-set names.
+  It is a screenshot of the reference's own row, cropped to the marks and capped
+  at its natural 494px so it is never enlarged — soft on a 2x display, and the
+  permission question under it is untouched by having artwork. See the note in
+  that folder; deleting the file brings the names back.
 - **The payment-method and card-brand marks are type and shapes, not the
   trademark artwork.** Google Pay, Amazon Pay, Visa, Mastercard, Amex and
   Discover all publish brand kits with usage rules. What is here says *which*
@@ -695,16 +701,6 @@ privacy on and a commit with the real address is rejected at push time.
   Swap in the official artwork before launch.
 - **The skip-to-checkout control is still in the build.** See the section above.
   It is the one thing here that must not ship.
-- **The promo field takes ANY non-empty code and gives 25% off.** Carried over
-  from v1's checkout on 2026-09-09; the reference has no code field, so this is
-  Braevon's own. There is no backend here to validate a code against, and a
-  prototype that rejects what the client types in a demo is worse than one that
-  takes anything — but it means the page will discount itself for `asdf`. Wire
-  it to a real validator before a patient sees it. `DISCOUNT_PCT` in
-  `checkout.py` is the percentage; `claimPromo()`/`paintPrice()` in `engine.js`
-  are the whole behaviour. Every figure it touches is written from the selected
-  pack's own `data-price`, so switching packs after claiming restates the
-  discount rather than leaving a list price under a claimed 25% off.
 - **The checkout's warm panels are grey since 2026-09-09.** The testimonial
   cards, the FAQ, the pack panel, the product shot and the success-probability
   panel all sat on their own warm off-white gradients; stacked, they read as the

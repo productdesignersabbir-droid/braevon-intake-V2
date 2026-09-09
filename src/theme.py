@@ -1389,10 +1389,15 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    optical line, and desaturated the way the reference greys them. */
 .ck-research-row img{height:26px;width:auto;max-width:118px;object-fit:contain;
   filter:grayscale(1);opacity:.72}
-/* The whole row supplied as one strip instead of five files: it spans the
-   block and keeps its own proportions, so no height cap and no per-mark
-   max-width. Still greyed, like the individual marks. */
-.ck-research-strip img{height:auto;width:100%;max-width:none}
+/* The whole row supplied as one strip instead of five files. It keeps its own
+   proportions and is capped at its NATURAL width - the file is a 494px raster,
+   and letting it fill the 812px checkout column would blow it up to a blur.
+   Below that it scales down, which costs nothing. No grayscale filter: the
+   supplied strip is already grey, and stacking one on top would flatten what
+   little contrast the marks have. */
+.ck-research-strip{display:block}
+.ck-research-strip img{display:block;margin:0 auto;height:auto;
+  width:100%;max-width:494px;filter:none;opacity:1}
 
 
 
@@ -1472,33 +1477,6 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-ready-card{background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px;margin-top:32px !important}
 .ck-ready-card h3{margin:0;font-size:19px;font-weight:600;color:var(--ink)}
-/* The promo code, carried over from v1's checkout on 2026-09-09. One row: the
-   tag mark, the field, and Apply as text rather than a second button shape -
-   the card already has one button and it is the Checkout. */
-.ck-promo{display:flex;align-items:center;gap:10px;margin-top:20px;
-  border:1px solid var(--border);border-radius:var(--radius);padding:0 14px;
-  min-height:52px;background:var(--surface)}
-.ck-promo svg{flex:none;width:18px;height:18px;stroke:var(--faint)}
-.ck-promo input{flex:1;min-width:0;border:0;outline:none;background:none;
-  font-family:inherit;font-size:16px;color:var(--ink)}
-.ck-promo input::placeholder{color:var(--faint)}
-.ck-promo-apply{flex:none;border:0;background:none;cursor:pointer;
-  font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--accent);padding:4px}
-.ck-promo.applied{border-color:var(--green-ink)}
-.ck-promo.applied .ck-promo-apply{color:var(--green-ink);cursor:default}
-/* The confirmation sits directly under the field, as v1's does, so the field
-   explains the line beneath it. */
-.ck-promo-note{display:flex;align-items:center;justify-content:center;gap:8px;
-  margin:10px 0 0;border-radius:var(--radius);background:var(--green-ink);
-  padding:12px 14px;color:#fff;font-size:14px;font-weight:600}
-.ck-promo-note svg{flex:none;width:16px;height:16px;stroke:#fff;stroke-width:2.4}
-/* The list price, struck, beside the figure the code replaced. */
-.ck-prod-price s,.ck-ready-pack s{color:var(--faint);font-weight:500;
-  text-decoration-thickness:1px}
-.ck-ready-pack s{display:block;margin-top:8px;font-size:15px}
-.ck-ready-pack s + em{margin-top:0}
-
 /* 16px between rows, down from 24 on 2026-09-09: at 24 the four lines read as
    four separate blocks rather than one list. */
 .ck-ready-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:16px}
@@ -1613,6 +1591,32 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   .ck-ready-pack{gap:14px}
   .ck-ready-pack img{width:74px}
   .ck-ready-line{font-size:19px}
+}
+
+/* ------------------------------------- the checkout, on a wide screen ----
+   The flow is one 480px column at every width and that stays true of the
+   QUESTIONNAIRE - it is the reference's own layout and the reason this build
+   has no breakpoint tiers. The checkout is the exception, asked for on
+   2026-09-09: it is a separate page in the reference too (`/approval`), it
+   carries its own chrome rather than the masthead and the bar, and it is the
+   one screen that is read rather than answered. On a desktop it gets room.
+
+   Below 940px nothing here applies and the checkout is the same 480px column
+   every other screen is.
+
+   PROSE DOES NOT GET THE FULL WIDTH. A paragraph set across 860px is a bad
+   line to read whatever the box around it is doing, so the running copy keeps a
+   measure and centres inside the wider column; the cards, the lists and the
+   panels are what actually spread. */
+@media (min-width:940px){
+  .shell:has(.step[data-checkout].on){max-width:860px}
+  body.frames .frame:has(.step[data-checkout]){width:860px}
+  body.frames .frame:has(.step[data-checkout]) .shell{max-width:860px}
+  .ck-intro,.ck-lead,.ck-prog-body p,.ck-hipaa,.ck-pay-terms,.ck-research > p,
+  .ck-guar,.ck-ready-line{max-width:620px;margin-inline:auto}
+  /* Centred blocks that are already narrow keep their own alignment. */
+  .ck-h1,.ck-h2,.ck-ready-line{text-align:left}
+  .ck-h2.mid,.ck-research > p{text-align:center}
 }
 
 /* ------------------------------------------------- all-screens document */

@@ -1176,11 +1176,7 @@ def emit_interactive():
                                             .replace('__SEGMENT_STARTS__',
                                                      json.dumps(SEGMENT_STARTS))
                                             .replace('__STEP_AT__',
-                                                     json.dumps(STEP_AT))
-                                            # the discount lives in checkout.py,
-                                            # beside the packs it comes off
-                                            .replace('__DISCOUNT_PCT__',
-                                                     str(checkout.DISCOUNT_PCT)))
+                                                     json.dumps(STEP_AT)))
     html = page('Braevon &mdash; Intake Assessment v2', body)
     for name in ('index.html', 'interactive.html'):
         open(os.path.join(OUT, name), 'w', encoding='utf-8').write(html)

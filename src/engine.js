@@ -396,56 +396,10 @@
     [].forEach.call(card.querySelectorAll('[data-pack-tag]'), function(t){
       t.textContent=pack.dataset.pack+' PACK';
     });
-    /* The price goes through paintPrice() rather than being written here, so a
-       pack switched AFTER a code was applied restates the discount instead of
-       leaving the list price under a claimed 25% off. */
-    paintPrice(card);
-  });
-  /* ------------------------------------------------------- the promo code */
-  /* Any non-empty code is accepted - see the note in checkout.py. It is one
-     boolean and one paint: `promoOn` is the whole state, and every figure the
-     code touches is written from the selected pack's own `data-price`, so the
-     bill, the product card and the closing card cannot disagree about whether
-     a discount is on. */
-  var DISCOUNT_PCT=__DISCOUNT_PCT__, promoOn=false;
-  function money(n){ return '$'+n.toFixed(2); }
-  function paintPrice(card){
-    var sel=card.querySelector('.ck-pack.selected'); if(!sel) return;
-    var list=parseFloat(String(sel.dataset.price).replace(/[^0-9.]/g,''));
-    if(isNaN(list)) return;
-    var now=promoOn ? list*(1-DISCOUNT_PCT/100) : list;
     [].forEach.call(card.querySelectorAll('[data-pack-price]'), function(p){
-      p.textContent=money(now);
+      p.textContent=pack.dataset.price;
     });
-    [].forEach.call(card.querySelectorAll('[data-pack-was]'), function(w){
-      w.textContent=money(list); w.hidden=!promoOn;
-    });
-  }
-  function claimPromo(box){
-    var input=box.querySelector('[data-promo-input]');
-    var btn=box.querySelector('[data-promo-apply]');
-    if(!input.value.trim()){ input.focus(); return; }
-    promoOn=true;
-    box.classList.add('applied');
-    input.disabled=true; btn.disabled=true; btn.textContent='Applied';
-    var card=box.closest('.step');
-    var note=card.querySelector('[data-promo-note]');
-    if(note) note.hidden=false;
-    paintPrice(card);
-  }
-  stage.addEventListener('click', function(e){
-    var btn=e.target.closest('[data-promo-apply]'); if(!btn) return;
-    claimPromo(btn.closest('.ck-promo'));
   });
-  /* Enter applies it. There is no <form> around the field - one inside the flow
-     would submit the page on Enter and reload it, losing every answer. */
-  stage.addEventListener('keydown', function(e){
-    if(e.key!=='Enter') return;
-    var input=e.target.closest('[data-promo-input]'); if(!input) return;
-    e.preventDefault();
-    claimPromo(input.closest('.ck-promo'));
-  });
-
   function advance(){
     var el=steps[idx];
     if(!stepValid(el)){ showError(el); return; }
@@ -557,12 +511,28 @@
         i.classList.toggle('on', i.dataset.goal===want);
       });
     });
+    /* With no answer, an echo falls back to WHAT THE MARKUP SHIPPED, not to a
+       hardcoded dash. The two callers want different things there and this is
+       the line that decides it: the medical review states what the patient
+       answered, so its markup carries "—" and an unanswered row must stay a
+       dash rather than invent a reading; the checkout's goals card is marketing
+       copy whose other two lines are hardcoded, so its markup carries a real
+       goal and an unanswered row reads like the rows beside it. Writing '—'
+       here overrode both, which is why the checkout's first goal looked missing
+       whenever the flow had not been walked - the skip-to-checkout control, or
+       the static frames.
+
+       The default is captured on the first fill and restored when the answer
+       goes away, so clearing a multi-select on the way back does not leave the
+       previous answer standing. */
     [].forEach.call(el.querySelectorAll('[data-echo]'), function(e){
       var k=e.dataset.echo;
+      if(e.dataset.echoDefault===undefined) e.dataset.echoDefault=e.textContent;
       if(k==='bp'){
-        e.textContent = (sysEl&&sysEl.value) ? sysEl.value+' / '+diaEl.value : '—';
+        e.textContent = (sysEl&&sysEl.value)
+          ? sysEl.value+' / '+diaEl.value : e.dataset.echoDefault;
       } else {
-        e.textContent = label(k) || '—';
+        e.textContent = label(k) || e.dataset.echoDefault;
       }
     });
   }

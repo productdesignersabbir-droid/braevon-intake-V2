@@ -85,15 +85,6 @@ PACKS = [
 # strip says "start at just", so it reads the cheapest pack rather than this one.
 LEAD_PACK = 1
 
-# The promo code, carried over from v1's checkout at the client's word on
-# 2026-09-09 - the reference has no code field, this is Braevon's own.
-#
-# **ANY non-empty code is accepted**, exactly as v1's does. There is no backend
-# here to validate one against, and a prototype that rejects what the client
-# types in a demo is worse than one that takes anything: what this is for is
-# showing the discounted state, not enforcing a code. Wire it to a real
-# validator before this goes near a patient.
-DISCOUNT_PCT = 25
 
 # The group and the field ids the checkout echoes, all of them v1's own from
 # 2026-09-04. They were the reference's (`Q1_primary_goal`, `first_name`) until
@@ -520,13 +511,23 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     _art = goal_style.get(_second) or list(goal_style.values())[0]
     if _second not in goal_style:
         _second = list(goal_style.keys())[0]
+    # Line one's DEFAULT is screen 1's first goal, not an em dash - the same
+    # goal whose glyph carries `on` above, so the icon and the label agree.
+    #
+    # It used to print "&mdash;" until the answer arrived, which made the row
+    # read as missing in every view that has no answer to echo: the static
+    # frames, and the skip-to-checkout control, which walks past screen 1
+    # without answering it. Lines two and three are hardcoded, so line one was
+    # the only one that ever looked broken. `fillSummary()` still overwrites it
+    # the moment there is a real answer; this is only what stands in until then.
+    _first = list(goal_style.keys())[0]
     goal_rows = (
         '<li><span class="ck-goal-ic" data-echo-icon="%s">%s</span>'
-        '<span data-echo="%s">&mdash;</span></li>'
+        '<span data-echo="%s">%s</span></li>'
         '<li><span style="color:%s;display:flex">%s</span><span>%s</span></li>'
         '<li><span style="color:#3B82F6;display:flex">%s</span>'
         '<span>Longer duration &amp; satisfaction</span></li>'
-        % (GOAL_GROUP, goal_icons, GOAL_GROUP,
+        % (GOAL_GROUP, goal_icons, GOAL_GROUP, _first,
            _art[1], _art[2], _second, _clock))
     goals = ('<div class="ck-goals">'
              '<span class="ck-goals-mark">%s</span>'
@@ -634,8 +635,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<div class="ck-prod-shot">'
         '<img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/>'
         '</div>'
-        '<p class="ck-prod-price">Prescribed for only '
-        '<s data-pack-was hidden></s> <b data-pack-price>%s</b></p>'
+        '<p class="ck-prod-price">Prescribed for only <b data-pack-price>%s</b></p>'
         '<ul class="ck-prod-list">%s</ul>'
         '</div></div>'
         % (packs, PACKS[LEAD_PACK][0], stars, CUSTOMERS,
@@ -840,7 +840,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<img src="assets/images/product-tablet.png" alt="The BRAEVON 4-in-1 tablet"/>'
         '<div><span class="ck-tag" data-pack-tag>%s PACK</span>'
         '<b>BRAEVON 4-in-1 prescribed for just</b>'
-        '<s data-pack-was hidden></s><em data-pack-price>%s</em></div>'
+        '<em data-pack-price>%s</em></div>'
         '</div>' % (PACKS[LEAD_PACK][0], _price(LEAD_PACK)))
     ready = (
         '<div class="ck-ready">'
@@ -855,29 +855,13 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '</div>'
         '<div class="ck-ready-card">'
         '<h3>What&rsquo;s included?</h3>'
-        '<div class="ck-promo">%s'
-        '<input type="text" data-promo-input placeholder="Enter promo code" '
-        'aria-label="Promo code" autocomplete="off" spellcheck="false"/>'
-        '<button class="ck-promo-apply" type="button" data-promo-apply>Apply</button>'
-        '</div>'
-        '<p class="ck-promo-note" data-promo-note hidden role="status" '
-        'aria-live="polite">%s<span>%d%% discount added successfully</span></p>'
         '<ul class="ck-ready-list">%s</ul>'
         '<div class="ck-ready-packs">%s</div>'
         '<p class="ck-ready-note">Pay one month at a time. No contracts, cancel '
         'anytime. <b>Medication is included.</b></p>'
         '<button class="cta cta-next" type="button">Checkout%s</button>'
         '</div></div>'
-        # In document order: the strip's price, the tag mark in front of the
-        # code field, the tick and the percentage in its confirmation, the
-        # included rows, the pack card, the button's arrow.
-        % (_from_price(),
-           # a luggage-tag mark, the same one v1 puts in front of its field
-           ic('<path d="M3 12.4V4.5a1.5 1.5 0 0 1 1.5-1.5h7.9a1.5 1.5 0 0 1 1 .4l8.2 8.2'
-              'a1.5 1.5 0 0 1 0 2.1l-7.9 7.9a1.5 1.5 0 0 1-2.1 0L3.4 13.4a1.5 1.5 0 0 1-.4-1z"/>'
-              '<path d="M7.4 7.4h.01"/>'),
-           icon['check'], DISCOUNT_PCT,
-           ready_rows, stack_rows, icon['arrow']))
+        % (_from_price(), ready_rows, stack_rows, icon['arrow']))
 
     # -- 15 ----------------------------------------------------------------
     faq = ''.join(
