@@ -309,10 +309,17 @@ img{max-width:100%;display:block}
    A min-height with the button pushed to the bottom reproduces that from one
    rule instead of a per-screen margin. */
 .col.fact{text-align:center;min-height:525px}
-/* Two auto margins - one above the content, one above the button - split the
-   free space in half, so the block sits centred between the top of the screen
-   and the button rather than bunched under the progress bar. */
-.col.fact > :first-child{margin-top:auto}
+/* The block used to sit centred between the top of the screen and the button:
+   two auto margins, one above the content and one above the button, splitting
+   the free space in half. That left 84px under the progress bar, and the client
+   asked for 20px on 2026-09-10. So only the button keeps its auto margin - it
+   stays at exactly the depth it already sat at, and the copy moves up to meet
+   the bar. `.step` gives every screen `--gap-block` under the nav row, so the
+   fact screen cancels however much of that overshoots 20 - written against the
+   token rather than as a flat -12px, because `--gap-block` drops to 26px at the
+   narrow breakpoint and a fixed number would land on 14px there. */
+.col.fact{margin-top:calc(20px - var(--gap-block))}
+.col.fact > :first-child{margin-top:0}
 .col.fact .cta{margin-top:auto}
 /* The one-figure screen carries a single statement rather than two stacked
    ones, so it can breathe where the two-figure screen has to stay tight. */
@@ -536,23 +543,30 @@ img{max-width:100%;display:block}
 }
 .hero-h1 .hi{font-weight:600}
 
-/* The claim strip. The reference fades a blue through a violet; this is a flat
-   --accent-soft instead, carried the full width of the box — the client asked
-   for solid rather than a fade on 2026-09-02. Same token the selected option
-   row uses, so the two tints cannot drift apart. */
-/* Padding runs light on the right, as the reference's does, so the line has
-   the room it needs to stay a single line down to the narrow breakpoint. */
+/* The claim strip. The reference fades a blue through a violet; this ran flat
+   --accent-soft at the full width of the column instead, because the client
+   asked for solid rather than a fade on 2026-09-02.
+   **Reversed on 2026-09-10**: the client asked for the fade back, and for the
+   box to stop just past the text rather than run the column. So it is a soft
+   --accent-soft dissolving into --page, which is the page's own white - the
+   right end of the box has nothing to butt against because it has become the
+   background by the time it gets there. --accent-soft is still the same token
+   the selected option row uses, so the two tints cannot drift apart.
+   `width:fit-content` is what sizes the box to its sentence; the padding is
+   what makes it "a little bigger than the text". `max-width:100%` keeps it
+   inside the column once `white-space` goes normal at the narrow breakpoint. */
 .strip{
-  margin:12px 0 0;padding:8px 10px 8px 12px;border-radius:var(--radius-card);
+  width:fit-content;max-width:100%;
+  margin:12px 0 0;padding:8px 18px 8px 14px;border-radius:var(--radius-card);
   font-size:14px;line-height:1.35;color:var(--ink);white-space:nowrap;
-  background:var(--accent-soft);
+  background:linear-gradient(90deg,var(--accent-soft) 0%,var(--page) 100%);
 }
 .strip strong{font-weight:700;font-style:italic}
 
-.ask{margin:20px 0 0;font-size:20px;line-height:1.3;font-weight:600;color:var(--ink)}
-.ask strong{font-weight:700}
-.ask-sub{margin:6px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
-.ask-hint{margin:2px 0 0;font-size:14px;color:var(--faint)}
+.ask{margin:20px 0 0;font-size:22px;line-height:1.3;font-weight:700;color:var(--ink)}
+.ask strong{font-weight:800}
+.ask-sub{margin:6px 0 0;font-size:17px;line-height:1.45;color:var(--muted)}
+.ask-hint{margin:2px 0 0;font-size:15px;color:var(--faint)}
 .ask-sub + .opts{margin-top:20px}
 .ask-hint + .opts{margin-top:24px}
 

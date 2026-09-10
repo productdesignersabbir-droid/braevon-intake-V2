@@ -288,6 +288,40 @@ at 480/390/360/320 — the headline holds two lines at every width and nothing
 overflows. **Only the first screen changed.** The question head is still 23px
 against the reference's 26px; that gap is untouched and still open.
 
+**A second pass the same day.** Three more, from the client looking at the
+built screen rather than at the reference:
+
+- **`.ask` again — 20px/600 to 22px/700**, `strong` 700 to 800. The numbers
+  matched the reference exactly and still read lighter than it, because Plus
+  Jakarta Sans's 600 is perceptibly thinner than the Inter the reference sets
+  it in. This is the one place on the first screen that is now deliberately
+  *not* the reference's number: matched by eye, not by measurement. `.ask-sub`
+  and `.ask-hint` went up a px each (17/15) to stay in proportion; their weight
+  and colour are untouched, and `--muted` (#4B5568) was already within a shade
+  of the reference's #4B5563.
+- **The claim strip is a fade again, and hugs its sentence.** Solid-and-
+  full-width was a client call on 2026-09-02; this reverses it. It is now
+  `--accent-soft` dissolving into `--page`, so the right end of the box has
+  become the background by the time it ends, and `width:fit-content` sizes it
+  to the text with the padding doing the "a little bigger than the text". Below
+  379px `white-space` goes normal and it fills the column over two lines, as
+  before.
+- **The fact interstitial opens 20px under the progress bar**, not 84px. It
+  used to sit centred in its `min-height:525px` on two auto margins; only the
+  button keeps one now, so the button stays at exactly the depth it already sat
+  at and the copy rises to meet the bar. Written as
+  `calc(20px - var(--gap-block))` rather than a flat -12px, because
+  `--gap-block` is 26px below 379px and a fixed number lands on 14px there.
+  Verified 20px on both fact screens at both gap values.
+
+**The freed space did not disappear, it moved.** Because the CTA keeps its auto
+margin, everything the top gave up now sits between the copy and the button:
+105px on the two-figure screen, **217px on the 137% screen**. That is the
+documented behaviour — the reference does drop its CTA to a consistent depth —
+but at 217px it reads as a hole rather than as air. Closing it means lowering
+`min-height` on `.col.fact` (or dropping it and letting each screen size to its
+content), which moves the button and is a separate decision from the 20px.
+
 **Measure on the SERVED page, never on the file.** `.claude/serve.py` (port
 4173) exists for this. Opening `index.html` straight from disk — or through a
 tool that renders it as a `data:` URL — fails the `@font-face`, because its src
