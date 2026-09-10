@@ -258,6 +258,36 @@ Option labels are **16px**, the question head 23px, the hero h1 36px, `.sub`
 reference; the build now sits a little above it on body copy and a little
 under on headlines.
 
+**Superseded for the first screen on 2026-09-10.** The client put our first
+screen beside the reference's and asked for the opening block to match it. That
+block is now set to the reference's own measured numbers rather than to a
+percentage of ours — read off `reference/medvi/medvi.html`, where the hero `h1`
+carries them inline and the three lines under it resolve through Framer style
+presets:
+
+| | ours was | reference | now |
+|---|---|---|---|
+| `.hero-h1` | 36px / 600 / 1.05 | **44px / 600 / 1.1em** (inline on its `<h1>`) | 44px / 600 / 1.1 |
+| `.strip` | 13px / 400 | **14px / 400 / 1.35em** (preset `1w1iu1y`, mobile variant) | 14px |
+| `.ask` | 18px / **400** | **20px / 600**, `strong` 700 (preset `h5suse`) | 20px / 600 |
+| `.ask-sub` | 15px | **16px / 400 / 1.45em** (preset `zcdy1q`) | 16px |
+| `.ask-hint` | 13px | *(no counterpart — the reference has one caption line, we have two)* | 14px |
+
+`.ask` is the one that was doing the damage. The reference sets that whole line
+semibold and only steps the product name up to 700; ours ran the line at 400
+with the name bold, so at a glance the line read as a caption rather than as
+the question it is. Size was half the gap and weight was the other half.
+
+`.ask-hint` has no reference number because the reference asks one question
+where we ask two ("What are you looking to improve?" / "Select all that
+apply."). It goes to 14px so the pair doesn't fall away under a 16px sibling.
+
+The narrow breakpoints moved with the base, not independently: `.hero-h1` is
+40px under 420px and 34px under 379px (was 33/28). Checked on the served page
+at 480/390/360/320 — the headline holds two lines at every width and nothing
+overflows. **Only the first screen changed.** The question head is still 23px
+against the reference's 26px; that gap is untouched and still open.
+
 **Measure on the SERVED page, never on the file.** `.claude/serve.py` (port
 4173) exists for this. Opening `index.html` straight from disk — or through a
 tool that renders it as a `data:` URL — fails the `@font-face`, because its src

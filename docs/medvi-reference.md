@@ -114,7 +114,7 @@ Changed, per the brief ("keep our font, colour and button style"):
 |---|---|
 | Inter | Plus Jakarta Sans (Braevon) |
 | `#2563EB` blue | `#E6430D` orange (Braevon) |
-| Button radius 16px, 18px/600, 54px | Braevon's button: radius 10px, 15.5px/800, 56px, arrow glyph |
+| Button radius 16px, 18px/600, 54px | Braevon's button: radius 10px, 17px/800, 56px, arrow glyph |
 | Grey `#111827` ink | Braevon's `#171D2C` / `#2B313C` |
 
 Three further deliberate differences, none of them cosmetic drift:
