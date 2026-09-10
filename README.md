@@ -306,6 +306,15 @@ built screen rather than at the reference:
   to the text with the padding doing the "a little bigger than the text". Below
   379px `white-space` goes normal and it fills the column over two lines, as
   before.
+  **Later the same day** the client asked the line itself for weight: it is
+  600 now, not 400, with the closing phrase a step above at 800. That broke
+  `white-space:nowrap` — at 600 the sentence is wider than the column between
+  380 and 420px, and a nowrap line inside a `max-width` box does not wrap, it
+  clips. The nowrap is gone; `fit-content` resolves to the line's width while
+  that fits and to the column's once it does not, so the box hugs on a wide
+  screen and wraps on a narrow one with no breakpoint deciding. Swept
+  480/440/420/400/382/375/360/320 — one line down to 420px, two below, nothing
+  clipped at any of them.
 - **The fact interstitial opens 20px under the progress bar**, not 84px. It
   used to sit centred in its `min-height:525px` on two auto margins; only the
   button keeps one now, so the button stays at exactly the depth it already sat
