@@ -315,6 +315,21 @@ built screen rather than at the reference:
   screen and wraps on a narrow one with no breakpoint deciding. Swept
   480/440/420/400/382/375/360/320 — one line down to 420px, two below, nothing
   clipped at any of them.
+- **`.ask-sub` is a question head now, not a caption.** "What are you looking
+  to improve?" is the first screen's actual question, and every other screen
+  sets its question as a `.qhead`; this one was running as a 17px/400 line in
+  `--muted`, which read as a caption for the line above it. It now carries
+  `.qhead`'s own values — 23px/600/1.2 in `--title-ink` at -.01em — verified
+  property-for-property against a real `.qhead` on the built page, and it takes
+  the same 21px step at the narrow breakpoint the other heads take. `.ask-sub`
+  appears on the first screen only, so nothing else moved.
+
+  **This leaves two heavy lines stacked** — `.ask` at 22px/700 above it and the
+  question at 23px/600 — where the reference has a bold lead-in over a plain
+  16px/400 caption. They read as a pair rather than as a lead-in and a question.
+  If that wants fixing, the lever is `.ask`: taking it back toward 18-20px, or
+  off 700, restores the step between them. Left as-is because the client asked
+  for the question to come up, not for the lead-in to go down.
 - **The fact interstitial opens 20px under the progress bar**, not 84px. It
   used to sit centred in its `min-height:525px` on two auto margins; only the
   button keeps one now, so the button stays at exactly the depth it already sat
