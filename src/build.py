@@ -665,9 +665,14 @@ def screen_hero(p):
             '<p class="strip">BRAEVON 4-in-1. Arousal &amp; performance. '
             '<strong>In minutes</strong></p>'
             '<p class="ask">See if <strong>BRAEVON</strong> is right for you.</p>'
-            # The question and its "select all that apply" come from the screen
-            # now, not from this string - Braevon's differ from the reference's.
-            + '<p class="ask-sub">%s</p>' % esc(brandify(p['subs'][0]))
+            # The "select all that apply" comes from the screen, not from this
+            # string - Braevon's differs from the reference's.
+            # `subs[0]` is the screen's question ("What are you looking to
+            # improve?") and is deliberately NOT rendered here: the client had
+            # it removed on 2026-09-10, the line above it being the only ask
+            # this screen needs. The text stays in the data rather than being
+            # deleted from it, so putting the line back is a one-line change
+            # here and not a re-authoring job.
             + ('<p class="ask-hint">%s</p>' % esc(brandify(p['subs'][1]))
                if len(p['subs']) > 1 else '')
             + options_block(p) + cta(blocked=p['n'] not in DEFAULTS) + '</div>')

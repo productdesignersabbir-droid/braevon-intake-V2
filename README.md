@@ -330,6 +330,18 @@ built screen rather than at the reference:
   If that wants fixing, the lever is `.ask`: taking it back toward 18-20px, or
   off 700, restores the step between them. Left as-is because the client asked
   for the question to come up, not for the lead-in to go down.
+
+  **Removed the same day.** Having seen it at question-head size, the client
+  had the line taken off the screen altogether — so the stacking problem
+  described just above is moot, and "See if BRAEVON is right for you." is the
+  only ask the screen carries. The `.ask-sub` rules went with it rather than
+  being left as dead selectors, and the narrow-breakpoint step reverted to
+  `.qhead` alone. **The text itself stays in `questions.json`**: the hero
+  builder simply does not render `subs[0]` any more, which keeps putting the
+  line back a one-line change in `build.py` instead of a re-authoring job.
+  `.ask-hint` ("Select all that apply.") stays, and its top margin went 2px ->
+  10px — 2px was tuned to tuck it under the question, and with the question gone
+  it sits under `.ask`, which needs the room.
 - **The fact interstitial opens 20px under the progress bar**, not 84px. It
   used to sit centred in its `min-height:525px` on two auto margins; only the
   button keeps one now, so the button stays at exactly the depth it already sat

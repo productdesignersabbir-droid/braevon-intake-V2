@@ -576,16 +576,14 @@ img{max-width:100%;display:block}
 
 .ask{margin:20px 0 0;font-size:22px;line-height:1.3;font-weight:700;color:var(--ink)}
 .ask strong{font-weight:800}
-/* This line is the screen's actual question - "What are you looking to
-   improve?" - and every other screen sets its question as a `.qhead`. It was
-   running as a 17px/400 caption in --muted, which read as a caption rather than
-   as the thing being asked, so on 2026-09-10 it was given `.qhead`'s own
-   values: 23px/600/1.2 in --title-ink at -.01em. Keep the two in step - if the
-   question head moves, this moves with it. */
-.ask-sub{margin:10px 0 0;font-size:23px;line-height:1.2;font-weight:600;
-  letter-spacing:-.01em;color:var(--title-ink)}
-.ask-hint{margin:2px 0 0;font-size:15px;color:var(--faint)}
-.ask-sub + .opts{margin-top:20px}
+/* There was a `.ask-sub` here - the screen's question, "What are you looking to
+   improve?" - set as a question head. The client had the line removed on
+   2026-09-10, so the rules for it are gone with it rather than left behind as
+   dead selectors; `git log` has them if it comes back.
+   The hint's top margin is 10px, not the 2px it ran at: 2px was tuned to tuck
+   it under the question, and with the question gone it sits under `.ask`, which
+   needs the room. */
+.ask-hint{margin:10px 0 0;font-size:15px;color:var(--faint)}
 .ask-hint + .opts{margin-top:24px}
 
 /* Goal rows are taller than an ordinary option and carry a bubble instead of a
@@ -1610,9 +1608,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 @media (max-width:420px){ .hero-h1{font-size:40px} .strip{font-size:13px} }
 @media (max-width:379px){
   :root{--pad:18px;--gap-block:26px}
-  /* `.ask-sub` is the first screen's question head, so it takes the step
-     with the others rather than staying 2px above them at the narrow width. */
-  .qhead,.ask-sub{font-size:21px}
+  .qhead{font-size:21px}
   .hero-h1{font-size:34px}
   /* The checkout at 320px. Only the three two-column cards need anything: each
      pairs a fixed-width render with a text column, and the text is what runs
