@@ -493,6 +493,20 @@ img{max-width:100%;display:block}
    as available before it is. Carried over from v1 deliberately. */
 .cta[data-blocked]{cursor:pointer}
 
+/* "Go to Checkout", under every Next: the same box as the primary button -
+   width, radius, height - outlined in the accent with accent text, so it reads
+   as the second choice rather than a second Next. */
+.cta-secondary{
+  width:100%;border:1.5px solid var(--accent);border-radius:var(--radius);
+  background:transparent;color:var(--accent);
+  font-family:inherit;font-weight:700;font-size:17px;letter-spacing:.01em;
+  padding:15px 18px;min-height:56px;margin-top:12px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background-color .14s ease;
+}
+.cta-secondary:hover{background:var(--accent-soft)}
+.cta-secondary[hidden]{display:none}
+
 
 /* ------------------------------------------------------- blood pressure */
 .bp{display:flex;align-items:flex-start;justify-content:center;gap:14px;margin-top:var(--gap-opt)}
@@ -902,22 +916,6 @@ img{max-width:100%;display:block}
 /* Ink, not the green these were: the reference sets them in its own text
    colour, and three green ticks read as three verified claims. */
 .rv-help li svg{flex:none;width:16px;height:16px;stroke:var(--ink)}
-
-/* -- the prototype's skip-to-checkout control ----------------------------- */
-/* NOT PATIENT UI. Grey on purpose - it must not read as part of the flow - and
-   it carries its own PROTOTYPE tag. Remove `SKIP_TO_CHECKOUT` in build.py and
-   this block together when the prototype stops being a prototype. */
-.proto-skip{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;
-  align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);
-  border-radius:999px;padding:9px 14px 9px 10px;cursor:pointer;
-  background:#26272D;color:#fff;font-family:inherit;font-size:14px;
-  font-weight:600;box-shadow:0 6px 22px rgba(16,20,34,.28)}
-.proto-skip:hover{background:#31333A}
-.proto-skip svg{width:15px;height:15px}
-.proto-skip[hidden]{display:none}
-.proto-skip-tag{border-radius:999px;background:rgba(255,255,255,.16);
-  padding:3px 7px;font-size:10px;font-weight:800;letter-spacing:.06em}
-@media print{.proto-skip{display:none}}
 
 /* ---------------------------------------------------- disqualification */
 /* The eligibility stop, laid out as the reference lays it out: on white, under

@@ -590,32 +590,25 @@
   var bpPre=stage.querySelector('.opts[data-group="bp"] .opt.selected');
   if(bpPre && bpPre.dataset.sys) setBP(bpPre.dataset.sys, bpPre.dataset.dia, false);
 
-  /* ------------------------------------- the prototype's skip control */
-  /* NOT PATIENT UI - see SKIP_TO_CHECKOUT in build.py. It calls show()
-     directly rather than advance(), so it walks past every screen without
-     validating or disqualifying on the way; the answers the flow starts with
-     (the defaults seeded just above) are what the checkout echoes back. */
-  var skipBtn=document.querySelector('[data-proto-skip]');
-  if(skipBtn){
-    var checkoutIdx=-1;
-    steps.forEach(function(s,i){
-      if(s.hasAttribute('data-checkout')) checkoutIdx=i;
+  /* ------------------------------------------ "Go to Checkout" buttons */
+  /* The outlined button under every Next. It calls show() directly rather
+     than advance(), so it walks past every screen without validating or
+     disqualifying on the way; the answers the flow starts with (the defaults
+     seeded just above) are what the checkout echoes back. */
+  var checkoutIdx=-1;
+  steps.forEach(function(s,i){ if(s.hasAttribute('data-checkout')) checkoutIdx=i; });
+  [].forEach.call(document.querySelectorAll('[data-go-checkout]'), function(b){
+    if(checkoutIdx<0){ b.hidden=true; return; }
+    b.addEventListener('click', function(){
+      /* An open stop screen would otherwise stay over the top of it. */
+      if(dq) dq.classList.remove('on');
+      if(done) done.classList.remove('on');
+      history.push(idx);
+      show(checkoutIdx);
+      window.scrollTo(0,0);
     });
-    if(checkoutIdx<0){ skipBtn.hidden=true; }
-    else {
-      skipBtn.addEventListener('click', function(){
-        /* An open stop screen would otherwise stay over the top of it. */
-        if(dq) dq.classList.remove('on');
-        if(done) done.classList.remove('on');
-        show(checkoutIdx);
-        window.scrollTo(0,0);
-      });
-    }
-  }
-  function syncSkip(){
-    if(!skipBtn) return;
-    skipBtn.hidden = steps[idx] && steps[idx].hasAttribute('data-checkout');
-  }
+  });
+  function syncSkip(){}
 
   syncReveals();
   show(0);

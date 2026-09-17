@@ -484,7 +484,12 @@ def cta(label='Next', blocked=True):
     rather than the native `disabled`, because the client asked that the button
     stay orange - so it has to receive the click in order to say what is
     missing."""
+    # Every Next carries "Go to Checkout" under it, so the checkout can be
+    # reached without walking the flow. It replaced a floating PROTOTYPE pill
+    # on 2026-09-17 at the client's request; the handler is in engine.js.
     return ('<button class="cta cta-next"%s>%s%s</button>'
+            '<button class="cta-secondary" data-go-checkout type="button">'
+            'Go to Checkout</button>'
             % (' data-blocked="1"' if blocked else '', esc(label), ICON['arrow']))
 
 
@@ -1203,26 +1208,10 @@ def page(title, body, body_class=''):
             % (title, CSS, cls, body))
 
 
-# A REVIEW CONTROL, NOT PATIENT UI. Asked for on 2026-09-07 so the checkout can
-# be looked at without walking the flow to reach it. It is deliberately grey
-# rather than the accent, it says PROTOTYPE on it, and it is emitted ONLY into
-# index.html / interactive.html - never into a frame, and it is the one thing in
-# the build that must come out before this goes near a real patient. Deleting
-# this constant and the line that adds it to `body` is the whole removal.
-SKIP_TO_CHECKOUT = (
-    '<button class="proto-skip" data-proto-skip type="button">'
-    '<span class="proto-skip-tag">PROTOTYPE</span>'
-    '<span>Go to checkout</span>'
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
-    'stroke-linecap="round" stroke-linejoin="round">'
-    '<path d="M5 12h13"/><path d="M12 5l7 7-7 7"/></svg></button>')
-
-
 def emit_interactive():
     body = ('<div class="shell">' + MASTHEAD + PROGRESS
             + '<main class="stage" id="stage">%s</main>' % '\n'.join(sections())
             + DQ + DONE + '</div>'
-            + SKIP_TO_CHECKOUT
             + '<script>%s</script>' % SCRIPT.replace('__TOTAL_Q__', str(TOTAL_Q))
                                             .replace('__SEGMENTS__', str(SEGMENTS))
                                             .replace('__SEGMENT_STARTS__',
