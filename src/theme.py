@@ -493,18 +493,17 @@ img{max-width:100%;display:block}
    as available before it is. Carried over from v1 deliberately. */
 .cta[data-blocked]{cursor:pointer}
 
-/* "Go to Checkout", under every Next: the same box as the primary button -
-   width, radius, height - outlined in the accent with accent text, so it reads
-   as the second choice rather than a second Next. */
+/* "Go to checkout", under every Next: a quiet text link rather than a second
+   button - no outline, small muted type and an arrow, the way the live v1 sets
+   its own review links. */
 .cta-secondary{
-  width:100%;border:1.5px solid var(--accent);border-radius:var(--radius);
-  background:transparent;color:var(--accent);
-  font-family:inherit;font-weight:700;font-size:17px;letter-spacing:.01em;
-  padding:15px 18px;min-height:56px;margin-top:12px;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  transition:background-color .14s ease;
+  width:100%;border:none;background:transparent;border-radius:var(--radius);
+  color:var(--faint);font-family:inherit;font-weight:600;font-size:13px;
+  padding:10px 12px;min-height:40px;margin-top:10px;
+  display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;
 }
-.cta-secondary:hover{background:var(--accent-soft)}
+.cta-secondary svg{width:13px;height:13px}
+.cta-secondary:hover{color:var(--muted)}
 .cta-secondary[hidden]{display:none}
 
 

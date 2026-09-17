@@ -489,8 +489,8 @@ def cta(label='Next', blocked=True):
     # on 2026-09-17 at the client's request; the handler is in engine.js.
     return ('<button class="cta cta-next"%s>%s%s</button>'
             '<button class="cta-secondary" data-go-checkout type="button">'
-            'Go to Checkout</button>'
-            % (' data-blocked="1"' if blocked else '', esc(label), ICON['arrow']))
+            'Go to checkout%s</button>'
+            % (' data-blocked="1"' if blocked else '', esc(label), ICON['arrow'], ICON['arrow']))
 
 
 def head(title=None, sub=None, eyebrow=None, lead=False, tight=False):
