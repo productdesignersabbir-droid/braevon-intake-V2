@@ -94,7 +94,7 @@ GOAL_GROUP = 'Q1_primary_goal'
 FIRST_NAME_ID = 'first_name'
 
 RATING = '4.6'
-CUSTOMERS = '175,000+'
+CUSTOMERS = '25,000+'
 
 
 def _price(i):
@@ -143,6 +143,14 @@ def chart():
         ('fill="white"', 'fill="#4B5568"'),
         # The chip lettering, near-white for a dark pill, now on a white one.
         ('fill="#FDFCFC"', 'fill="#171D2C"'),
+        # 2026-09-17, at the client's word: a thinner BRAEVON line (and the
+        # highlight that travels it, which shares the width) ...
+        ('stroke-width="11.1367"', 'stroke-width="7"'),
+        # ... and a BRAEVON chip at the other three's size. Its pill is 50.4
+        # tall against their 38, so it takes 38/50.4 of their 1.7 scale, still
+        # about its swatch so it stays pinned to its line.
+        ('.lbl-fit-braevon    { transform-origin:',
+         '.lbl-fit-braevon    { transform: scale(1.28); transform-origin:'),
     ]
     for a, b in edits:
         svg = svg.replace(a, b)
@@ -280,6 +288,17 @@ NEXT_STEPS = [
      'access to our care team and licensed clinicians &mdash; whenever you need us.'),
 ]
 
+# One solid glyph per step, in the order of NEXT_STEPS, as the reference sets
+# them beside each step's title (2026-09-17): physician, approval seal, truck,
+# calendar, speech bubble. Filled in currentColor, with white detail on top.
+STEP_ICONS = [
+    '<circle cx="12" cy="7" r="4.2"/><path d="M3.5 21.5c0-4.7 3.8-8 8.5-8s8.5 3.3 8.5 8z"/><path d="M9 14.5v2.5a3 3 0 0 0 6 0v-2.5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-width="1.6"/>',
+    '<path d="M12 1.8l2.6 1.9 3.2-.1 1 3 2.6 1.9-1 3 1 3-2.6 1.9-1 3-3.2-.1L12 22.2l-2.6-1.9-3.2.1-1-3L2.6 15.5l1-3-1-3 2.6-1.9 1-3 3.2.1z"/><path d="m8 12.2 2.8 2.8 5.2-5.6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    '<path d="M1.5 6a1.5 1.5 0 0 1 1.5-1.5h10.5A1.5 1.5 0 0 1 15 6v2h3.3a1.5 1.5 0 0 1 1.2.6l2.7 3.6a1.5 1.5 0 0 1 .3.9V17a1.5 1.5 0 0 1-1.5 1.5H3A1.5 1.5 0 0 1 1.5 17z"/><circle cx="6.5" cy="18.5" r="2.3" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="18.5" r="2.3" stroke="#fff" stroke-width="1.6"/>',
+    '<rect x="2.5" y="4.5" width="19" height="17" rx="2.5"/><path d="M7.5 2.5v4M16.5 2.5v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="m8.2 14.2 2.6 2.6 5-5.2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    '<path d="M4 3h16a2.5 2.5 0 0 1 2.5 2.5v10A2.5 2.5 0 0 1 20 18h-9.5L5 22v-4H4a2.5 2.5 0 0 1-2.5-2.5v-10A2.5 2.5 0 0 1 4 3z"/><circle cx="7.5" cy="10.5" r="1.4" fill="#fff"/><circle cx="12" cy="10.5" r="1.4" fill="#fff"/><circle cx="16.5" cy="10.5" r="1.4" fill="#fff"/>',
+]
+
 # Block 13's "What's Included?" card - the reference's four lines.
 # The third field is the row's own glyph, drawn rather than ticked. The
 # reference gives each line an icon that says what it is - a vial, a piggy bank,
@@ -346,6 +365,28 @@ FAQ = [
      'medical support, your written prescription, a month of medicine and free '
      'shipping. There is nothing else to pay and no insurance is needed. Plans can be '
      'cancelled at any time from your patient portal.'),
+    # The next three follow the reference's own questions (2026-09-17), answered
+    # from what braevon.com itself says: the four molecules and "the active
+    # ingredients in Viagra, Cialis, and Levitra plus Apomorphine", the 15-minute
+    # onset and 36-hour window, and "If you don't qualify, you don't pay". The
+    # reference's specific claims (a liquid, "2 treatments for the price of 1",
+    # the transaction "voided instantly") are MEDVi's and are not carried over.
+    ('Why choose BRAEVON over Hims or Roman?',
+     'Because you get four medicines in one dose. Most online ED services prescribe a '
+     'single ingredient at a time. BRAEVON combines the active ingredients in '
+     'Viagra&reg;, Cialis&reg; and Levitra&reg; &mdash; sildenafil, tadalafil and '
+     'vardenafil &mdash; with apomorphine, which works on desire in the brain. It '
+     'dissolves under your tongue with no water needed, and the doctor consultation, '
+     '24/7 medical support and free rush shipping are all included in the price.'),
+    ('Will I be &ldquo;up&rdquo; for 36 hours straight?',
+     'No. You stay in full control. BRAEVON keeps you ready for a window of up to 36 '
+     'hours, but an erection only happens when you are sexually aroused &mdash; no '
+     'awkward moments in between. If an erection ever lasts longer than 4 hours, '
+     'seek medical help straight away.'),
+    ('What if I&rsquo;m not approved?',
+     'Then you don&rsquo;t pay. A US-licensed doctor reviews your health profile, '
+     'usually within 24 hours. If they decide BRAEVON isn&rsquo;t right for you, '
+     'you won&rsquo;t be charged. It&rsquo;s risk-free.'),
 ]
 
 # **Block 11 is deliberately empty.** The reference runs a "BACKED BY RESEARCH
@@ -561,7 +602,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<p>You have a <b>very high</b> chance of success with prescribed BRAEVON '
         'medication</p>'
         '<div class="ck-prob-fig"><b>94%%</b><span>VERY HIGH</span></div>'
-        '</div></div>' % icon['shield'])
+        '</div></div>' % icon['dna'])
 
     # -- 4 -----------------------------------------------------------------
     rows = ''.join(
@@ -570,7 +611,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         % (bub, gly, ic(path), name, note)
         for name, note, bub, gly, path in BENEFITS)
     benefits = ('<div class="ck-sect">'
-                '<h2 class="ck-h2">The goals <em>you will accomplish</em> with your '
+                '<h2 class="ck-h2 big">The goals you will accomplish with your '
                 'plan:</h2><div class="ck-benefits">%s</div></div>' % rows)
 
     # -- 5 -----------------------------------------------------------------
@@ -579,9 +620,10 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     incl_rows = ''.join('<li>%s<span>%s</span></li>' % (tick, t)
                         for t in INCLUDED)
     included = ('<div class="ck-incl">'
-                '<h2 class="ck-h2 accent">What&rsquo;s included:</h2>'
+                '<h2 class="ck-h2 big">What&rsquo;s included:</h2>'
                 '<div class="ck-incl-card">'
-                '<img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/>'
+                '<img src="assets/images/product-included.png" '
+                'alt="A BRAEVON pouch with two 4-in-1 tablets"/>'
                 '<div><div class="ck-incl-title"><b>BRAEVON</b>'
                 '<span class="ck-tag">4-IN-1 STACK</span></div>'
                 '<ul class="ck-stack">%s</ul></div></div>'
@@ -590,10 +632,12 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
 
     # -- 6 -----------------------------------------------------------------
     steps = ''.join(
-        '<li><span class="ck-step-n">STEP %d</span><b>%s</b><p>%s</p></li>'
-        % (i + 1, name, body) for i, (name, body) in enumerate(NEXT_STEPS))
+        '<li><span class="ck-step-n">STEP %d</span>'
+        '<b><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">%s</svg>%s</b>'
+        '<p>%s</p></li>'
+        % (i + 1, STEP_ICONS[i], name, body) for i, (name, body) in enumerate(NEXT_STEPS))
     nexts = ('<div class="ck-sect">'
-             '<h2 class="ck-h2">What happens <em>next?</em></h2>'
+             '<h2 class="ck-h2 big">What happens next?</h2>'
              '<ol class="ck-steps">%s</ol></div>' % steps)
 
     # -- 7 -----------------------------------------------------------------
@@ -624,7 +668,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
                         for t in card_lines)
     product = (
         '<div class="ck-sect">'
-        '<h2 class="ck-h2 mid"><em>Choose</em> your medication preference below:</h2>'
+        '<h2 class="ck-h2 mid big">Choose your medication preference below:</h2>'
         '<div class="ck-packs" data-packs>%s</div>'
         '<div class="ck-prod">'
         '<div class="ck-prod-head">'
@@ -820,8 +864,8 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '</article>' % (title, stars, body, who, badge)
         for title, body, who in TESTIMONIALS)
     quotes = ('<div class="ck-sect">'
-              '<h2 class="ck-h2">The <em>results</em> speak for themselves!</h2>'
-              '<p class="ck-lead">Braevon success stories are coming in, and we cannot '
+              '<h2 class="ck-h2 big mid">The results speak for themselves!</h2>'
+              '<p class="ck-lead mid">Braevon success stories are coming in,<br/>and we cannot '
               'get enough.</p><div class="ck-quotes">%s</div></div>' % quotes)
 
     # -- 13 ----------------------------------------------------------------
@@ -837,7 +881,8 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     # selected in the picker.
     stack_rows = (
         '<div class="ck-ready-pack">'
-        '<img src="assets/images/product-tablet.png" alt="The BRAEVON 4-in-1 tablet"/>'
+        '<img src="assets/images/product-included.png" '
+        'alt="A BRAEVON pouch with two 4-in-1 tablets"/>'
         '<div><span class="ck-tag" data-pack-tag>%s PACK</span>'
         '<b>BRAEVON 4-in-1 prescribed for just</b>'
         '<em data-pack-price>%s</em></div>'
@@ -845,13 +890,15 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     ready = (
         '<div class="ck-ready">'
         '<span class="ck-ready-tag">Are you ready?</span>'
-        '<h2 class="ck-h2">It&rsquo;s time for the <em>life you deserve</em></h2>'
+        '<h2 class="ck-h2 big">It&rsquo;s time for the life you deserve</h2>'
         '<div class="ck-ready-rail">'
         '<div class="ck-ready-clock"><span>You&rsquo;re approved for</span>'
         '<b data-countdown>10:00</b></div>'
         '<div class="ck-ready-strip">Prescriptions start at just <b>%s</b> '
         '&mdash; no insurance needed</div>'
         '<p class="ck-ready-line">The most effective ED programme is right here</p>'
+        '<svg class="ck-ready-arrow" viewBox="0 0 40 24" fill="none" aria-hidden="true">'
+        '<path d="M4 4l16 16L36 4"/></svg>'
         '</div>'
         '<div class="ck-ready-card">'
         '<h3>What&rsquo;s included?</h3>'

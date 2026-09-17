@@ -188,6 +188,11 @@ ICON = {
     'warn': _ic('<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>'
                 '<path d="M12 9v4M12 17h.01"/>'),
     'shield': _ic('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
+    # Upright double helix for the programme card, after the client's reference
+    # (2026-09-17): two crossing strands, capped top and bottom, one rung mid.
+    'dna': _ic('<path d="M7 3c0 5 10 4 10 9s-10 4-10 9"/>'
+               '<path d="M17 3c0 5-10 4-10 9s10 4 10 9"/>'
+               '<path d="M7 3h10M7 12h10M7 21h10"/>').replace('stroke-width="1.8"', 'stroke-width="2.2"'),
     'info': _ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
     'star': ('<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6'
              '-5 4.4 1.5 6.5L10 15.2 4.2 18.6l1.5-6.5-5-4.4 6.6-.6z"/></svg>'),

@@ -1026,8 +1026,9 @@ body:not(.frames){overflow-x:clip}
 /* Centred, asked for on 2026-09-09. It is the page's own title above a centred
    goals card, and it was the one thing in that stack still ranging left. The
    section heads below it (.ck-h2) stay left - they head blocks, not the page. */
-.ck-h1{margin:40px 0 0;text-align:center;font-size:24px;line-height:1.2;font-weight:600;
-  letter-spacing:-.01em;color:var(--title-ink)}
+/* Bigger, bolder and in --ink rather than --title-ink, asked for on 2026-09-17. */
+.ck-h1{margin:40px 0 0;text-align:center;font-size:28px;line-height:1.2;font-weight:700;
+  letter-spacing:-.01em;color:var(--ink)}
 .ck-h2{margin:0;font-size:24px;line-height:1.2;font-weight:600;
   letter-spacing:-.01em;color:var(--title-ink)}
 .ck-h2 em{font-style:normal;color:var(--accent)}
@@ -1037,6 +1038,10 @@ body:not(.frames){overflow-x:clip}
    section title. Do not widen it to `.ck-h2`; the rest stay left at 23px. */
 .ck-h2.mid{text-align:center;font-size:21px}
 .ck-h2.accent{color:var(--accent)}
+/* "The goals you will accomplish with your plan:" - bigger and all black, no
+   orange highlight, asked for on 2026-09-17. */
+.ck-h2.big{font-size:28px;color:var(--ink)}
+.ck-lead.mid{text-align:center}
 .ck-lead{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--muted)}
 .ck-sect > * + *{margin-top:var(--gap-title)}
 .ck-lead + *{margin-top:var(--gap-title)}
@@ -1044,21 +1049,22 @@ body:not(.frames){overflow-x:clip}
 /* -- 1 goals ------------------------------------------------------------ */
 /* The reference centres this card at 345px rather than running it full width,
    so it reads as a receipt of what was answered rather than as a section. */
-.ck-goals{align-self:center;max-width:345px;width:100%;
+.ck-goals{align-self:center;max-width:370px;width:100%;
   background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px;
   display:flex;align-items:center;gap:16px}
-/* Soft orange, asked for on 2026-09-09 - it was the deep-to-deeper gradient the
-   checkout's darker chrome uses. On the tint the white glyph would disappear, so
-   the glyph takes the accent: the same soft-ground/accent-glyph pair every other
-   bubble in the build is built from. */
+/* Grey, asked for on 2026-09-17 (it was the soft-orange/accent pair from
+   2026-09-09): a hairline ground with a faint glyph. */
 .ck-goals-mark{flex:none;width:56px;height:56px;border-radius:50%;
-  background:var(--accent-soft);
-  display:grid;place-items:center;color:var(--accent)}
+  background:var(--hairline);
+  display:grid;place-items:center;color:var(--faint)}
 .ck-goals-mark svg{width:28px;height:28px}
-.ck-goals b{display:block;font-size:14px;font-weight:700;color:var(--accent)}
+/* At phone width the 15px goal lines ran out of room and the third wrapped;
+   less padding and gap buys the ~16px it needs (2026-09-17). */
+@media (max-width:420px){ .ck-goals{padding:20px 18px;gap:12px} }
+.ck-goals b{display:block;font-size:14px;font-weight:800;color:var(--accent)}
 .ck-goals ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:2px}
-.ck-goals li{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink)}
+.ck-goals li{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:500;color:#0B0F19}
 /* One glyph per goal rather than three identical ticks, as the reference sets
    them. The hues are `GOAL_STYLE`'s - the five the client picked for screen 1,
    and the documented exception to orange carrying emphasis. */
@@ -1072,7 +1078,7 @@ body:not(.frames){overflow-x:clip}
 .ck-goal-ic i.on{display:block}
 
 /* -- 2 intro + the onset chart ------------------------------------------ */
-.ck-intro p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ck-intro p{margin:0;font-size:16px;line-height:1.45;color:var(--ink)}
 .ck-intro p + p{margin-top:16px}
 .ck-intro b{font-weight:700}
 /* The reference gives the chart a 20px-padded box of its own under the copy.
@@ -1100,25 +1106,28 @@ body:not(.frames){overflow-x:clip}
    640px chart would hang out of each one. */
 .ck-chart{margin-top:16px;padding:20px 0;overflow-x:auto;
   -webkit-overflow-scrolling:touch}
-.ck-chart svg{display:block;width:100%;min-width:420px;height:auto;margin:0 auto}
-body:not(.frames) .ck-chart{margin-inline:calc(50% - 50vw)}
-body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
+/* Held to the content column, asked for on 2026-09-17: it used to bleed to
+   640px and floor at 420px, so it ran wider than the copy above it. */
+.ck-chart svg{display:block;width:100%;height:auto;margin:0 auto}
 
 /* -- 3 the programme card ----------------------------------------------- */
 .ck-prog{background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px}
 .ck-prog-head{display:flex;align-items:center;gap:16px}
+/* A black, heavier title, asked for on 2026-09-17. The mark is a DNA helix on
+   a warm grey ground with an orange glyph - "grey orange", the client's words,
+   after a soft-ground/strong-glyph reference. */
 .ck-prog-mark{flex:none;width:48px;height:48px;border-radius:50%;
-  background:var(--accent-soft);display:grid;place-items:center;color:var(--accent)}
-.ck-prog-mark svg{width:22px;height:22px}
-.ck-prog-head h2{margin:0;font-size:24px;line-height:1.2;font-weight:600;
-  color:var(--accent)}
+  background:#F1EDEA;display:grid;place-items:center;color:var(--accent)}
+.ck-prog-mark svg{width:24px;height:24px}
+.ck-prog-head h2{margin:0;font-size:24px;line-height:1.2;font-weight:700;
+  color:var(--ink)}
 /* Copy left, render right - the reference's own split, and it does not stack:
    the render is 109px wide and the column has 384px to give.
    40px above rather than the reference's 24: the client asked on 2026-09-04 for
    more air between the "BRAEVON 4-in-1" heading and the tablet under it. */
 .ck-prog-body{display:flex;align-items:center;gap:10px;margin-top:40px}
-.ck-prog-body p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+.ck-prog-body p{margin:0;font-size:16px;line-height:1.45;color:var(--ink)}
 .ck-prog-body b{font-weight:700}
 .ck-prog-sub{margin-top:16px !important;font-size:14px !important;color:var(--ink) !important}
 .ck-prog-body img{flex:none;width:112px;height:auto;align-self:center}
@@ -1144,23 +1153,26 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-benefit .bubble{flex:none;width:36px;height:36px;border-radius:50%;
   display:grid;place-items:center;background:var(--bub);color:var(--gly)}
 .ck-benefit .bubble svg{width:18px;height:18px;stroke-width:2.4}
-.ck-benefit b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
-.ck-benefit span{display:block;font-size:14px;color:var(--ink)}
+.ck-benefit b{display:block;font-size:17px;font-weight:600;color:var(--ink)}
+.ck-benefit span{display:block;font-size:15px;color:var(--ink)}
 
 /* -- 5 what's included --------------------------------------------------- */
-.ck-incl{background:#FFF8F5;border-radius:var(--radius-media);padding:24px 24px 40px}
+/* Soft grey rather than the warm #FFF8F5, asked for on 2026-09-17. */
+.ck-incl{background:var(--neutral-tint);border-radius:var(--radius-media);padding:24px 24px 40px}
 .ck-incl-card{display:flex;align-items:flex-start;gap:24px;margin-top:32px;
   background:var(--surface);border-radius:var(--radius-card);
   box-shadow:0 4px 16px rgba(0,0,0,.08);padding:24px}
 /* 96px, up from the reference's 66 - the client asked for the tablet bigger on
    2026-09-04. The copy column takes the difference and still holds four
    molecule lines at 212px. */
-.ck-incl-card img{flex:none;width:96px;height:auto}
+.ck-incl-card img{flex:none;width:120px;height:auto}
 /* Flex items floor at their own min-content width, so without this the stack
    list holds the card open and the whole thing runs past the column at 320px. */
 .ck-incl-card > div,.ck-prog-body > div,.ck-prod-head > div,
 .ck-benefit > div,.ck-goals > div{min-width:0}
-.ck-incl-title{display:flex;align-items:center;gap:12px}
+/* Wraps as a unit: the bigger pouch left "4-IN-1 STACK" breaking inside its chip. */
+.ck-incl-title{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.ck-incl-title .ck-tag{white-space:nowrap}
 .ck-incl-title b{font-size:19px;line-height:1.3;font-weight:700;color:var(--ink)}
 /* Primary `--accent`, at the client's word on 2026-09-04 - it was
    `--accent-deep`. Same trade as the countdown bar: white on #E6430D is 4.06:1
@@ -1179,7 +1191,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-stack b{font-weight:700}
 .ck-incl-list{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:16px}
 .ck-incl-list li{display:flex;align-items:flex-start;gap:10px;
-  font-size:13px;font-weight:500;line-height:1.3;color:var(--ink)}
+  font-size:14px;font-weight:600;line-height:1.3;color:var(--ink)}
 .ck-incl-list li > span{min-width:0}
 .ck-incl-list svg{flex:none;width:16px;height:16px;stroke:#16A34A;stroke-width:2.6}
 
@@ -1194,12 +1206,15 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    vanished and the step dots floated unconnected. */
 .ck-steps li{position:relative;padding:0 0 32px 24px;border-left:5px solid #FBD0BE}
 .ck-steps li:last-child{border-left-color:transparent;padding-bottom:0}
-.ck-steps li::before{content:"";position:absolute;left:-10px;top:2px;
+.ck-steps li::before{content:"";position:absolute;left:-10px;top:0;
   width:15px;height:15px;border-radius:50%;background:var(--accent)}
-.ck-step-n{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;
+.ck-step-n{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;
   color:var(--accent)}
-.ck-steps b{display:block;margin-top:8px;font-size:16px;font-weight:600;color:var(--ink)}
-.ck-steps p{margin:6px 0 0;font-size:14px;line-height:1.35;color:var(--muted)}
+.ck-steps b{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:16px;
+  font-weight:600;color:var(--ink)}
+/* The step's own glyph ahead of its title, as the reference sets it. */
+.ck-steps b svg{flex:none;width:20px;height:20px}
+.ck-steps p{margin:6px 0 0;font-size:14px;line-height:1.35;color:var(--title-ink)}
 
 /* -- 7 the countdown pill ------------------------------------------------ */
 /* **v1's mint**, at the client's word on 2026-09-04 - `#41D8A6` ground with
@@ -1209,7 +1224,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    split - a mint pill on the approval, a different ground on the checkout bar -
    so the two are not meant to be one family. */
 .ck-pill{align-self:center;display:flex;align-items:center;gap:8px;
-  border-radius:4px;padding:9px 16px;color:var(--mint-ink);background:var(--mint);
+  border-radius:4px;padding:9px 16px;color:var(--green-ink);background:#E6F7EE;
   font-size:16px;font-weight:600}
 .ck-pill b{font-weight:800;font-variant-numeric:tabular-nums}
 
@@ -1254,9 +1269,11 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-prod{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px}
 .ck-prod-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.ck-prod-head b{display:block;margin-top:6px;font-size:19px;font-weight:600;
+.ck-prod-head b{display:block;margin-top:6px;font-size:24px;font-weight:600;
   color:var(--ink);line-height:1.3}
-.ck-prod-head small{display:block;font-size:17px;font-weight:500;color:var(--title-ink)}
+.ck-prod-head small{display:block;font-size:19px;font-weight:500;color:var(--title-ink)}
+/* 24px wraps "BRAEVON 4-in-1" beside the stars at phone width (2026-09-17). */
+@media (max-width:420px){ .ck-prod-head b{font-size:21px;white-space:nowrap} }
 .ck-prod-rate{flex:none;text-align:right}
 .ck-prod-rate .stars{justify-content:flex-end}
 /* `:not(.stars)` is load-bearing. The rating mark is itself a `<span class=
@@ -1272,7 +1289,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   background:var(--neutral-tint);
   display:grid;place-items:center;padding:20px}
 .ck-prod-shot img{width:150px;height:auto}
-.ck-prod-price{margin:24px 0 0;text-align:center;font-size:18px;font-weight:500;
+.ck-prod-price{margin:24px 0 0;text-align:center;font-size:21px;font-weight:500;
   color:var(--title-ink)}
 .ck-prod-price b{font-weight:700;color:var(--green-ink)}
 .ck-prod-list{margin:20px 0 0;padding:0;list-style:none;display:grid;gap:16px}
@@ -1291,7 +1308,8 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    and no border. It was an outlined green capsule until the client asked for it
    matched on 2026-09-04. The ring is v1's own `hsa` glyph. */
 .ck-hsa{display:flex;align-items:center;justify-content:center;gap:10px}
-.ck-hsa svg{flex:none;width:30px;height:30px;color:var(--green-ink)}
+/* Blue, the HSA/FSA mark's own colour, at the client's word on 2026-09-17. */
+.ck-hsa svg{flex:none;width:30px;height:30px;color:#2563EB}
 .ck-hsa p{margin:0;font-size:18px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
 .ck-hsa b{font-weight:800}
 /* No card: the reference sets these two lines straight on the page under the
@@ -1470,8 +1488,8 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    end of the sentence instead of a tag. --accent-soft is the build's own tint,
    the one the selected row and the claim strip already sit on. */
 .ck-ready-tag{display:inline-block;border-radius:33px;padding:16px 24px;
-  background:var(--accent-soft);
-  font-size:16px;font-weight:500;color:var(--ink)}
+  background:var(--neutral-tint);
+  font-size:16px;font-weight:500;color:var(--accent)}
 .ck-ready-clock{display:inline-flex;align-items:center;gap:5px;
   background:var(--surface);padding:6px 8px;font-size:13px;color:var(--muted)}
 .ck-ready-clock b{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
@@ -1488,16 +1506,23 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   background:var(--mint);
   color:var(--mint-ink);font-size:13px}
 .ck-ready-strip b{font-weight:900}
-/* The reference runs a 4px rule down the left of the clock / strip / line
-   group with an arrow head at its foot, pointing at the card below. It is one
-   border on the group rather than three, and the head is a rotated caret. */
-.ck-ready-rail{position:relative;padding-left:32px;
-  border-left:4px solid var(--accent-soft);margin-top:24px !important}
+/* Redrawn to the reference on 2026-09-17. One 5px rule runs down the group,
+   just inside the column's left edge, and ends in a wide open chevron. The
+   clock and the strip sit ON the rule rather than beside it - each carries its
+   own ground and a stacking context, so the rule reads as passing behind them
+   - and only the closing line is indented off it. The rule starts a short
+   stub above the clock, as the reference's does. It was a pale border-left
+   with a small caret, which on white barely showed. */
+.ck-ready-rail{--rail:#F6B89E;position:relative;padding-bottom:56px;
+  margin-top:20px !important}
+.ck-ready-rail::before{content:"";position:absolute;left:8px;width:5px;top:0;bottom:4px;
+  border-radius:3px;background:var(--rail)}
+.ck-ready-rail > *{position:relative;z-index:1}
 .ck-ready-rail > * + *{margin-top:16px}
-.ck-ready-rail::after{content:"";position:absolute;left:-9px;bottom:-6px;
-  width:14px;height:14px;border-right:4px solid var(--accent-soft);
-  border-bottom:4px solid var(--accent-soft);transform:rotate(45deg);
-  border-bottom-right-radius:3px}
+.ck-ready-rail .ck-ready-clock{margin-top:44px;padding-left:0}
+.ck-ready-rail .ck-ready-line{padding-left:48px}
+.ck-ready-arrow{position:absolute !important;left:-9.5px;bottom:0;width:40px;height:24px;
+  stroke:var(--rail);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
 /* The rail runs 16px between its three parts; the claim under the strip takes
    more, asked for on 2026-09-09 - it is the payoff line rather than a third
    item in a stack, and at 16 it sat against the green edge. */
@@ -1513,7 +1538,7 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
 .ck-ready-list li{display:flex;align-items:flex-start;gap:16px}
 /* Each row now carries its own glyph instead of a tick, so the stroke comes
    back to the build's ordinary 1.8 - 2.4 was the weight a lone check needed. */
-.ck-ready-list svg{flex:none;width:22px;height:22px;stroke:var(--accent);
+.ck-ready-list svg{flex:none;width:22px;height:22px;stroke:var(--title-ink);
   stroke-width:1.8}
 .ck-ready-list b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
 .ck-ready-list span{display:block;margin-top:2px;font-size:13px;color:var(--muted)}
@@ -1525,6 +1550,12 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
   border-radius:var(--radius-card);padding:24px}
 .ck-ready-pack{display:flex;align-items:center;gap:20px;min-width:0}
 .ck-ready-pack > div{flex:1;min-width:0}
+/* Soft grey with orange lettering here only, asked for on 2026-09-17; the
+   other chips keep the mint pair. A step darker than the panel it sits on. */
+/* No fill, asked for on 2026-09-17: orange lettering alone, with the side
+   padding dropped so it lines up with the title under it. */
+.ck-ready-pack .ck-tag,.ck-prod-head .ck-tag{background:none;color:var(--accent);
+  padding-left:0;padding-right:0}
 /* The render is a cut-out PNG, so its lift is a drop-shadow filter and never a
    box-shadow - a box-shadow paints a rectangle behind the transparency. */
 .ck-ready-pack img{flex:none;width:96px;height:auto;
@@ -1550,18 +1581,18 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
    with it: a warm hairline on a grey ground reads as a stray tint. */
 .ck-faq{background:var(--neutral-tint);
   border-radius:12px;padding:32px}
-.ck-faq h2{margin:0 0 24px;text-align:center;font-size:19px;font-weight:600;
-  color:var(--accent)}
+.ck-faq h2{margin:0 0 24px;text-align:center;font-size:26px;font-weight:600;
+  line-height:1.2;letter-spacing:-.01em;color:var(--ink)}
 .ck-faq-item{border-top:1px solid var(--border)}
 .ck-faq-item:first-of-type{border-top:none}
 .ck-faq-item summary{display:flex;align-items:flex-start;gap:10px;
   list-style:none;cursor:pointer;padding:14px 0;
-  font-size:14px;line-height:1.35;color:var(--title-ink)}
+  font-size:15px;font-weight:600;line-height:1.35;color:var(--ink)}
 .ck-faq-item summary::-webkit-details-marker{display:none}
 .ck-faq-item summary svg{order:2;flex:none;width:16px;height:16px;margin-left:auto;
-  stroke:var(--accent);transition:transform .16s ease}
+  stroke:var(--ink);transition:transform .16s ease}
 .ck-faq-item[open] summary svg{transform:rotate(180deg)}
-.ck-faq-item p{margin:0 0 16px;font-size:14px;line-height:1.5;color:var(--muted)}
+.ck-faq-item p{margin:0 0 16px;font-size:15px;line-height:1.5;color:var(--muted)}
 
 /* ------------------------------------------------------------- footer */
 /* braevon.com's own footer, its phone variant, in white rather than the site's
@@ -1611,10 +1642,11 @@ body:not(.frames) .ck-chart svg{width:min(100vw,640px)}
      pairs a fixed-width render with a text column, and the text is what runs
      out of room first. The pack pair is left alone - it is two 130px cards at
      this width and still reads. */
-  .ck-h1,.ck-h2,.ck-prog-head h2{font-size:23px}
+  .ck-h2,.ck-prog-head h2{font-size:23px}
+  .ck-h1,.ck-h2.big{font-size:26px}
   .ck-incl,.ck-faq{padding:20px}
   .ck-incl-card{gap:16px;padding:18px}
-  .ck-incl-card img{width:52px}
+  .ck-incl-card img{width:72px}
   .ck-prog-body img{width:88px}
   .ck-ready-packs{padding:18px}
   .ck-ready-pack{gap:14px}
