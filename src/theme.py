@@ -1248,7 +1248,7 @@ body:not(.frames){overflow-x:clip}
    both sub-lines ran to the same number of lines. */
 .ck-pack{flex:1;min-width:0;position:relative;background:var(--surface);
   border:1px solid var(--hairline);border-radius:var(--radius-card);
-  box-shadow:var(--shadow);padding:32px 12px;cursor:pointer;
+  box-shadow:var(--shadow);padding:44px 12px 17px;cursor:pointer;
   display:flex;flex-direction:column;justify-content:center;
   font-family:inherit;text-align:center;transition:box-shadow .14s ease,border-color .14s ease}
 .ck-pack.selected{border-color:var(--accent-line);box-shadow:0 4px 20px var(--glow)}
@@ -1264,6 +1264,9 @@ body:not(.frames){overflow-x:clip}
    the pack tag on the closing card wears, so the two badges match. */
 /* Centred across the top of the card rather than pinned to its right corner,
    asked for on 2026-09-17. */
+/* The card's content centres in the space BELOW the badge, not in the whole
+   card (2026-09-17): the badge ends at 26px, so the top padding is that plus
+   the same 18px the bottom takes. */
 .ck-pack em{position:absolute;top:10px;left:50%;transform:translateX(-50%);
   white-space:nowrap;display:inline-block;
   font-style:normal;border-radius:4px;background:var(--mint);
@@ -1355,7 +1358,7 @@ body:not(.frames){overflow-x:clip}
    the flow do not feel like two products. */
 .ck-form{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:20px}
-.ck-form h3{margin:0 0 16px;font-size:17px;font-weight:700;color:var(--ink);
+.ck-form h3{margin:0 0 16px;font-size:22px;font-weight:700;color:var(--ink);
   text-align:center}
 .ck-fld{margin-top:12px}
 .ck-fld:first-of-type{margin-top:0}
