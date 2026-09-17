@@ -1159,13 +1159,23 @@ body:not(.frames){overflow-x:clip}
 /* -- 5 what's included --------------------------------------------------- */
 /* Soft grey rather than the warm #FFF8F5, asked for on 2026-09-17. */
 .ck-incl{background:var(--neutral-tint);border-radius:var(--radius-media);padding:24px 24px 40px}
-.ck-incl-card{display:flex;align-items:flex-start;gap:24px;margin-top:32px;
+/* Stacked, asked for on 2026-09-17: the pouch centred on top, bigger, and the
+   name, chip and molecule lines centred under it - side by side left the copy
+   a narrow column that broke every molecule line. */
+.ck-incl-card{display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:20px;margin-top:32px;
   background:var(--surface);border-radius:var(--radius-card);
   box-shadow:0 4px 16px rgba(0,0,0,.08);padding:24px}
 /* 96px, up from the reference's 66 - the client asked for the tablet bigger on
    2026-09-04. The copy column takes the difference and still holds four
    molecule lines at 212px. */
-.ck-incl-card img{flex:none;width:120px;height:auto}
+.ck-incl-card img{flex:none;width:180px;height:auto}
+.ck-incl-card > div{width:100%}
+.ck-incl-card .ck-incl-title{justify-content:center}
+/* The molecule lines read left-aligned (2026-09-17), as one block centred
+   under the name rather than four ragged centred lines. */
+.ck-incl-card .ck-stack{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto;
+  text-align:left}
 /* Flex items floor at their own min-content width, so without this the stack
    list holds the card open and the whole thing runs past the column at 320px. */
 .ck-incl-card > div,.ck-prog-body > div,.ck-prod-head > div,
@@ -1173,7 +1183,7 @@ body:not(.frames){overflow-x:clip}
 /* Wraps as a unit: the bigger pouch left "4-IN-1 STACK" breaking inside its chip. */
 .ck-incl-title{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 .ck-incl-title .ck-tag{white-space:nowrap}
-.ck-incl-title b{font-size:19px;line-height:1.3;font-weight:700;color:var(--ink)}
+.ck-incl-title b{font-size:24px;line-height:1.3;font-weight:700;color:var(--ink)}
 /* Primary `--accent`, at the client's word on 2026-09-04 - it was
    `--accent-deep`. Same trade as the countdown bar: white on #E6430D is 4.06:1
    and this cap is 10px, so it is under AA. Their brand call, taken knowingly.
@@ -1238,7 +1248,7 @@ body:not(.frames){overflow-x:clip}
    both sub-lines ran to the same number of lines. */
 .ck-pack{flex:1;min-width:0;position:relative;background:var(--surface);
   border:1px solid var(--hairline);border-radius:var(--radius-card);
-  box-shadow:var(--shadow);padding:34px 12px 22px;cursor:pointer;
+  box-shadow:var(--shadow);padding:32px 12px;cursor:pointer;
   display:flex;flex-direction:column;justify-content:center;
   font-family:inherit;text-align:center;transition:box-shadow .14s ease,border-color .14s ease}
 .ck-pack.selected{border-color:var(--accent-line);box-shadow:0 4px 20px var(--glow)}
@@ -1252,19 +1262,30 @@ body:not(.frames){overflow-x:clip}
 /* Green, and small enough to sit inside the card's own stroke rather than
    crowding it - 2026-09-09. It takes the countdown's mint pair, the same one
    the pack tag on the closing card wears, so the two badges match. */
-.ck-pack em{position:absolute;top:7px;right:7px;display:inline-block;
+/* Centred across the top of the card rather than pinned to its right corner,
+   asked for on 2026-09-17. */
+.ck-pack em{position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  white-space:nowrap;display:inline-block;
   font-style:normal;border-radius:4px;background:var(--mint);
   padding:3px 6px;font-size:10px;font-weight:700;color:var(--mint-ink);
   letter-spacing:.03em;line-height:1}
 /* No shim on the title any more: the card's own top padding clears the badge
    and the flex centring keeps the pair aligned. */
-.ck-pack b{display:block;font-size:19px;font-weight:700;
+.ck-pack b{display:block;font-size:24px;font-weight:700;
   color:var(--accent);line-height:1.3}
 /* 13px, and `nowrap`: the sub-line is abbreviated to hold one line, and this
    makes that a rule rather than a hope - if a longer one is ever set here it
    will overflow visibly instead of quietly wrapping the cards out of step. */
 .ck-pack small{display:block;margin-top:2px;font-size:13px;line-height:1.35;
   color:var(--ink);white-space:nowrap}
+/* MOST POPULAR takes the brand's solid orange; BEST VALUE keeps the mint - the
+   reference's own pairing of a strong and a soft badge (2026-09-17). */
+.ck-pack em.hot{background:var(--accent);color:#fff}
+/* The 12-pack's saving, pulled out of the sub-line so it reads first. */
+.ck-save.ghost{visibility:hidden}
+.ck-save{display:inline-block;padding:2px 6px;border-radius:4px;
+  font-style:normal;font-size:12px;font-weight:800;letter-spacing:.02em;
+  background:#DCF5E6;color:var(--green-ink);vertical-align:1px}
 
 .ck-prod{margin-top:16px;background:var(--surface);border-radius:var(--radius-media);
   box-shadow:var(--shadow);padding:24px}
@@ -1288,10 +1309,14 @@ body:not(.frames){overflow-x:clip}
 .ck-prod-shot{margin-top:24px;border-radius:var(--radius-card);
   background:var(--neutral-tint);
   display:grid;place-items:center;padding:20px}
-.ck-prod-shot img{width:150px;height:auto}
+/* Sized by height, not width: the 12-pack render is landscape and the 6-pack's
+   portrait, so a shared width left the two pouches looking half the size. */
+.ck-prod-shot img{width:auto;height:200px;max-width:100%;object-fit:contain}
 .ck-prod-price{margin:24px 0 0;text-align:center;font-size:21px;font-weight:500;
   color:var(--title-ink)}
-.ck-prod-price b{font-weight:700;color:var(--green-ink)}
+/* Bigger, heavier and underlined, asked for on 2026-09-17. */
+.ck-prod-price b{font-size:26px;font-weight:800;color:var(--green-ink);
+  text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:5px}
 .ck-prod-list{margin:20px 0 0;padding:0;list-style:none;display:grid;gap:16px}
 .ck-prod-list li{display:flex;align-items:flex-start;gap:10px;
   font-size:13px;font-weight:500;line-height:1.3;color:var(--ink)}
@@ -1558,7 +1583,7 @@ body:not(.frames){overflow-x:clip}
   padding-left:0;padding-right:0}
 /* The render is a cut-out PNG, so its lift is a drop-shadow filter and never a
    box-shadow - a box-shadow paints a rectangle behind the transparency. */
-.ck-ready-pack img{flex:none;width:96px;height:auto;
+.ck-ready-pack img{flex:none;width:auto;height:126px;max-width:130px;object-fit:contain;
   filter:drop-shadow(0 12px 22px rgba(16,20,34,.18))}
 /* 17px, down from 19 on 2026-09-09: the line sets on two rather than three
    beside the render, and it no longer outweighs the .ck-h2 above it. The price
@@ -1646,11 +1671,11 @@ body:not(.frames){overflow-x:clip}
   .ck-h1,.ck-h2.big{font-size:26px}
   .ck-incl,.ck-faq{padding:20px}
   .ck-incl-card{gap:16px;padding:18px}
-  .ck-incl-card img{width:72px}
+  .ck-incl-card img{width:150px}
   .ck-prog-body img{width:88px}
   .ck-ready-packs{padding:18px}
   .ck-ready-pack{gap:14px}
-  .ck-ready-pack img{width:74px}
+  .ck-ready-pack img{height:100px;max-width:100px}
   .ck-ready-line{font-size:19px}
 }
 

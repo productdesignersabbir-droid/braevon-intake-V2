@@ -78,12 +78,26 @@ PACKS = [
     # both cards hold it on ONE line at the column's width. Asked for on
     # 2026-09-09; spelled out, the 12-pack's ran to two and pushed the two cards
     # out of alignment with each other.
-    ('6',  99,  '$99.00',  '$16.50/tab', ''),
-    ('12', 132, '$132.00', '$11.00/tab &middot; save 33%', 'MOST POPULAR'),
+    # Badges moved on 2026-09-17, at the client's word: MOST POPULAR on the 6,
+    # BEST VALUE on the 12, and the 12's saving set as a green chip of its own.
+    # No per-tablet price on the cards since 2026-09-17, at the client's word.
+    # The 6 has no sub-line at all, so "6 PACK" centres in its card both ways.
+    ('6',  99,  '$99.00',  '', 'MOST POPULAR'),
+    ('12', 132, '$132.00', '<i class="ck-save">SAVE 33%</i>', 'BEST VALUE'),
 ]
 # The Figma's "Most popular" opens selected, as the reference's does. The CTA
 # strip says "start at just", so it reads the cheapest pack rather than this one.
 LEAD_PACK = 1
+
+# The render that follows the pack pick on the product card and the closing
+# card (2026-09-17): one pouch for the 6-pack, two for the 12. Keyed by the
+# tablet count in PACKS. The "What's included" card keeps the single pouch.
+PACK_IMAGES = {
+    '6':  ('assets/images/product-included.png',
+           'A BRAEVON pouch with two 4-in-1 tablets'),
+    '12': ('assets/images/product-12pack.png',
+           'Two BRAEVON pouches with two 4-in-1 tablets'),
+}
 
 
 # The group and the field ids the checkout echoes, all of them v1's own from
@@ -651,11 +665,13 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     # to carry visually, so it is still announced.
     packs = ''.join(
         '<button class="ck-pack%s" type="button" data-pack="%s" data-price="%s" '
-        'aria-pressed="%s">%s'
-        '<b>%s PACK</b><small>%s</small></button>'
+        'data-img="%s" data-img-alt="%s" aria-pressed="%s">%s'
+        '<b>%s PACK</b>%s</button>'
         % (' selected' if i == LEAD_PACK else '', n, shown,
+           PACK_IMAGES[n][0], PACK_IMAGES[n][1],
            'true' if i == LEAD_PACK else 'false',
-           ('<em>%s</em>' % badge) if badge else '', n, sub)
+           ('<em%s>%s</em>' % (' class="hot"' if badge == 'MOST POPULAR' else '', badge))
+           if badge else '', n, ('<small>%s</small>' % sub) if sub else '')
         for i, (n, price, shown, sub, badge) in enumerate(PACKS))
     card_lines = [
         ('Powerful 4-in-1 performance stack that targets desire (brain) and '
@@ -677,7 +693,9 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<div class="ck-prod-rate">%s<span>%s customers</span></div>'
         '</div>'
         '<div class="ck-prod-shot">'
-        '<img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/>'
+        # The opening render is the lead pack's (the 12): PACK_IMAGES['12'].
+        '<img data-pack-img src="assets/images/product-12pack.png" '
+        'alt="Two BRAEVON pouches with two 4-in-1 tablets"/>'
         '</div>'
         '<p class="ck-prod-price">Prescribed for only <b data-pack-price>%s</b></p>'
         '<ul class="ck-prod-list">%s</ul>'
@@ -881,8 +899,8 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     # selected in the picker.
     stack_rows = (
         '<div class="ck-ready-pack">'
-        '<img src="assets/images/product-included.png" '
-        'alt="A BRAEVON pouch with two 4-in-1 tablets"/>'
+        '<img data-pack-img src="assets/images/product-12pack.png" '
+        'alt="Two BRAEVON pouches with two 4-in-1 tablets"/>'
         '<div><span class="ck-tag" data-pack-tag>%s PACK</span>'
         '<b>BRAEVON 4-in-1 prescribed for just</b>'
         '<em data-pack-price>%s</em></div>'

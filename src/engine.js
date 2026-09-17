@@ -399,6 +399,10 @@
     [].forEach.call(card.querySelectorAll('[data-pack-price]'), function(p){
       p.textContent=pack.dataset.price;
     });
+    /* The render follows the pick too: one pouch for 6, two for 12. */
+    [].forEach.call(card.querySelectorAll('[data-pack-img]'), function(i){
+      if(pack.dataset.img){ i.src=pack.dataset.img; i.alt=pack.dataset.imgAlt||i.alt; }
+    });
   });
   function advance(){
     var el=steps[idx];
