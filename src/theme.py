@@ -911,11 +911,13 @@ img{max-width:100%;display:block}
 
 /* --accent-soft, the checkout's selected-row tint, in place of the mint -
    asked for on 2026-09-18. */
-.rv-help{display:flex;gap:14px;align-items:flex-start;background:var(--accent-soft);
-  border-radius:var(--radius-card);padding:16px;margin-top:12px}
+.rv-help{display:flex;flex-direction:column;gap:16px;background:var(--accent-soft);
+  border-radius:var(--radius-card);padding:20px 16px;margin-top:12px}
 /* The checkout's pouch-and-tablets render (2026-09-18), not the lone tablet.
-   It is portrait, so it gets a little more width than the square tablet had. */
-.rv-help img{flex:none;width:76px;height:auto;object-fit:contain}
+   Stacked above the copy and centred at 200px tall, asked for the same day -
+   beside the copy it could only be a thumbnail. */
+.rv-help img{flex:none;align-self:center;width:auto;height:200px;max-width:100%;
+  object-fit:contain}
 .rv-help b{display:block;font-size:18px;font-weight:700;color:var(--title-ink)}
 .rv-help p{margin:8px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
 .rv-help ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
