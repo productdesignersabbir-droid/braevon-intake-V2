@@ -841,14 +841,15 @@ img{max-width:100%;display:block}
    own, as the reference does: a brand bar, a green confirmation, the review
    panel, then the "how it helps" block. */
 .rv{gap:0}
-/* Black, not the accent: the client asked on 2026-09-18 for the dark gradient
-   the checkout's testimonial photo sits on (`.qshot`). The sub-lines went from
-   orange-tinted whites to a neutral grey and white to match. */
+/* Black, not the accent: the client asked on 2026-09-18 for the checkout's dark
+   ink gradient - the one v3's checkout runs on its timer bar, pill and price
+   strip (Option 2, #171D2C into #5A6275). The sub-lines went from orange-tinted
+   whites to a cool grey and white to match. */
 .rv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
-  background:linear-gradient(150deg,#3B2F2A,#1B1512);color:#fff;
+  background:linear-gradient(90deg,#171D2C 0%,#5A6275 100%);color:#fff;
   padding:16px;margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0}
 .rv-head b{display:block;font-size:21px;font-weight:800;letter-spacing:.02em}
-.rv-head span{display:block;font-size:15px;color:#D6D3D1}
+.rv-head span{display:block;font-size:15px;color:#CBD5E1}
 .rv-head-r{text-align:right}
 /* Carries .rv-head so it beats the 14px set on that block's spans. */
 .rv-head .rv-ready{font-size:13px;font-weight:700;color:#fff}
