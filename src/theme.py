@@ -841,14 +841,17 @@ img{max-width:100%;display:block}
    own, as the reference does: a brand bar, a green confirmation, the review
    panel, then the "how it helps" block. */
 .rv{gap:0}
+/* Black, not the accent: the client asked on 2026-09-18 for the dark gradient
+   the checkout's testimonial photo sits on (`.qshot`). The sub-lines went from
+   orange-tinted whites to a neutral grey and white to match. */
 .rv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
-  background:var(--accent);color:#fff;
+  background:linear-gradient(150deg,#3B2F2A,#1B1512);color:#fff;
   padding:16px;margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0}
 .rv-head b{display:block;font-size:21px;font-weight:800;letter-spacing:.02em}
-.rv-head span{display:block;font-size:15px;color:#FDE0D4}
+.rv-head span{display:block;font-size:15px;color:#D6D3D1}
 .rv-head-r{text-align:right}
 /* Carries .rv-head so it beats the 14px set on that block's spans. */
-.rv-head .rv-ready{font-size:13px;font-weight:700;color:#FFD9C7}
+.rv-head .rv-ready{font-size:13px;font-weight:700;color:#fff}
 
 .rv-ok{display:flex;gap:10px;align-items:flex-start;background:#F0FDF4;
   padding:14px 16px;margin:0 calc(var(--pad) * -1)}
@@ -905,9 +908,13 @@ img{max-width:100%;display:block}
 .rv-hipaa svg{width:16px;height:16px;stroke:currentColor;flex:none}
 .rv-hipaa p{margin:0;font-size:13px;line-height:1.45;color:var(--faint)}
 
-.rv-help{display:flex;gap:14px;align-items:flex-start;background:#F0FDF4;
+/* --accent-soft, the checkout's selected-row tint, in place of the mint -
+   asked for on 2026-09-18. */
+.rv-help{display:flex;gap:14px;align-items:flex-start;background:var(--accent-soft);
   border-radius:var(--radius-card);padding:16px;margin-top:12px}
-.rv-help img{flex:none;width:64px;height:auto;object-fit:contain}
+/* The checkout's pouch-and-tablets render (2026-09-18), not the lone tablet.
+   It is portrait, so it gets a little more width than the square tablet had. */
+.rv-help img{flex:none;width:76px;height:auto;object-fit:contain}
 .rv-help b{display:block;font-size:18px;font-weight:700;color:var(--title-ink)}
 .rv-help p{margin:8px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
 .rv-help ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
