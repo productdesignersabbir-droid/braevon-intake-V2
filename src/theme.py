@@ -909,9 +909,9 @@ img{max-width:100%;display:block}
 .rv-hipaa svg{width:16px;height:16px;stroke:currentColor;flex:none}
 .rv-hipaa p{margin:0;font-size:13px;line-height:1.45;color:var(--faint)}
 
-/* --accent-soft, the checkout's selected-row tint, in place of the mint -
-   asked for on 2026-09-18. */
-.rv-help{display:flex;flex-direction:column;gap:16px;background:var(--accent-soft);
+/* #FFF4F6, the blush the checkout's "very high chance" panel (`.ck-prob`) sits
+   on - asked for on 2026-09-18, after --accent-soft read too orange. */
+.rv-help{display:flex;flex-direction:column;gap:16px;background:#FFF4F6;
   border-radius:var(--radius-card);padding:20px 16px;margin-top:12px}
 /* The checkout's pouch-and-tablets render (2026-09-18), not the lone tablet.
    Stacked above the copy and centred at 200px tall, asked for the same day -

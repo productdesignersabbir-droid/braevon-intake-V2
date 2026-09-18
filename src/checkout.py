@@ -536,7 +536,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     # shipping and cancellation answer. Flagged for the client.
 
     # -- 0 -----------------------------------------------------------------
-    head = ('<h1 class="ck-h1"><span data-fname-echo>Your</span> BRAEVON 4-in-1 '
+    head = ('<h1 class="ck-h1"><span data-fname-echo>Your</span> BRAEVON PRIME<span style="font-weight:400">&trade;</span> '
             'prescription plan approval!</h1>')
 
     # -- 1 -----------------------------------------------------------------
@@ -604,13 +604,13 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     programme = (
         '<div class="ck-prog">'
         '<div class="ck-prog-head"><span class="ck-prog-mark">%s</span>'
-        '<h2>BRAEVON 4-in-1</h2></div>'
+        '<h2>BRAEVON PRIME<span style="font-weight:400">&trade;</span></h2></div>'
         '<div class="ck-prog-body">'
         '<div><p>Based on your intake form, you are a good candidate for the '
-        '<b>BRAEVON 4-in-1 programme</b>.</p>'
+        '<b>BRAEVON PRIME<span style="font-weight:400">&trade;</span> programme</b>.</p>'
         '<p class="ck-prog-sub">This 4-in-1 stack is designed to prime desire (brain) '
         'and boost blood flow (body) in one sublingual dose.</p></div>'
-        '<img src="assets/images/product-prime.png" alt="The BRAEVON 4-in-1 tablet"/>'
+        '<img src="assets/images/product-prime.png" alt="The BRAEVON PRIME&trade; tablet"/>'
         '</div>'
         '<div class="ck-prob">'
         '<p>You have a <b>very high</b> chance of success with prescribed BRAEVON '
@@ -689,7 +689,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<div class="ck-prod">'
         '<div class="ck-prod-head">'
         '<div><span class="ck-tag" data-pack-tag>%s PACK</span>'
-        '<b>BRAEVON 4-in-1</b><small>ED Medication</small></div>'
+        '<b>BRAEVON PRIME<span style="font-weight:400">&trade;</span></b><small>ED Medication</small></div>'
         '<div class="ck-prod-rate">%s<span>%s customers</span></div>'
         '</div>'
         '<div class="ck-prod-shot">'
@@ -902,7 +902,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<img data-pack-img src="assets/images/product-12pack.png" '
         'alt="Two BRAEVON pouches with two 4-in-1 tablets"/>'
         '<div><span class="ck-tag" data-pack-tag>%s PACK</span>'
-        '<b>BRAEVON 4-in-1 prescribed for just</b>'
+        '<b>BRAEVON PRIME<span style="font-weight:400">&trade;</span> prescribed for just</b>'
         '<em data-pack-price>%s</em></div>'
         '</div>' % (PACKS[LEAD_PACK][0], _price(LEAD_PACK)))
     ready = (

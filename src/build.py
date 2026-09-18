@@ -360,7 +360,7 @@ FOOTNOTES = {
 
 
 HIGHLIGHTS = {
-    5:  'BRAEVON&rsquo;s 4-in-1',          # set in the screen's own markup
+    5:  'BRAEVON PRIME<span style="font-weight:400">&trade;</span>',          # set in the screen's own markup
     16: 'For your safety', 17: 'For your safety', 18: 'For your safety',
     19: 'For your safety', 20: 'For your safety', 21: 'For your safety',
     23: 'So far so good!',
@@ -670,9 +670,9 @@ def screen_hero(p):
             'poster="assets/images/braevon-hero.jpg">'
             '<source src="assets/video/hero.mp4" type="video/mp4"/></video>'
             '<img class="hero-product" src="assets/images/product-tablet.png" '
-            'alt="The BRAEVON 4-in-1 tablet"/></div>'
+            'alt="The BRAEVON PRIME&trade; tablet"/></div>'
             '<h1 class="hero-h1">You Deserve a<br/><span class="hi">Better Sex Life.</span></h1>'
-            '<p class="strip">BRAEVON 4-in-1. Arousal &amp; performance. '
+            '<p class="strip">BRAEVON PRIME<span style="font-weight:400">&trade;</span>. Arousal &amp; performance. '
             '<strong>In minutes</strong></p>'
             '<p class="ask">See if <strong>BRAEVON</strong> is right for you.</p>'
             # The "select all that apply" comes from the screen, not from this
@@ -820,7 +820,7 @@ def screen_review(p):
             '<div class="rv-help">'
             '<img src="assets/images/product-included.png" '
             'alt="A BRAEVON pouch with two 4-in-1 tablets"/>'
-            '<div><b>How BRAEVON 4-in-1 Can Help</b>'
+            '<div><b>How BRAEVON PRIME<span style="font-weight:400">&trade;</span> Can Help</b>'
             '<p>Our 4-in-1 formula helps you by targeting both desire (the brain) '
             'and performance (the body).</p><ul>%s</ul></div></div>'
             % (ICON['tick'], readback, helps)
@@ -873,7 +873,7 @@ def screen_interstitial(p):
         # Centred, on white, exactly as the reference sets it: the product name,
         # a gradient pill, then two figures at 58px with a rule between them.
         return ('<div class="col fact">'
-                '<p class="fact-name">BRAEVON 4-in-1</p>'
+                '<p class="fact-name">BRAEVON PRIME<span style="font-weight:400">&trade;</span></p>'
                 '<p class="fact-pill">Fast Acting / Long Lasting</p>'
                 '<p class="fact-k accent">10&ndash;15</p>'
                 '<p class="fact-u">MINUTES</p>'
@@ -889,8 +889,8 @@ def screen_interstitial(p):
             '<div><b>%s</b><span>%s</span></div></div>' % (bub, gly, svg, a, b)
             for a, b, bub, gly, svg in MECHANISM)
         return ('<div class="col">'
-                + head('How <span class="hl">BRAEVON&rsquo;s 4-in-1</span> Works for you',
-                       'BRAEVON&rsquo;s 4-in-1 is engineered to hit both Desire (the brain) '
+                + head('How <span class="hl">BRAEVON PRIME<span style="font-weight:400">&trade;</span></span> Works for you',
+                       'BRAEVON PRIME<span style="font-weight:400">&trade;</span> is engineered to hit both Desire (the brain) '
                        'and Performance (the body) in one dose.', lead=True)
                 + '<div class="reviewcard">%s</div>' % rows
                 + cta(blocked=False) + '</div>')
@@ -943,14 +943,14 @@ def screen_interstitial(p):
                        tight=True)
                 + '<div class="reviewcard adv">'
                   '<p class="adv-h">THE 4-IN-1 ADVANTAGE</p>'
-                  '<p class="adv-sub">See how the BRAEVON 4-in-1 stack compares to '
+                  '<p class="adv-sub">See how the BRAEVON PRIME<span style="font-weight:400">&trade;</span> stack compares to '
                   'single-ingredient pills.</p>'
                 + axis() + rail
                 # The brand block the comparison builds to. It is the one part
                 # of this screen drawn in Braevon orange rather than the
                 # reference's three molecule hues - it is Braevon's own claim.
                 + '<div class="fullpot">'
-                  '<div class="fp-head"><div class="fp-name"><b>BRAEVON 4-in-1</b>'
+                  '<div class="fp-head"><div class="fp-name"><b>BRAEVON PRIME<span style="font-weight:400">&trade;</span></b>'
                   '<span>FULL POTENTIAL</span></div>'
                 + (chip % (brain, 'Arousal + Performance'))
                 + '</div>' + axis()
@@ -970,7 +970,7 @@ def screen_interstitial(p):
         # It is not a dark card; there is only one dark surface in the flow and
         # it is the stop.
         return ('<div class="col fact solo">'
-                '<p class="fact-name">BRAEVON 4-in-1</p>'
+                '<p class="fact-name">BRAEVON PRIME<span style="font-weight:400">&trade;</span></p>'
                 '<p class="fact-pill">Do It For Her</p>'
                 '<p class="fact-k accent">137%</p>'
                 '<p class="fact-u">improvement in sex<br/>for partner</p>'
