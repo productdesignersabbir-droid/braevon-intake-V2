@@ -148,10 +148,13 @@ Also from that review:
 - **The terms box on the submission screen arrives ticked** (`data-default`).
   Asked for by the client; pre-ticked consent to marketing texts and calls is
   something their counsel should clear before launch.
-- **Trust marks under Check Eligibility** (`TRUST` in `build.py`): a Trustpilot
-  line, a HIPAA badge and a made-in-USA seal, drawn for this prototype. Each is
-  a claim Braevon has to be entitled to make, and the Trustpilot score is still
-  the placeholder 4.6.
+- **Trust marks under Check Eligibility** (`TRUST` in `build.py`): the
+  masthead's "Excellent 4.6" rating line, a HIPAA badge and a made-in-USA seal,
+  drawn for this prototype. The Trustpilot star and wordmark that first sat
+  there were removed at the client's word the same day. Each mark is a claim
+  Braevon has to be entitled to make, and 4.6 is still a placeholder.
+- **Details boxes are required** once an answer opens one, and **the birth
+  year** takes four digits from 1901 to the current year (`engine.js`).
 
 ## Control shapes
 

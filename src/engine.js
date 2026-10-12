@@ -171,6 +171,21 @@
     if(end) try{ f.setSelectionRange(f.value.length, f.value.length); }catch(_){}
   });
 
+  /* ---------------------------------------------------------- birth year */
+  /* Digits only, four at most, as they are typed. Whether the four make a real
+     year - 1901 up to the current one - is fieldProblem's call below. */
+  var YEAR_MIN=1901;
+  stage.addEventListener('input', function(e){
+    var f=e.target;
+    if(!f.matches || !f.matches('[data-birth-year]')) return;
+    var d=f.value.replace(/\D/g,'').slice(0,4);
+    if(d!==f.value) f.value=d;
+  });
+  function yearValid(v){
+    var now=new Date().getFullYear(), y=parseInt(v,10);
+    return /^\d{4}$/.test(v) && y>=YEAR_MIN && y<=now;
+  }
+
   /* --------------------------------------------------------- validation */
   /* What is wrong with a field, in words, or null if nothing is. Shared by the
      validity check and the error display so the two cannot disagree. */
@@ -179,6 +194,8 @@
     if(!f.value.trim()) return 'This field is required.';
     if(f.hasAttribute('data-us-phone') && !usValid(f.value))
       return 'Enter a valid US phone number, e.g. (415) 555-1234.';
+    if(f.hasAttribute('data-birth-year') && !yearValid(f.value.trim()))
+      return 'Enter a year from '+YEAR_MIN+' to '+new Date().getFullYear()+'.';
     if(f.type==='email' && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(f.value.trim()))
       return 'Enter a valid email address.';
     return null;
@@ -240,6 +257,20 @@
       var m=box.querySelector('.err'); if(m) m.hidden=true;
     }
     clearError(e.target.closest('.step'));
+  });
+
+  /* Leaving a field that has something wrong in it says so there and then,
+     rather than waiting for the button - "adfds" in the email box used to sit
+     looking accepted until Check Eligibility was pressed. An empty field is
+     left alone until the button: nobody should be told off for tabbing past. */
+  stage.addEventListener('focusout', function(e){
+    var f=e.target;
+    if(!f.matches || !f.matches('.field input')) return;
+    var box=f.closest('.field'), msg=box&&box.querySelector('.err');
+    if(!box || !f.value.trim()) return;
+    var why=fieldProblem(f);
+    box.classList.toggle('bad', !!why);
+    if(msg){ msg.textContent=why||''; msg.hidden=!why; }
   });
 
   /* --------------------------------------------------- disqualification */

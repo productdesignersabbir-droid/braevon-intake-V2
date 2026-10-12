@@ -873,8 +873,7 @@ img{max-width:100%;display:block}
 /* Under the last button, as the reference sets them: the Trustpilot line, then
    a HIPAA badge and a made-in-USA seal side by side. */
 .trust{display:flex;flex-direction:column;align-items:center;gap:22px;margin-top:28px}
-.trust-tp{display:flex;align-items:center;gap:8px}
-.trust-tp > svg{width:26px;height:26px;flex:none}
+.trust-tp{display:flex;align-items:center;gap:10px}
 .trust-tp b{font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--ink);
   margin-right:4px}
 .trust-tp .stars i{width:26px;height:26px}

@@ -644,6 +644,11 @@ def field_block(f, label=None):
         # with the numeric keypad on a phone.
         extra = (' data-us-phone="1" inputmode="tel" maxlength="14"'
                  if f.get('us_phone') else '')
+        # A birth year: four digits, 1901 to this year. A text box with the
+        # numeric keypad rather than type="number", which takes any length,
+        # takes "e" and "-", and draws spinner arrows. engine.js enforces it.
+        if f.get('birth_year'):
+            extra = ' data-birth-year="1" inputmode="numeric" maxlength="4"'
         ctrl = ('<input id="%s" type="%s" placeholder="%s" autocomplete="off"%s/>'
                 % (fid, attr(f.get('input_type') or 'text'),
                    attr(f.get('placeholder') or ''), extra))
@@ -780,7 +785,8 @@ def screen_birthdate(p):
     labels = (p['subs'][1:4] + ['Month', 'Day', 'Year'])[:3]
     month = dict(m['birth_month'], options=MONTHS)
     day = dict(m['birth_day'], options=['%02d' % i for i in range(1, 32)])
-    year = dict(m['birth_year'], placeholder='1985')
+    year = dict(m['birth_year'], placeholder='1985', input_type='text',
+                birth_year=True)
     # The reference's LAST STEP pill came off here on 2026-09-08, when the
     # consent screen was added after this one and made the claim false. It is
     # not moved onto the consent screen either: that screen says "One last step"
@@ -882,9 +888,9 @@ def screen_review(p):
 # README.
 TRUST = (
     '<div class="trust">'
-    '<div class="trust-tp"><svg viewBox="0 0 24 24" fill="#00B67A"><path d="M12 1.5l2.9 7.2'
-    ' 7.6.5-5.8 4.9 1.9 7.4L12 17.4l-6.6 4.1 1.9-7.4L1.5 9.2l7.6-.5z"/></svg>'
-    '<b>Trustpilot</b>%s</div>'
+    # The masthead's own rating line, larger - the client had the Trustpilot
+    # star and wordmark taken off on 2026-10-12 and asked for this in its place.
+    '<div class="trust-tp"><b>Excellent 4.6</b>%s</div>'
     '<div class="trust-row">'
     '<div class="trust-hipaa"><svg viewBox="0 0 48 56" aria-hidden="true">'
     '<path d="M24 2 4 9v17c0 13 8.500 22.500 20 28 11.500-5.500 20-15 20-28V9z" fill="#2B3A4A"/>'
