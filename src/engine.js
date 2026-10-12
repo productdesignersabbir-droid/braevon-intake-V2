@@ -200,8 +200,17 @@
     return ok;
   }
   function showError(el){
-    var r=el.querySelector('.reveal.on .err');
-    if(r) r.hidden=false;
+    /* An open follow-up: a details box left empty gets its own message and the
+       red outline; a Yes/No pair keeps the message it always had. */
+    var emptyBox=null;
+    [].forEach.call(el.querySelectorAll('.reveal.on'), function(rv){
+      var t=rv.querySelector('textarea'), m=rv.querySelector(':scope > .err');
+      if(!t){ var r=rv.querySelector('.err'); if(r) r.hidden=false; return; }
+      var empty=!t.value.trim();
+      if(m) m.hidden=!empty;
+      t.closest('.field').classList.toggle('bad', empty);
+      if(empty && !emptyBox) emptyBox=t;
+    });
     /* Say what is wrong, under the field it is wrong in. */
     var firstBad=null;
     [].forEach.call(el.querySelectorAll('.field input, .field select'), function(f){
@@ -210,6 +219,7 @@
       if(msg){ msg.textContent = why || ''; msg.hidden = !why; }
       if(why && !firstBad) firstBad=f;
     });
+    if(!firstBad) firstBad=emptyBox;
     var first=firstBad || el.querySelector('.opts:not([data-optional]) , .field input, .field select');
     if(first) first.scrollIntoView({block:'center', behavior:'smooth'});
     if(firstBad) try{ firstBad.focus({preventScroll:true}); }catch(_){}

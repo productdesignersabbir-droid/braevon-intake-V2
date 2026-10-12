@@ -679,14 +679,18 @@ def reveal_block(p, r):
                 'data-mode="single">%s</div>'
                 % (esc(brandify(r['label'])), attr(r['name']), opts))
     else:
-        extra += ' data-optional="1"'
+        # Required once open, from 2026-10-12 at the client's word: an answer
+        # that opens a details box cannot be left without filling it in. The
+        # reference's own boxes are optional; `r['optional']` is still in the
+        # data, unread, if that ever needs to come back.
         body = ('<label for="%s">%s</label>' % (attr(r['name']),
                                                 esc(brandify(r['label'])))
                 + ('<p class="reveal-sub">%s</p>' % esc(brandify(r['sub']))
                    if r.get('sub') else '')
                 + field_block({'tag': 'textarea', 'name': r['name'],
                                'placeholder': r.get('placeholder')
-                                              or 'Write here...'}))
+                                              or 'Write here...'})
+                + '<p class="err" hidden>Please add the details to continue.</p>')
     return ('<div class="reveal"%s data-reveal-for="%s" data-reveal-on="%s">%s</div>'
             % (extra, attr(p['group']), attr(r['on']), body))
 
