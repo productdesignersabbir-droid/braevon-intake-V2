@@ -128,6 +128,31 @@ wired in. They are a different, older question set (v1's 24) and are not what
   extraction carries a hidden `answer_*` free-text field. The reference never
   renders one, so neither does v2 — the options are the answer.
 
+## The 2026-10-12 review
+
+The client compared the build against the reference side by side and asked for
+it bigger and bolder throughout. The reference's measured sizes were already in
+place; Plus Jakarta Sans simply reads smaller than Inter at the same size, so
+the scale went up a step past the reference's numbers: 27px/700 question heads,
+18px/600 option labels, a 64px button at 20px, larger bubbles, rings, masthead
+and chart. `docs/medvi-reference.md` still records what the reference measures.
+
+Also from that review:
+
+- **Icons.** Line icons are heavier (`_ic`, 2.1 stroke). The testimonial cards
+  use solid glyphs (`_fi`) and the chart's chips use emoji, both as the
+  reference draws them.
+- **Three generated pictures**, none of them photographs of real people or
+  customers: `medications.jpg` (screen 41), `testimonial-wedding.jpg` (32) and
+  `testimonial-bed.jpg` (44). The testimonials themselves are still placeholders.
+- **The terms box on the submission screen arrives ticked** (`data-default`).
+  Asked for by the client; pre-ticked consent to marketing texts and calls is
+  something their counsel should clear before launch.
+- **Trust marks under Check Eligibility** (`TRUST` in `build.py`): a Trustpilot
+  line, a HIPAA badge and a made-in-USA seal, drawn for this prototype. Each is
+  a claim Braevon has to be entitled to make, and the Trustpilot score is still
+  the placeholder 4.6.
+
 ## Control shapes
 
 Not every screen is a stacked list. Measured off the live reference, seven ask

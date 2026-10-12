@@ -177,8 +177,18 @@ for _p in FLOW:
 
 
 def _ic(paths):
-    return ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+    return ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" '
             'stroke-linecap="round" stroke-linejoin="round">%s</svg>' % paths)
+
+
+def _fi(paths):
+    """A solid glyph, the way the reference draws the icons on its testimonial
+    cards - a filled shape in the bubble's hue rather than `_ic`'s outline.
+    Asked for on 2026-10-12. The round-joined stroke in the same colour only
+    softens the corners."""
+    return ('<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" '
+            'stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">%s</svg>'
+            % paths)
 
 
 ICON = {
@@ -192,7 +202,7 @@ ICON = {
     # (2026-09-17): two crossing strands, capped top and bottom, one rung mid.
     'dna': _ic('<path d="M7 3c0 5 10 4 10 9s-10 4-10 9"/>'
                '<path d="M17 3c0 5-10 4-10 9s10 4 10 9"/>'
-               '<path d="M7 3h10M7 12h10M7 21h10"/>').replace('stroke-width="1.8"', 'stroke-width="2.2"'),
+               '<path d="M7 3h10M7 12h10M7 21h10"/>').replace('stroke-width="2.1"', 'stroke-width="2.4"'),
     'info': _ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
     'star': ('<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.7 6.1 6.6.6'
              '-5 4.4 1.5 6.5L10 15.2 4.2 18.6l1.5-6.5-5-4.4 6.6-.6z"/></svg>'),
@@ -334,7 +344,10 @@ SCREEN_IMAGE = {
     # not a clinician. The client supplied this portrait on 2026-09-04 to
     # replace the stand-in. It is its own file, not stat-hero.jpg, because
     # screen 44 still uses that one as a testimonial avatar.
-    41: ('man-portrait.jpg', 'A man at home'),
+    # Replaced again on 2026-10-12: the client asked for a picture that says
+    # what the headline says and nothing else, so it is the medicines
+    # themselves rather than a person. Generated, not photographed.
+    41: ('medications.jpg', 'Medication and vitamin bottles with a few tablets'),
 }
 
 # The follow-ups, keyed by screen. Braevon's document writes them out per
@@ -435,31 +448,51 @@ _PINK = ('#FCE7F3', '#EC4899')
 _PURPLE = ('#F3EBFF', '#A855F7')
 _HEART_RED = ('#FEE2E2', '#EF4444')
 _GREEN2 = ('#DFF7E6', '#22C55E')
+_ORANGE2 = ('#FFEDD5', '#F97316')
+_LOBE = ('M10.6 4.1a2.9 2.9 0 0 0-4.9 1.4 3 3 0 0 0-2 4.6 3.1 3.1 0 0 0 .5 4.9'
+         ' 3.2 3.2 0 0 0 6.4 1.6z')
+_BRAIN_F = _fi('<path d="%s"/><path transform="matrix(-1 0 0 1 24 0)" d="%s"/>'
+               % (_LOBE, _LOBE))
+_HEART_F = _fi('<path d="M12 20.5l-1.3-1.2C6 15.1 3 12.4 3 9a4.9 4.9 0 0 1 9-2.7'
+               'A4.9 4.9 0 0 1 21 9c0 3.4-3 6.1-7.7 10.3z"/>')
+_BOLT_F = _fi('<path d="M13.5 2.5 5 13.5h6l-1 8 8.5-11h-6z"/>')
+_BATTERY_F = ('<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.7 4H14V2h-4v2'
+              'H8.3C7.6 4 7 4.6 7 5.3v15.4c0 .7.6 1.3 1.3 1.3h7.4c.7 0 1.3-.6 1.3-1.3'
+              'V5.3c0-.7-.6-1.3-1.3-1.3zM11 20v-5.5H9L13 7v5.5h2z"/></svg>')
+_FLEX_F = _fi('<path d="M5.5 19V6.8a2.3 2.3 0 0 1 2.3-2.3h1a2.3 2.3 0 0 1 2.3 2.3v4.6'
+              'a5.2 5.2 0 0 1 9.4 3.1V16a3 3 0 0 1-3 3z"/>')
+_TREND_B = _ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>').replace(
+    'stroke-width="2.1"', 'stroke-width="2.8"')
+_PERSON_F = ('<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2"/>'
+             '<path d="M4 20.5a8 8 0 0 1 16 0 1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/></svg>')
 
 QUOTES = {
     32: ('&ldquo;Braevon probably saved my marriage.&rdquo;',
          [('Personal Goal',
-           [_PINK + (_ic('<path d="M4 17l5-5 4 4 7-7"/><path d="M14 9h6v6"/>'),)],
+           [_PINK + (_TREND_B,)],
            'Boost Sex Drive and Desire'),
           ('Benefits',
-           [_PURPLE + (_BRAIN,), _HEART_RED + (_HEART,)],
+           [_PURPLE + (_BRAIN_F,), _HEART_RED + (_HEART_F,)],
            'Mental Mood and<br/>Lasting Effects')],
-         'Nicholas Carlos &mdash; Kansas City, MO', 'hero-benefits.jpg',
-         ('hero-benefits.jpg', '66% 12%')),
+         # The wedding picture and the plain avatar are the reference's own
+         # arrangement, asked for on 2026-10-12. The avatar used to be a crop of
+         # the banner; a couple in a field has no face to crop, and the
+         # reference draws a figure there anyway.
+         'Nicholas Carlos &mdash; Kansas City, MO', 'testimonial-wedding.jpg',
+         None),
     44: ('&ldquo;The results were almost immediate &mdash; more energy, more desire, '
          'and a stronger performance every time.&rdquo;',
          [('Personal Goal',
-           [_GREEN2 + (_ic('<circle cx="12" cy="13" r="8"/>'
-                           '<path d="M12 9v4l2.5 2.5M9 2h6"/>'),)],
+           [_GREEN2 + (_BATTERY_F,)],
            'Improve Stamina and Endurance'),
           ('Benefits',
-           [_GREEN2 + (_BOLT,), _HEART_RED + (_HEART,)],
+           [_PURPLE + (_BOLT_F,), _ORANGE2 + (_FLEX_F,)],
            'Quick Effect and<br/>Lasting Performance')],
          # Not the white-coat shot: this is a customer, not a clinician. Shares
          # stat-hero.jpg with screen 41's banner - a 28px avatar and a 168px
          # banner on different screens do not read as the same picture, but a
          # portrait of its own would be better. See the README.
-         'Ryan Mitchell &mdash; New York, NY', 'braevon-hero.jpg',
+         'Ryan Mitchell &mdash; New York, NY', 'testimonial-bed.jpg',
          ('stat-hero.jpg', '50% 20%')),
 }
 
@@ -838,6 +871,51 @@ def screen_review(p):
             + cta() + '</div>')
 
 
+# The three marks the reference sets under its last button: its Trustpilot
+# score, a HIPAA badge and a made-in-USA seal. Asked for on 2026-10-12. Drawn
+# here rather than lifted - none of them is the issuing body's artwork, and
+# each is a claim the client has to be entitled to make before launch. See the
+# README.
+TRUST = (
+    '<div class="trust">'
+    '<div class="trust-tp"><svg viewBox="0 0 24 24" fill="#00B67A"><path d="M12 1.5l2.9 7.2'
+    ' 7.6.5-5.8 4.9 1.9 7.4L12 17.4l-6.6 4.1 1.9-7.4L1.5 9.2l7.6-.5z"/></svg>'
+    '<b>Trustpilot</b>%s</div>'
+    '<div class="trust-row">'
+    '<div class="trust-hipaa"><svg viewBox="0 0 48 56" aria-hidden="true">'
+    '<path d="M24 2 4 9v17c0 13 8.500 22.500 20 28 11.500-5.500 20-15 20-28V9z" fill="#2B3A4A"/>'
+    '<path d="M24 6.500 8 12.200V26c0 10.800 6.800 18.800 16 23.500 9.200-4.700 16-12.700 16-23.500V12.200z" fill="#4A9BD4"/>'
+    '<g fill="none" stroke="#fff" stroke-width="2.200" stroke-linecap="round">'
+    '<path d="M24 13v29"/><path d="M14 19c3-3 7-3 10 0 3-3 7-3 10 0"/>'
+    '<path d="M19.500 24.500c0 3 9 2.500 9 5.500s-9 2.500-9 5.500 6 2.500 6 4.500"/></g>'
+    '<circle cx="24" cy="12.500" r="2.300" fill="#fff"/></svg>'
+    '<b>HIPAA</b><span>COMPLIANT</span></div>'
+    '<div class="trust-usa"><svg viewBox="0 0 80 80" aria-hidden="true">'
+    '<defs><clipPath id="usa-c"><circle cx="40" cy="40" r="17"/></clipPath>'
+    '<path id="usa-t" d="M40 40m-25.500 0a25.500 25.500 0 1 1 51 0"/>'
+    '<path id="usa-b" d="M40 40m-30.500 0a30.500 30.500 0 0 0 61 0"/></defs>'
+    '<circle cx="40" cy="40" r="37" fill="#1F4B99" stroke="#1F4B99" stroke-width="5" '
+    'stroke-dasharray="7.300 2.400" stroke-linejoin="round"/>'
+    '<circle cx="40" cy="40" r="33.500" fill="#fff"/>'
+    '<circle cx="40" cy="40" r="31" fill="#1F4B99"/>'
+    '<circle cx="40" cy="40" r="19.500" fill="#fff"/>'
+    '<g clip-path="url(#usa-c)"><rect x="20" y="20" width="40" height="40" fill="#fff"/>'
+    '<g fill="#D62839"><rect x="20" y="23" width="40" height="3.800"/>'
+    '<rect x="20" y="30.600" width="40" height="3.800"/><rect x="20" y="38.200" width="40" height="3.800"/>'
+    '<rect x="20" y="45.800" width="40" height="3.800"/><rect x="20" y="53.400" width="40" height="3.800"/></g>'
+    '<rect x="20" y="20" width="18" height="18.200" fill="#1F4B99"/>'
+    '<g fill="#fff"><circle cx="26" cy="27" r="1.200"/><circle cx="31" cy="27" r="1.200"/>'
+    '<circle cx="36" cy="27" r="1.200"/><circle cx="28.500" cy="31" r="1.200"/>'
+    '<circle cx="33.500" cy="31" r="1.200"/><circle cx="26" cy="35" r="1.200"/>'
+    '<circle cx="31" cy="35" r="1.200"/><circle cx="36" cy="35" r="1.200"/></g></g>'
+    '<g fill="#fff" font-family="inherit" font-size="7.500" font-weight="800" '
+    'letter-spacing=".8" text-anchor="middle">'
+    '<text><textPath href="#usa-t" startOffset="50%%">MADE IN USA</textPath></text>'
+    '<text><textPath href="#usa-b" startOffset="50%%">MADE IN USA</textPath></text></g>'
+    '</svg></div>'
+    '</div></div>')
+
+
 def screen_submission(p):
     m = {f['name']: f for f in p['fields']}
     return ('<div class="col">'
@@ -856,7 +934,8 @@ def screen_submission(p):
             # this screen's alone.
             + '<div class="opts terms" data-group="final_submission_terms_agreement" '
               'data-mode="multi">'
-              '<button class="opt checkbox" data-value="yes"><span class="lbl">'
+              '<button class="opt checkbox selected" data-default="1" data-value="yes">'
+              '<span class="lbl">'
               'By clicking Check Eligibility, I agree to receive emails, customer '
               'support text messages and phone calls from Braevon, and I agree to '
               'the Terms of Service and Privacy Policy.'
@@ -864,7 +943,7 @@ def screen_submission(p):
             # "Check Eligibility", not "Submit", at the client's word on
             # 2026-09-09 - it is the reference's own label for this button, and
             # it says what the next screen does rather than what the form does.
-            + cta('Check Eligibility') + '</div>')
+            + cta('Check Eligibility') + TRUST % STARS + '</div>')
 
 
 def screen_interstitial(p):
@@ -933,7 +1012,9 @@ def screen_interstitial(p):
             '</div>' % (a, b, mol, x, w, col, .12 + i * .14)
             for i, (a, b, mol, col, x, w) in enumerate(rows))
 
-        chip = '<span class="chip">%s%s</span>'
+        # The reference sets these four as emoji, not line icons, and the
+        # client asked for its icon style on 2026-10-12.
+        chip = '<span class="chip"><i>%s</i>%s</span>'
         return ('<div class="col">'
                 # 23px sets this on three lines at the 480 column, with "to"
                 # alone on the last. 22px is the whole fix - measured on the
@@ -950,15 +1031,15 @@ def screen_interstitial(p):
                 # of this screen drawn in Braevon orange rather than the
                 # reference's three molecule hues - it is Braevon's own claim.
                 + '<div class="fullpot">'
-                  '<div class="fp-head"><div class="fp-name"><b>BRAEVON PRIME<span style="font-weight:400">&trade;</span></b>'
+                  '<div class="fp-head"><div class="fp-name"><b>BRAEVON PRIME<sup>&trade;</sup></b>'
                   '<span>FULL POTENTIAL</span></div>'
-                + (chip % (brain, 'Arousal + Performance'))
+                + (chip % ('&#x1F9E0;', 'Arousal + Performance'))
                 + '</div>' + axis()
                 + '<div class="track"><i class="grad" style="left:10%;width:90%;'
                   'animation-delay:.74s"></i></div>'
                   '<div class="chips">'
-                + (chip % (bolt, 'Starts at 10m')) + (chip % (peak, 'Peak Power'))
-                + (chip % (clock, '36h Window'))
+                + (chip % ('&#x26A1;', 'Starts at 10m')) + (chip % ('&#x1F4AA;', 'Peak Power'))
+                + (chip % ('&#x1F552;', '36h Window'))
                 + '</div><div class="fp-rule"></div>'
                   '<p class="fp-note">Contains Sildenafil, Tadalafil, Vardenafil '
                   'and Apomorphine, which primes the brain for desire.</p>'
@@ -988,14 +1069,18 @@ def screen_interstitial(p):
     return ('<div class="col"><div class="quotepanel">'
             '<figure class="qshot"><img src="assets/images/%s" alt=""/>'
             '<figcaption><span class="qstars">%s</span>'
-            '<blockquote>%s</blockquote></figcaption></figure>'
+            '<blockquote%s>%s</blockquote></figcaption></figure>'
             '<div class="qcards">%s</div>'
             '<div class="qwho">%s%s</div>'
-            '</div>' % (photo, stars, quote, cards,
+            '</div>' % (photo, stars,
+                        # A long quote takes a step down so it sets in four
+                        # lines rather than six.
+                        ' class="long"' if len(quote) > 70 else '',
+                        quote, cards,
                         ('<img class="qavatar" src="assets/images/%s" alt="" '
                          'style="object-position:%s"/>' % face)
                         if face else
-                        ('<span class="qavatar">%s</span>' % ICON['person']),
+                        ('<span class="qavatar">%s</span>' % _PERSON_F),
                         who)
             + cta(blocked=False) + '</div>')
 

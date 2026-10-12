@@ -451,6 +451,11 @@
       if(f.type==='checkbox'||f.type==='radio') f.checked=false; else f.value=''; });
     [].forEach.call(stage.querySelectorAll('select'), function(f){ f.selectedIndex=0; });
     answers={};
+    /* The one box that arrives ticked - the terms row on the submission screen
+       - goes back to ticked, so a restart matches a fresh load. */
+    [].forEach.call(stage.querySelectorAll('.opt[data-default]'), function(o){
+      o.classList.add('selected');
+      answers[o.closest('.opts').dataset.group]=[o.dataset.value]; });
     syncReveals();
     stop(false); history=[]; show(0);
   });

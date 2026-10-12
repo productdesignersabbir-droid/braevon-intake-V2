@@ -91,9 +91,16 @@ OVERRIDES = {
     # none-answer nor a single-select's first option; it is kept because the
     # client asked for a default on this screen on 2026-09-03, and it is a
     # goal rather than a symptom. See the README.
-    1: dict(doc=1, name='Q1_A0 - 01', mode='multi',
+    #
+    # SINGLE again from 2026-10-12, at the client's word: picking a goal has to
+    # take the patient straight to the next screen, and a screen that leaves on
+    # the first tick can only ever collect one answer. The document still has
+    # it as multi. The hint under the ask changes with it - "Select all that
+    # apply" would promise something the screen no longer does.
+    1: dict(doc=1, name='Q1_A0 - 01', mode='single',
             title='You Deserve a Better Sex Life.',
-            subs=['What are you looking to improve?', 'Select all that apply.'],
+            subs=['What are you looking to improve?',
+                  'Choose the one that matters most to you.'],
             options=[_opt('Last longer'),
                      _opt('Better erections'),
                      _opt('More arousal'),

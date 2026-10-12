@@ -96,7 +96,7 @@ html,body{margin:0;padding:0}
 body{
   background:var(--page); color:var(--ink);
   font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  font-size:15px; line-height:1.45;
+  font-size:16px; line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
 button{font-family:inherit}
@@ -116,16 +116,16 @@ img{max-width:100%;display:block}
   gap:12px;padding:16px var(--pad);min-height:46px;
 }
 .logo{display:flex;align-items:center;flex:none}
-.logo svg{height:22px;width:auto;display:block}
+.logo svg{height:26px;width:auto;display:block}
 
 .rating{display:flex;align-items:center;gap:8px;white-space:nowrap}
-.rating .txt{font-size:12px;font-weight:700;color:var(--ink)}
+.rating .txt{font-size:14px;font-weight:700;color:var(--ink)}
 /* Trustpilot sets its mark as a white glyph on a green tile, not a green
    glyph on the page. The square is the mark; --green is reserved for it. */
 .stars{display:flex;gap:3px}
-.stars i{width:18px;height:18px;background:var(--green);
+.stars i{width:21px;height:21px;background:var(--green);
   display:grid;place-items:center}
-.stars i svg{width:12px;height:12px;color:#fff;display:block}
+.stars i svg{width:14px;height:14px;color:#fff;display:block}
 
 .rule{height:1px;background:var(--border)}
 
@@ -149,7 +149,7 @@ img{max-width:100%;display:block}
    global border-box would take the padding out of the 24px and crush the
    glyph instead of growing the target. */
 .back-btn::after{content:"";position:absolute;inset:-10px}
-.back-btn svg{width:18px;height:18px}
+.back-btn svg{width:22px;height:22px}
 /* Hidden, not removed: the bar must not shift sideways between a screen with a
    back button and one without. */
 .back-btn[hidden]{display:grid;visibility:hidden}
@@ -165,12 +165,12 @@ img{max-width:100%;display:block}
    It was 386px centred, the reference's own width, until the client asked for
    it flush on 2026-09-02. */
 .progress{display:flex;gap:24px;width:100%;min-width:0}
-.seg{flex:1;height:12px;border-radius:6px;background:var(--track);overflow:hidden}
+.seg{flex:1;height:14px;border-radius:7px;background:var(--track);overflow:hidden}
 /* The reference reads its bar in two tones: a segment already behind you is
    the full accent, the one you are inside is the same hue lightened, and the
    rest are track. So "how far" and "where exactly" are both legible at a
    glance, which one flat colour cannot do. */
-.seg span{display:block;height:100%;width:0;border-radius:6px;background:var(--accent);
+.seg span{display:block;height:100%;width:0;border-radius:7px;background:var(--accent);
   transition:width .32s cubic-bezier(.4,0,.2,1),background-color .32s ease}
 .seg.now span{background:var(--accent-tint)}
 .progress[hidden]{display:none}
@@ -189,18 +189,18 @@ img{max-width:100%;display:block}
 
 /* ----------------------------------------------------------- typography */
 .eyebrow{
-  margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:.09em;
+  margin:0 0 8px; font-size:12.5px; font-weight:800; letter-spacing:.09em;
   text-transform:uppercase; color:var(--accent);
 }
 .qhead{
-  margin:0; font-size:23px; line-height:1.2; font-weight:600;
+  margin:0; font-size:27px; line-height:1.2; font-weight:700;
   letter-spacing:-.01em; color:var(--title-ink);
 }
-.qhead.big{font-size:27px}
+.qhead.big{font-size:31px}
 /* One step down, for a headline long enough to leave an orphan on a third line
    at the column's width. Applied per title in build.py, never globally. */
-.qhead.tight{font-size:22px}
-.sub{margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
+.qhead.tight{font-size:26px}
+.sub{margin:10px 0 0;font-size:17px;line-height:1.45;color:var(--muted)}
 .qhead + .sub{margin-top:12px}
 /* On an interstitial the line under the headline is carrying the claim, not
    captioning a question, and the reference sets it as a second heading:
@@ -208,9 +208,9 @@ img{max-width:100%;display:block}
    size against the title rather than take the scale - at 22px against a 23px
    qhead the two read as one block, so 2026-09-08 took it back 10% and gave the
    pair a gap the eye can see. An ordinary .sub is 15px and needs neither. */
-.sub.lead{font-size:20px;line-height:1.3;font-weight:600;color:var(--ink)}
+.sub.lead{font-size:21px;line-height:1.3;font-weight:600;color:var(--ink)}
 .qhead + .sub.lead{margin-top:18px}
-.legend{margin:var(--gap-title) 0 10px;font-size:13px;font-weight:700;color:var(--ink)}
+.legend{margin:var(--gap-title) 0 10px;font-size:15px;font-weight:700;color:var(--ink)}
 .hi{color:var(--accent);font-weight:700}
 
 /* Every block that follows the head gets the same gap, so a screen with a
@@ -227,12 +227,12 @@ img{max-width:100%;display:block}
   display:flex;align-items:center;gap:12px;width:100%;text-align:left;
   background:var(--surface); border:1px solid var(--hairline);
   border-radius:var(--radius-card); box-shadow:var(--shadow);
-  padding:13px 16px; cursor:pointer; color:var(--ink);
+  padding:17px 18px; cursor:pointer; color:var(--ink);
   transition:border-color .12s ease,box-shadow .16s ease;
 }
 .opt:hover{border-color:#C9CFDA}
-.opt .lbl{flex:1;font-size:16px;font-weight:500;line-height:1.2}
-.opt .lbl small{display:block;margin-top:5px;font-size:12px;line-height:1.35;
+.opt .lbl{flex:1;font-size:18px;font-weight:600;line-height:1.25}
+.opt .lbl small{display:block;margin-top:5px;font-size:13.5px;line-height:1.35;
   font-weight:400;color:var(--muted)}
 .inline-note{font-weight:400;color:var(--muted)}
 
@@ -240,10 +240,10 @@ img{max-width:100%;display:block}
    3px. That contrast is what tells one-answer from many-answers apart, and it
    is the one place the single-radius rule is deliberately broken. */
 .opt .ring{
-  order:-1; flex:none; width:16px;height:16px;border-radius:50%;
+  order:-1; flex:none; width:20px;height:20px;border-radius:50%;
   border:1.5px solid #C9CFDA; background:#fff; position:relative;
 }
-.opt.checkbox .ring{border-radius:3px}
+.opt.checkbox .ring{border-radius:4px}
 /* Selected is an outline and a glow, never a fill. A tinted row at this size
    reads as heavy next to four white ones, and the tint fights the icon
    bubbles, which carry colour of their own.
@@ -264,11 +264,11 @@ img{max-width:100%;display:block}
 .opt.selected .ring{border-color:var(--accent);background:var(--accent)}
 .opt.selected .ring::after{
   content:"";position:absolute;inset:0;margin:auto;
-  width:4px;height:7.5px;border:solid #fff;border-width:0 1.8px 1.8px 0;
+  width:5px;height:9.5px;border:solid #fff;border-width:0 2px 2px 0;
   transform:translateY(-1px) rotate(45deg);
 }
 .opt:not(.checkbox).selected .ring::after{
-  width:6px;height:6px;border:none;border-radius:50%;background:#fff;transform:none;
+  width:8px;height:8px;border:none;border-radius:50%;background:#fff;transform:none;
 }
 /* The terms row on the submission screen. Small print, not an answer: a size
    down from an option label, in the caption grey, and - because it runs to four
@@ -278,7 +278,7 @@ img{max-width:100%;display:block}
 .opts.terms{margin-top:16px}
 .opts.terms .opt{align-items:flex-start;gap:14px}
 .opts.terms .opt .ring{margin-top:2px}
-.opts.terms .opt .lbl{font-size:13px;line-height:1.5;font-weight:400;
+.opts.terms .opt .lbl{font-size:14.5px;line-height:1.5;font-weight:400;
   color:var(--muted)}
 
 /* Where the exclusive answer sits is per screen - see GROUPS. Trailing, it is
@@ -297,9 +297,9 @@ img{max-width:100%;display:block}
 
 /* A caption breaking a long safety list into sections. It is a list heading,
    so it takes the gap above and none below - the row under it is its own. */
-.optcap{margin:18px 0 -2px;font-size:18px;font-weight:700;color:var(--ink)}
+.optcap{margin:18px 0 -2px;font-size:20px;font-weight:700;color:var(--ink)}
 .opts > .optcap:first-child{margin-top:0}
-.opt-note{margin:-4px 0 0;font-size:12px;color:var(--muted);font-weight:600}
+.opt-note{margin:-4px 0 0;font-size:14px;color:var(--muted);font-weight:600}
 
 /* ------------------------------------------------ the fact interstitial */
 /* Screen 2, centred on white the way the reference sets it. */
@@ -321,26 +321,31 @@ img{max-width:100%;display:block}
 .col.fact{margin-top:calc(20px - var(--gap-block))}
 .col.fact > :first-child{margin-top:0}
 .col.fact .cta{margin-top:auto}
+/* The auto margin only holds the button at a depth while the copy is shorter
+   than the column's min-height. Once the figures grew (2026-10-12) the
+   two-figure screen filled it and the button sat straight against the last
+   line, so the last line carries a floor of its own. */
+.col.fact > p:last-of-type{margin-bottom:40px}
 /* The one-figure screen carries a single statement rather than two stacked
    ones, so it can breathe where the two-figure screen has to stay tight. */
 .col.fact.solo .fact-pill{margin-top:20px}
 .col.fact.solo .fact-k{margin-top:30px}
 .col.fact.solo .fact-u{margin-top:14px;line-height:1.35}
-.fact-name{margin:8px 0 0;font-size:15px;font-weight:500;color:var(--muted)}
+.fact-name{margin:8px 0 0;font-size:18px;font-weight:700;color:var(--muted)}
 .fact-pill{
   align-self:center;margin:12px 0 0;padding:8px 20px;border-radius:999px;
-  font-size:18px;font-weight:500;color:#fff;
+  font-size:21px;font-weight:700;color:#fff;
   background:linear-gradient(90deg,var(--accent) 0%,var(--accent-tint) 100%);
 }
-.fact-k{margin:16px 0 0;font-size:54px;line-height:1;font-weight:600;color:var(--ink)}
+.fact-k{margin:18px 0 0;font-size:72px;line-height:1;font-weight:800;color:var(--ink)}
 /* "10-15" is a whole accented line; "36 HRS" is a coloured number against ink
    units, so there the span carries it. nth-of-type would count every <p> in
    the column, not just the figures, so the first one is marked explicitly. */
 .qhead .hl{color:var(--accent)}
 .fact-k.accent{color:var(--accent)}
 .fact-k span{color:var(--accent)}
-.fact-u{margin:3px 0 0;font-size:26px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
-.fact-cap{margin:7px 0 0;font-size:18px;line-height:1.4;color:var(--ink)}
+.fact-u{margin:4px 0 0;font-size:30px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.fact-cap{margin:8px 0 0;font-size:21px;line-height:1.4;color:var(--ink)}
 .fact-cap b{font-weight:700;font-style:italic}
 .fact-rule{width:34px;height:2px;background:var(--border);margin:16px auto 0;border-radius:2px}
 
@@ -349,9 +354,9 @@ img{max-width:100%;display:block}
    own male/female question the same way. */
 .opts.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-opt)}
 .opt.tile{flex-direction:column;justify-content:center;align-items:center;
-  text-align:center;gap:12px;padding:20px 16px;min-height:132px}
-.opt.tile .lbl{flex:none;font-size:16px;font-weight:500}
-.opt.tile .lbl small{display:block;margin-top:8px;font-size:12px;font-weight:400;
+  text-align:center;gap:14px;padding:24px 16px;min-height:156px}
+.opt.tile .lbl{flex:none;font-size:18px;font-weight:600}
+.opt.tile .lbl small{display:block;margin-top:8px;font-size:13.5px;font-weight:400;
   line-height:1.35;color:var(--muted)}
 /* A Yes/No that opens inside a reveal is a follow-up, not the screen's own
    question, so it takes the tile's shape at a row's height rather than the
@@ -370,7 +375,7 @@ img{max-width:100%;display:block}
 .dob + .fields,.fields + .fields,.fields + .dob{margin-top:12px}
 .field{flex:1 1 100%;min-width:0}
 .field.half{flex:1 1 calc(50% - 6px)}
-.field label,.dob-label{display:block;margin:0 0 8px;font-size:18px;font-weight:500;color:var(--ink)}
+.field label,.dob-label{display:block;margin:0 0 8px;font-size:19px;font-weight:600;color:var(--ink)}
 /* The placeholder state, in the reference's own treatment: a select still
    showing its first option reads grey, and turns to ink once a real answer is
    chosen. Without it "January / 01" looks like data the form filled in. */
@@ -379,9 +384,9 @@ img{max-width:100%;display:block}
 .reveal textarea::placeholder{color:var(--faint);opacity:1}
 
 .field input,.field select,.field textarea,.reveal textarea,.reveal input{
-  width:100%;font-family:inherit;font-size:17px;color:var(--ink);
+  width:100%;font-family:inherit;font-size:18px;color:var(--ink);
   background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius-card);padding:13px 14px;min-height:52px;
+  border-radius:var(--radius-card);padding:15px 16px;min-height:60px;
   appearance:none;-webkit-appearance:none;
 }
 .field textarea,.reveal textarea{min-height:104px;resize:vertical;line-height:1.45}
@@ -402,7 +407,7 @@ img{max-width:100%;display:block}
 /* The molecules named under a headline: two columns, bulleted, in the caption
    grey the reference uses. Column-major, so the pairs read down then across. */
 .medlist{margin:14px 0 0;padding:0 0 0 18px;list-style:disc;
-  columns:2;column-gap:20px;font-size:15px;line-height:1.7;color:var(--muted)}
+  columns:2;column-gap:20px;font-size:16.5px;line-height:1.7;color:var(--muted)}
 .medlist li{break-inside:avoid}
 /* The list is part of the question, so what follows it takes the block gap
    rather than sitting straight against the last bullet. */
@@ -417,14 +422,14 @@ img{max-width:100%;display:block}
    fixed height, so it stays square at every shell width.
    The bias is still slightly high, because a face sits above the middle of a
    portrait - tuned to man-portrait.jpg (1045x1400); retune if it is replaced. */
-.qshot-top img{display:block;width:100%;aspect-ratio:1;height:auto;
-  object-fit:cover;object-position:50% 15%}
+.qshot-top img{display:block;width:100%;aspect-ratio:3/2;height:auto;
+  object-fit:cover;object-position:50% 60%}
 
 .reveal{display:none;margin-top:var(--gap-block)}
 .reveal.on{display:block}
-.reveal label{display:block;margin:0 0 10px;font-size:18px;font-weight:700;color:var(--ink);line-height:1.3}
-.reveal-sub{margin:0 0 8px;font-size:12px;color:var(--muted)}
-.err{margin:8px 0 0;font-size:14px;color:var(--error);font-weight:600}
+.reveal label{display:block;margin:0 0 10px;font-size:20px;font-weight:700;color:var(--ink);line-height:1.3}
+.reveal-sub{margin:0 0 8px;font-size:14.5px;color:var(--muted)}
+.err{margin:8px 0 0;font-size:15.5px;color:var(--error);font-weight:600}
 .err[hidden]{display:none}
 /* A field that failed validation carries the message and the outline together,
    so the eye lands on the same place twice. */
@@ -437,7 +442,7 @@ img{max-width:100%;display:block}
 .note{
   display:flex;gap:12px;align-items:flex-start;
   background:var(--neutral-tint);border-radius:var(--radius-card);
-  padding:14px 16px;font-size:15px;line-height:1.45;color:var(--ink);
+  padding:16px 18px;font-size:16.5px;line-height:1.45;color:var(--ink);
 }
 /* The mark sits on the first line of the text, not on the middle of the block:
    centring it against two wrapped lines is what read as misaligned. The offset
@@ -459,8 +464,8 @@ img{max-width:100%;display:block}
 .infonote{display:flex;gap:10px;align-items:flex-start;margin-top:var(--gap-title);
   background:var(--accent-soft);border-radius:var(--radius-card);padding:14px 16px}
 .infonote svg{flex:none;width:18px;height:18px;stroke:var(--accent);margin-top:1px}
-.infonote b{display:block;font-size:15px;font-weight:700;color:var(--accent)}
-.infonote p{margin:4px 0 0;font-size:15px;line-height:1.5;color:var(--accent-hover-ink,#8A2F12)}
+.infonote b{display:block;font-size:17px;font-weight:700;color:var(--accent)}
+.infonote p{margin:4px 0 0;font-size:16px;line-height:1.5;color:var(--accent-hover-ink,#8A2F12)}
 .infonote b{color:#8A2F12}
 /* The reference gives the button noticeably more air after one of these than
    after an ordinary block. */
@@ -480,14 +485,14 @@ img{max-width:100%;display:block}
 .cta{
   width:100%;border:none;border-radius:var(--radius);
   background:var(--accent);color:#fff;
-  font-weight:800;font-size:17px;letter-spacing:.01em;
-  padding:17px 18px;min-height:56px;
+  font-weight:800;font-size:20px;letter-spacing:.01em;
+  padding:18px 18px;min-height:64px;
   display:flex;align-items:center;justify-content:center;gap:9px;
   cursor:pointer;transition:background-color .14s ease;
   box-shadow:0 4px 16px rgba(230,67,13,.22);
   margin-top:var(--gap-block);
 }
-.cta svg{width:20px;height:20px}
+.cta svg{width:24px;height:24px}
 /* The client asked that the button never grey out: it stays orange while the
    step is unanswered and refuses the advance instead, so the affordance reads
    as available before it is. Carried over from v1 deliberately. */
@@ -498,11 +503,11 @@ img{max-width:100%;display:block}
    its own review links. */
 .cta-secondary{
   width:100%;border:none;background:transparent;border-radius:var(--radius);
-  color:var(--faint);font-family:inherit;font-weight:600;font-size:13px;
+  color:var(--faint);font-family:inherit;font-weight:600;font-size:15px;
   padding:10px 12px;min-height:40px;margin-top:10px;
   display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;
 }
-.cta-secondary svg{width:13px;height:13px}
+.cta-secondary svg{width:15px;height:15px}
 .cta-secondary:hover{color:var(--muted)}
 .cta-secondary[hidden]{display:none}
 
@@ -518,7 +523,7 @@ img{max-width:100%;display:block}
 .cell:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 .cap{margin-top:6px;font-size:10px;color:var(--faint)}
 .slash{font-size:26px;color:var(--faint);line-height:1.6}
-.bp-lead{margin:var(--gap-title) 0 0;font-size:12px;color:var(--muted);text-align:center}
+.bp-lead{margin:var(--gap-title) 0 0;font-size:14.5px;color:var(--muted);text-align:center}
 
 /* ----------------------------------------------------- the opening screen */
 /* Screen 1 carries the tallest stack in the flow — hero, two-line h1, claim
@@ -551,10 +556,10 @@ img{max-width:100%;display:block}
 }
 
 .hero-h1{
-  margin:0;font-size:44px;line-height:1.1;font-weight:600;
+  margin:0;font-size:46px;line-height:1.08;font-weight:700;
   letter-spacing:-.02em;color:var(--title-ink);
 }
-.hero-h1 .hi{font-weight:600}
+.hero-h1 .hi{font-weight:800}
 
 /* The claim strip. The reference fades a blue through a violet; this ran flat
    --accent-soft at the full width of the column instead, because the client
@@ -578,7 +583,7 @@ img{max-width:100%;display:block}
 .strip{
   width:fit-content;max-width:100%;
   margin:12px 0 0;padding:8px 18px 8px 14px;border-radius:var(--radius-card);
-  font-size:14px;line-height:1.35;color:var(--ink);
+  font-size:15px;line-height:1.35;color:var(--ink);
   background:linear-gradient(90deg,var(--accent-soft) 0%,var(--page) 100%);
   /* 600, not the 400 it ran at - the client asked for the whole line to carry
      weight on 2026-09-10. The closing phrase keeps its one step above at 800,
@@ -587,7 +592,7 @@ img{max-width:100%;display:block}
 }
 .strip strong{font-weight:800;font-style:italic}
 
-.ask{margin:20px 0 0;font-size:22px;line-height:1.3;font-weight:700;color:var(--ink)}
+.ask{margin:20px 0 0;font-size:24px;line-height:1.3;font-weight:700;color:var(--ink)}
 .ask strong{font-weight:800}
 /* There was a `.ask-sub` here - the screen's question, "What are you looking to
    improve?" - set as a question head. The client had the line removed on
@@ -596,26 +601,26 @@ img{max-width:100%;display:block}
    The hint's top margin is 10px, not the 2px it ran at: 2px was tuned to tuck
    it under the question, and with the question gone it sits under `.ask`, which
    needs the room. */
-.ask-hint{margin:10px 0 0;font-size:15px;color:var(--faint)}
+.ask-hint{margin:10px 0 0;font-size:17px;color:var(--faint)}
 .ask-hint + .opts{margin-top:24px}
 
 /* Goal rows are taller than an ordinary option and carry a bubble instead of a
    ring — there is nothing to compare them against yet, so the icon does the
    work the radio would. */
-.opt.goal{padding:7px 16px;gap:14px;min-height:56px}
+.opt.goal{padding:10px 18px;gap:16px;min-height:68px}
 .opt.goal .bubble,.opt.band .bubble{
-  flex:none;width:42px;height:42px;border-radius:50%;
+  flex:none;width:50px;height:50px;border-radius:50%;
   background:var(--bub,var(--accent-soft));color:var(--gly,var(--accent));
   display:grid;place-items:center;
 }
-.opt.goal .bubble svg,.opt.band .bubble svg{width:22px;height:22px}
+.opt.goal .bubble svg,.opt.band .bubble svg{width:27px;height:27px}
 /* A band row is a goal row that also carries a caption, so it keeps the gap
    but not the fixed height. */
 .opt.band{gap:14px;padding:10px 16px}
-.opt.band .lbl{font-size:16px;font-weight:600}
-.bubble.big{width:44px;height:44px;border-radius:50%;flex:none;display:grid;
+.opt.band .lbl{font-size:18px;font-weight:600}
+.bubble.big{width:60px;height:60px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
-.bubble.big svg{width:23px;height:23px}
+.bubble.big svg{width:31px;height:31px}
 
 
 /* ------------------------------------------------------------- markety */
@@ -659,10 +664,10 @@ img{max-width:100%;display:block}
 .dial svg{transform:rotate(-90deg)}
 .dial .pct{position:absolute;inset:0;display:grid;place-items:center;
   font-size:24px;font-weight:800;color:var(--ink)}
-.loader h2{margin:20px 0 0;font-size:17px;font-weight:700;color:var(--title-ink)}
+.loader h2{margin:20px 0 0;font-size:21px;font-weight:700;color:var(--title-ink)}
 .checklist{margin:var(--gap-title) 0 0;display:flex;flex-direction:column;gap:10px}
-.checklist div{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
-.checklist i{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex:none}
+.checklist div{display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)}
+.checklist i{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);flex:none}
 .checklist div.done i{background:var(--accent);border-color:var(--accent);position:relative}
 .checklist div.done i::after{content:"";position:absolute;inset:0;margin:auto;
   width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;
@@ -675,7 +680,7 @@ img{max-width:100%;display:block}
   font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .reviewcard{background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:18px;margin-top:var(--gap-title)}
-.reviewcard h3{margin:0 0 14px;font-size:14px;font-weight:700}
+.reviewcard h3{margin:0 0 14px;font-size:17px;font-weight:700}
 .rrow{display:flex;justify-content:space-between;gap:14px;padding:10px 0;
   border-top:1px solid var(--border);font-size:13px}
 .rrow:first-of-type{border-top:none}
@@ -692,43 +697,49 @@ img{max-width:100%;display:block}
 .mech{display:flex;align-items:flex-start;gap:14px;padding:14px 0;
   border-top:1px solid var(--border)}
 .mech:first-child{border-top:none}
-.mech .bubble{flex:none;width:36px;height:36px;border-radius:50%;
+.mech .bubble{flex:none;width:46px;height:46px;border-radius:50%;
   background:var(--bub);color:var(--gly);display:grid;place-items:center}
-.mech .bubble svg{width:19px;height:19px}
-.mech b{font-size:14px;font-weight:700;display:block}
-.mech span:not(.bubble){font-size:13px;line-height:1.5;color:var(--muted);
+.mech .bubble svg{width:25px;height:25px}
+.mech b{font-size:17px;font-weight:700;display:block}
+.mech span:not(.bubble){font-size:15px;line-height:1.5;color:var(--muted);
   display:block;font-weight:400;margin-top:3px}
 
 /* ------------------------------------------------ the 4-in-1 advantage */
 /* The reference's comparison, rebuilt: a card headed by its own title and
    lead-in, one shared time axis, a row per single-ingredient pill, and the
    brand block the whole thing builds to. */
-.adv{padding:18px 16px}
-.adv-h{margin:0;font-size:17px;font-weight:800;letter-spacing:.01em;color:var(--ink)}
-.adv-sub{margin:6px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
+.adv{padding:22px 14px}
+.adv-h{margin:0;font-size:21px;font-weight:800;letter-spacing:.01em;color:var(--ink)}
+.adv-sub{margin:6px 0 0;font-size:16px;line-height:1.5;color:var(--muted)}
 
 /* The axis is drawn, not measured — 10m and 15m sit crowded at the left and
    36hr hard against the right, exactly as the reference spaces them. Its marks
    are absolute, so the row bars below can use the same percentages. */
-.axis{display:flex;align-items:flex-end;gap:8px;margin-top:20px}
-.axis-ic{flex:none;width:20px;height:20px;border-radius:50%;border:1px solid var(--accent);
+.axis{display:flex;align-items:flex-end;gap:8px;margin-top:24px}
+.axis-ic{flex:none;width:28px;height:28px;margin-bottom:-14px;border-radius:50%;
+  border:1.5px solid var(--accent);background:var(--surface);
   display:grid;place-items:center;color:var(--accent)}
-.axis-ic svg{width:12px;height:12px}
-.axis-line{position:relative;flex:1;height:26px;
-  border-bottom:1px solid var(--border)}
-.axis-line i{position:absolute;bottom:0;width:1px;height:6px;background:var(--border);
+.axis-ic svg{width:17px;height:17px}
+.axis-line{position:relative;flex:1;height:30px;
+  border-bottom:2px solid var(--border)}
+.axis-line i{position:absolute;bottom:-5px;width:2px;height:10px;font-style:normal;background:var(--border);
   transform:translateX(-50%)}
-.axis-line i b{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);
-  font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.axis-line i b{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);
+  font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
 
-.advrow{margin-top:16px}
+.advrow{margin-top:22px}
 .advrow-t{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-  font-size:13px}
-.advrow-t b{font-weight:700;color:var(--ink)}
-.advrow-t b span{font-weight:500;color:var(--muted)}
-.advrow-m{font-size:12px;color:var(--muted);text-align:right}
-.track{position:relative;height:12px;border-radius:999px;background:var(--wash);
-  margin-top:7px;overflow:hidden}
+  font-size:17px}
+.advrow-t b{font-weight:800;color:var(--ink);white-space:nowrap}
+.advrow-t b span{font-size:14px;font-weight:500;color:var(--muted)}
+.advrow-m{font-size:13.5px;color:var(--faint);text-align:right;white-space:nowrap;
+  margin-left:auto}
+/* "Other Stacks" names three molecules and does not fit beside its label at
+   this size, so the row wraps as a unit: the molecules drop to a line of their
+   own rather than breaking mid-list or pushing out of the card. */
+.advrow-t{flex-wrap:wrap;row-gap:3px}
+.track{position:relative;height:18px;border-radius:999px;background:var(--wash);
+  margin-top:9px;overflow:hidden}
 .track i{position:absolute;top:0;bottom:0;border-radius:999px}
 .track i.grad{background:linear-gradient(90deg,var(--accent-tint) 0%,var(--accent) 100%)}
 /* Each bar draws itself from its own start mark out to its end, the way the
@@ -745,20 +756,28 @@ img{max-width:100%;display:block}
 
 /* The brand block: the only part of this screen in Braevon orange, because it
    is the only part making Braevon's claim. */
-.fullpot{margin-top:22px;border:1px solid var(--accent-soft);background:#FFF9F6;
-  border-radius:var(--radius-card);padding:16px}
+.fullpot{margin-top:30px;border:1.5px solid var(--accent-line);background:#FFF9F6;
+  border-radius:14px;padding:20px 14px;box-shadow:0 6px 20px var(--glow)}
 .fp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.fp-name b{display:block;font-size:16px;font-weight:800;color:var(--accent)}
-.fp-name span{display:block;margin-top:2px;font-size:10px;font-weight:800;
+.fp-name b{display:block;font-size:20px;line-height:1.15;white-space:nowrap;font-weight:800;color:var(--accent)}
+.fp-name > span{display:block;margin-top:4px;font-size:12px;font-weight:800;
   letter-spacing:.12em;color:var(--muted)}
-.chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface);
-  border:1px solid var(--hairline);border-radius:999px;padding:5px 10px;
-  font-size:11px;font-weight:700;color:var(--ink);white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);
+  border:1px solid var(--accent-line);border-radius:999px;padding:7px 10px;
+  font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap}
 .chip svg{width:12px;height:12px;stroke:var(--accent);flex:none}
-.fullpot .axis{margin-top:16px}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
-.fp-rule{height:1px;background:var(--hairline);margin:14px 0 0}
-.fp-note{margin:12px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+/* The reference's chips carry emoji. The <i> only keeps the glyph upright and
+   on the label's baseline. */
+.chip i{font-style:normal;font-size:1.1em;line-height:1}
+/* The last mark is hard against the right end, so its label hangs from that
+   end instead of centring on the tick and running out of the card. */
+.axis-line i:last-child b{left:auto;right:-2px;transform:none}
+.fp-head{flex-wrap:wrap}
+.fp-name sup{font-size:.5em;font-weight:500;vertical-align:super;line-height:0}
+.fullpot .axis{margin-top:20px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.fp-rule{height:0;border-top:1.5px dashed var(--accent-line);margin:20px 0 0}
+.fp-note{margin:14px 0 0;font-size:15px;line-height:1.5;color:var(--muted)}
 
 /* ------------------------------------------------------ consent (50) */
 /* v1's consent screen in v2's dress. Nothing here is a new component: the card
@@ -768,9 +787,9 @@ img{max-width:100%;display:block}
    build. */
 .cs-card{padding:20px 18px}
 .cs-sec + .cs-sec{margin-top:16px}
-.cs-sec h3{margin:0;font-size:15px;font-weight:700;color:var(--ink)}
-.cs-sec p{margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--muted)}
-.cs-sec ul{margin:8px 0 0;padding-left:20px;font-size:15px;line-height:1.6;
+.cs-sec h3{margin:0;font-size:17px;font-weight:700;color:var(--ink)}
+.cs-sec p{margin:6px 0 0;font-size:16px;line-height:1.55;color:var(--muted)}
+.cs-sec ul{margin:8px 0 0;padding-left:20px;font-size:16px;line-height:1.6;
   color:var(--muted)}
 .cs-sec li + li{margin-top:2px}
 
@@ -809,32 +828,65 @@ img{max-width:100%;display:block}
   margin-top:var(--gap-block)}
 .qshot{position:relative;margin:0;border-radius:var(--radius-card);overflow:hidden;
   background:linear-gradient(150deg,#3B2F2A,#1B1512)}
-.qshot img{display:block;width:100%;height:196px;object-fit:cover}
-.qshot figcaption{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:10px;padding:20px;
-  background:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,.52))}
+/* Photo and caption share one grid cell, so the panel is as tall as the quote
+   needs and never shorter than 232px - a long quote at this size used to run
+   out of a fixed-height photo and lose its stars off the top. */
+.qshot{display:grid}
+.qshot > *{grid-area:1/1;min-width:0}
+.qshot img{display:block;width:100%;height:100%;min-height:232px;object-fit:cover}
+.qshot figcaption{position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;padding:28px 20px;
+  background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.28))}
+/* The wedding picture is a wide shot with the couple small in the middle; the
+   client asked for them closer and for a lighter veil on 2026-10-12. Scaled
+   about the couple, and clipped by the figure's own overflow. The quote keeps
+   a soft shadow so it still reads now that the veil is thin. */
+.qshot img[src*="testimonial-wedding"]{transform:scale(1.75);transform-origin:50% 56%}
+/* Same treatment for the bed picture: in on the feet, the room cropped away. */
+.qshot img[src*="testimonial-bed"]{transform:scale(1.55);transform-origin:44% 66%}
+.qshot blockquote,.qstars{filter:drop-shadow(0 1px 6px rgba(0,0,0,.45))}
 .qstars{display:flex;gap:5px;color:#FFC531}
-.qstars svg{width:17px;height:17px;display:block}
-.qshot blockquote{margin:0;text-align:center;color:#fff;font-size:21px;
-  font-weight:700;line-height:1.3;text-wrap:balance}
+.qstars svg{width:24px;height:24px;display:block}
+.qshot blockquote{margin:0;text-align:center;color:#fff;font-size:28px;
+  font-weight:800;line-height:1.25;text-wrap:balance}
+.qshot blockquote.long{font-size:24px}
 
 .qcards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .qcard{background:var(--surface);border-radius:var(--radius-card);
-  box-shadow:var(--shadow);padding:14px 12px;text-align:center}
-.qcard b{display:block;font-size:14px;font-weight:700;color:var(--ink)}
-.qbubs{display:flex;justify-content:center;gap:8px;margin:12px 0}
-.qcard .bubble{width:36px;height:36px;border-radius:50%;flex:none;display:grid;
+  box-shadow:var(--shadow);padding:20px 12px;text-align:center}
+.qcard b{display:block;font-size:17px;font-weight:800;color:var(--ink)}
+.qbubs{display:flex;justify-content:center;gap:10px;margin:16px 0}
+.qcard .bubble{width:50px;height:50px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
-.qcard .bubble svg{width:19px;height:19px}
-.qcard p{margin:0;font-size:13px;line-height:1.4;color:var(--ink)}
+.qcard .bubble svg{width:28px;height:28px}
+.qcard p{margin:0;font-size:15.5px;line-height:1.4;color:var(--ink)}
 
 .qwho{display:flex;align-items:center;justify-content:center;gap:10px;
   margin-top:10px;background:var(--surface);border-radius:var(--radius-card);
-  box-shadow:var(--shadow);padding:12px;font-size:13px;color:var(--ink)}
-.qavatar{width:28px;height:28px;border-radius:50%;flex:none;display:grid;
+  box-shadow:var(--shadow);padding:16px 12px;font-size:16px;font-weight:500;color:var(--ink)}
+.qavatar{width:44px;height:44px;border-radius:50%;flex:none;display:grid;
   place-items:center;background:#DBEAFE;color:#3B82F6;
   object-fit:cover;object-position:50% 22%}
-.qavatar svg{width:16px;height:16px}
+.qavatar svg{width:26px;height:26px}
+
+/* ------------------------------------------------- trust marks (45) */
+/* Under the last button, as the reference sets them: the Trustpilot line, then
+   a HIPAA badge and a made-in-USA seal side by side. */
+.trust{display:flex;flex-direction:column;align-items:center;gap:22px;margin-top:28px}
+.trust-tp{display:flex;align-items:center;gap:8px}
+.trust-tp > svg{width:26px;height:26px;flex:none}
+.trust-tp b{font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--ink);
+  margin-right:4px}
+.trust-tp .stars i{width:26px;height:26px}
+.trust-tp .stars i svg{width:18px;height:18px}
+.trust-row{display:flex;align-items:center;justify-content:center;gap:56px}
+.trust-hipaa{display:flex;flex-direction:column;align-items:center}
+.trust-hipaa svg{width:52px;height:auto;display:block}
+.trust-hipaa b{margin-top:6px;font-size:20px;line-height:1;font-weight:800;
+  letter-spacing:.02em;color:#3D8FCB}
+.trust-hipaa span{margin-top:3px;font-size:10px;font-weight:600;letter-spacing:.08em;
+  color:var(--muted)}
+.trust-usa svg{width:92px;height:92px;display:block}
 
 /* ------------------------------------------------------ medical review */
 /* The one screen that replaces the masthead and the bar with a header of its
@@ -849,20 +901,20 @@ img{max-width:100%;display:block}
   background:linear-gradient(90deg,#171D2C 0%,#5A6275 100%);color:#fff;
   padding:16px;margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0}
 .rv-head b{display:block;font-size:21px;font-weight:800;letter-spacing:.02em}
-.rv-head span{display:block;font-size:15px;color:#CBD5E1}
+.rv-head span{display:block;font-size:16px;color:#CBD5E1}
 .rv-head-r{text-align:right}
 /* Carries .rv-head so it beats the 14px set on that block's spans. */
-.rv-head .rv-ready{font-size:13px;font-weight:700;color:#fff}
+.rv-head .rv-ready{font-size:15px;font-weight:700;color:#fff}
 
 .rv-ok{display:flex;gap:10px;align-items:flex-start;background:#F0FDF4;
   padding:14px 16px;margin:0 calc(var(--pad) * -1)}
 .rv-ok svg{flex:none;width:20px;height:20px;stroke:#16A34A;margin-top:1px}
-.rv-ok b{display:block;font-size:15px;font-weight:600;color:#166534}
-.rv-ok p{margin:2px 0 0;font-size:13px;line-height:1.45;color:#16A34A}
+.rv-ok b{display:block;font-size:17px;font-weight:700;color:#166534}
+.rv-ok p{margin:2px 0 0;font-size:15px;line-height:1.45;color:#16A34A}
 
 .rv-panel{background:var(--neutral-tint);border-radius:var(--radius-card);
   padding:20px 16px;margin-top:var(--gap-block)}
-.rv-title{margin:0 0 16px;font-size:27px;line-height:1.2;font-weight:600;
+.rv-title{margin:0 0 16px;font-size:29px;line-height:1.2;font-weight:700;
   color:var(--ink);text-align:center}
 .rv-card{background:var(--surface);border-radius:var(--radius-card);
   box-shadow:var(--shadow);padding:16px}
@@ -870,8 +922,8 @@ img{max-width:100%;display:block}
 /* The reference puts the label and the figure on one line and runs the bar the
    full width underneath, rather than squeezing all three into a row. */
 .rv-prob-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.rv-prob-top span{font-size:17px;color:var(--muted)}
-.rv-prob-top b{font-size:28px;font-weight:800;color:#16A34A;line-height:1}
+.rv-prob-top span{font-size:18px;font-weight:600;color:var(--muted)}
+.rv-prob-top b{font-size:34px;font-weight:800;color:#16A34A;line-height:1}
 .rv-bar{height:10px;border-radius:999px;background:var(--wash);overflow:hidden;
   margin-top:14px}
 .rv-bar i{display:block;height:100%;border-radius:999px;background:#22C55E}
@@ -883,16 +935,16 @@ img{max-width:100%;display:block}
   padding:20px 0}
 .rvrow:first-child{padding-top:4px}
 .rvrow:last-child{padding-bottom:4px}
-/* 48px = the 36px bubble plus the 12px gap, so the rule lines up with the
+/* 56px = the 44px bubble plus the 12px gap, so the rule lines up with the
    label above it. Keep the three in step if any of them changes. */
-.rvrow + .rvrow::before{content:"";position:absolute;top:0;left:48px;right:0;
+.rvrow + .rvrow::before{content:"";position:absolute;top:0;left:56px;right:0;
   height:1px;background:var(--border)}
-.rvrow .bubble{flex:none;width:36px;height:36px;border-radius:50%;display:grid;
+.rvrow .bubble{flex:none;width:44px;height:44px;border-radius:50%;display:grid;
   place-items:center;background:var(--bub);color:var(--gly)}
-.rvrow .bubble svg{width:19px;height:19px}
-.rvrow b{display:block;font-size:17px;font-weight:500;color:var(--ink)}
-.rvrow > div > span{display:block;margin-top:2px;font-size:15px;color:var(--ink)}
-.rv-verdict{margin:16px 0 0;text-align:center;font-size:18px;font-weight:500;
+.rvrow .bubble svg{width:24px;height:24px}
+.rvrow b{display:block;font-size:18px;font-weight:700;color:var(--ink)}
+.rvrow > div > span{display:block;margin-top:2px;font-size:16px;color:var(--ink)}
+.rv-verdict{margin:16px 0 0;text-align:center;font-size:20px;font-weight:600;
   line-height:1.4;color:var(--ink)}
 .rv-verdict b{font-weight:700;color:var(--accent)}
 
@@ -907,7 +959,7 @@ img{max-width:100%;display:block}
 .rv-hipaa{display:flex;align-items:center;justify-content:center;gap:8px;
   margin:14px auto 0;color:var(--faint)}
 .rv-hipaa svg{width:16px;height:16px;stroke:currentColor;flex:none}
-.rv-hipaa p{margin:0;font-size:13px;line-height:1.45;color:var(--faint)}
+.rv-hipaa p{margin:0;font-size:14.5px;line-height:1.45;color:var(--faint)}
 
 /* #FFF4F6, the blush the checkout's "very high chance" panel (`.ck-prob`) sits
    on - asked for on 2026-09-18, after --accent-soft read too orange. */
@@ -918,10 +970,10 @@ img{max-width:100%;display:block}
    beside the copy it could only be a thumbnail. */
 .rv-help img{flex:none;align-self:center;width:auto;height:200px;max-width:100%;
   object-fit:contain}
-.rv-help b{display:block;font-size:18px;font-weight:700;color:var(--title-ink)}
-.rv-help p{margin:8px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
+.rv-help b{display:block;font-size:20px;font-weight:700;color:var(--title-ink)}
+.rv-help p{margin:8px 0 0;font-size:16.5px;line-height:1.5;color:var(--ink)}
 .rv-help ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
-.rv-help li{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ink)}
+.rv-help li{display:flex;align-items:center;gap:8px;font-size:16.5px;color:var(--ink)}
 /* Ink, not the green these were: the reference sets them in its own text
    colour, and three green ticks read as three verified claims. */
 .rv-help li svg{flex:none;width:16px;height:16px;stroke:var(--ink)}
@@ -945,18 +997,18 @@ img{max-width:100%;display:block}
 .dq-card{background:var(--surface);border:1px solid var(--hairline);
   border-radius:var(--radius-card);box-shadow:var(--shadow);
   padding:28px 22px 30px;margin-top:var(--gap-block)}
-.dq-mark{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);
+.dq-mark{width:56px;height:56px;border-radius:50%;background:var(--accent-soft);
   display:grid;place-items:center;margin:0 auto 16px}
-.dq-mark svg{width:22px;height:22px;stroke:var(--accent)}
-.dq h1{margin:0;font-size:23px;line-height:1.25;font-weight:700;color:var(--accent)}
-.dq-card p{margin:16px 0 0;font-size:15px;line-height:1.5;color:var(--ink)}
+.dq-mark svg{width:28px;height:28px;stroke:var(--accent)}
+.dq h1{margin:0;font-size:27px;line-height:1.25;font-weight:700;color:var(--accent)}
+.dq-card p{margin:16px 0 0;font-size:17px;line-height:1.5;color:var(--ink)}
 /* The two exits. Each is a lead-in line and a button, sized to its label the
    way the reference sizes them - not full-bleed, or they would read as the
    flow's Next and invite a click. */
-.dq-lead{margin:28px 0 0;font-size:16px;font-weight:700;color:var(--ink)}
+.dq-lead{margin:28px 0 0;font-size:18px;font-weight:700;color:var(--ink)}
 .dq-lead.soft{font-weight:500;color:var(--ink);line-height:1.5}
 .dq-rule{height:1px;background:var(--hairline);margin:30px 0 0}
-.dq-back,.dq-ghost{margin:14px auto 0;display:block;min-height:44px;
+.dq-back,.dq-ghost{margin:14px auto 0;display:block;min-height:52px;
   padding:0 20px;border-radius:var(--radius);font-family:inherit;
   font-size:17px;font-weight:800;cursor:pointer}
 .dq-back{border:none;background:var(--accent);color:#fff}
@@ -1671,10 +1723,17 @@ body:not(.frames){overflow-x:clip}
 .ft-social svg{width:22px;height:22px;display:block}
 
 /* ------------------------------------------------------------- narrow */
-@media (max-width:420px){ .hero-h1{font-size:40px} .strip{font-size:13px} }
+@media (max-width:420px){ .hero-h1{font-size:40px} .strip{font-size:13.5px}
+  .fact-k{font-size:62px} }
 @media (max-width:379px){
   :root{--pad:18px;--gap-block:26px}
-  .qhead{font-size:21px}
+  .qhead{font-size:23px}
+  .qhead.tight{font-size:22px}
+  .qshot blockquote{font-size:23px}
+  .qshot blockquote.long{font-size:20px}
+  .advrow-t{font-size:15px}
+  .chip{font-size:12px;padding:7px 9px}
+  .fp-name b{font-size:18px}
   .hero-h1{font-size:34px}
   /* The checkout at 320px. Only the three two-column cards need anything: each
      pairs a fixed-width render with a text column, and the text is what runs
