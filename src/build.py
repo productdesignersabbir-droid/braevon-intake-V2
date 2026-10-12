@@ -701,6 +701,22 @@ def reveal_block(p, r):
 
 
 # ------------------------------------------------------------------ screens
+def _hero_media():
+    """The hero clip if there is one, the still if there is not.
+
+    It used to be a <video> either way, relying on the poster while
+    assets/video/hero.mp4 was missing. On an iPhone a video that cannot play
+    gets Safari's own round play button drawn over it, which is what the client
+    saw on 2026-10-12 - so with no clip there is no <video> at all. Drop the
+    clip in and rebuild, and the video comes back."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    if os.path.exists(os.path.join(here, '..', 'assets', 'video', 'hero.mp4')):
+        return ('<video class="hero-media" autoplay muted loop playsinline '
+                'preload="metadata" poster="assets/images/braevon-hero.jpg">'
+                '<source src="assets/video/hero.mp4" type="video/mp4"/></video>')
+    return '<img class="hero-media" src="assets/images/braevon-hero.jpg" alt=""/>'
+
+
 def screen_hero(p):
     """Screen 1 - the reference's opening layout with Braevon's photograph.
 
@@ -708,9 +724,7 @@ def screen_hero(p):
     and the same element plays it instead."""
     return ('<div class="col">'
             '<div class="hero">'
-            '<video class="hero-media" autoplay muted loop playsinline preload="metadata" '
-            'poster="assets/images/braevon-hero.jpg">'
-            '<source src="assets/video/hero.mp4" type="video/mp4"/></video>'
+            + _hero_media() +
             '<img class="hero-product" src="assets/images/product-tablet.png" '
             'alt="The BRAEVON PRIME&trade; tablet"/></div>'
             '<h1 class="hero-h1">You Deserve a<br/><span class="hi">Better Sex Life.</span></h1>'

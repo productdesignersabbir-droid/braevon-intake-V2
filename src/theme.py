@@ -542,6 +542,12 @@ img{max-width:100%;display:block}
    past that to buy the fourth option row its place above the fold. Anchored
    to the top, 196 keeps the top 68% of the photograph, which is both faces
    down to his collar; centring it here would cut the foreheads. */
+/* If a clip is ever in place and the phone will not autoplay it (Low Power
+   Mode), Safari draws its own play button over the frame. The poster is the
+   fallback there, so the button is hidden rather than offered. */
+.hero-media::-webkit-media-controls-start-playback-button{display:none!important;
+  -webkit-appearance:none}
+.hero-media::-webkit-media-controls{display:none!important}
 .hero-media{
   width:100%;aspect-ratio:432/196;object-fit:cover;display:block;
   border-radius:var(--radius-media);background:var(--neutral-tint);
@@ -582,8 +588,11 @@ img{max-width:100%;display:block}
    without a breakpoint deciding which. */
 .strip{
   width:fit-content;max-width:100%;
-  margin:12px 0 0;padding:8px 18px 8px 14px;border-radius:var(--radius-card);
-  font-size:15px;line-height:1.35;color:var(--ink);
+  margin:12px 0 0;padding:8px 12px;border-radius:var(--radius-card);
+  /* Sized off the viewport so the line stays a single line on a phone: the
+     sentence is 26.6 times its font size wide, and 72px is the column's two
+     gutters plus this box's own padding. 15px from 480 up. */
+  font-size:clamp(11px,calc((100vw - 72px) / 26.6),15px);line-height:1.35;color:var(--ink);
   background:linear-gradient(90deg,var(--accent-soft) 0%,var(--page) 100%);
   /* 600, not the 400 it ran at - the client asked for the whole line to carry
      weight on 2026-09-10. The closing phrase keeps its one step above at 800,
@@ -824,8 +833,10 @@ img{max-width:100%;display:block}
 /* ------------------------------------------------------- testimonials */
 /* The reference's testimonial: one tinted panel holding a photo with the stars
    and the quote over it, two cards, and the person on a row of their own. */
-.quotepanel{background:var(--neutral-tint);border-radius:12px;padding:10px;
-  margin-top:var(--gap-block)}
+/* No top margin: `.step` already puts the block gap under the progress bar,
+   and a second one here left the panel twice as far down as the reference
+   sets it (2026-10-12). */
+.quotepanel{background:var(--neutral-tint);border-radius:12px;padding:10px}
 .qshot{position:relative;margin:0;border-radius:var(--radius-card);overflow:hidden;
   background:linear-gradient(150deg,#3B2F2A,#1B1512)}
 /* Photo and caption share one grid cell, so the panel is as tall as the quote
@@ -1722,7 +1733,11 @@ body:not(.frames){overflow-x:clip}
 .ft-social svg{width:22px;height:22px;display:block}
 
 /* ------------------------------------------------------------- narrow */
-@media (max-width:420px){ .hero-h1{font-size:40px} .strip{font-size:13.5px}
+@media (max-width:420px){ .hero-h1{font-size:40px}
+  .ask{font-size:21px}
+  .qwho{font-size:14.5px;gap:8px} .qavatar{width:36px;height:36px}
+  .qcard p{font-size:14.5px}
+  .qshot blockquote{font-size:25px} .qshot blockquote.long{font-size:21px}
   .fact-k{font-size:62px} }
 @media (max-width:379px){
   :root{--pad:18px;--gap-block:26px}
