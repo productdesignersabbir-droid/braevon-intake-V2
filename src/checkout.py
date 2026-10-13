@@ -85,6 +85,30 @@ PACKS = [
     ('6',  99,  '$99.00',  '', 'MOST POPULAR'),
     ('12', 132, '$132.00', '<i class="ck-save">SAVE 33%</i>', 'BEST VALUE'),
 ]
+
+# CHECKOUT VERSION 2, asked for on 2026-10-12: the same page with a third pack,
+# 18 tablets, for the client to compare against the two-pack version above.
+# Both live on the one checkout, behind two tabs at the top of the page (see
+# `VERSIONS` and the `ck-vers` bar in `screen`). Each version is its own row of
+# pack cards; the tab shows one row and hides the other, and nothing else on
+# the page differs between them.
+# With three on the row the badges move up one - none on the 6, MOST POPULAR
+# on the 12 (still the one that opens selected), BEST VALUE on the 18.
+# **$165.00 is not the client's figure.** It is the 6-to-12 step ($33) taken
+# once more, confirmed by the designer as the number to show; the client has
+# not supplied a price for this pack. $9.17 a tablet against the 6's $16.50 is
+# the 44%.
+PACKS_V2 = [
+    ('6',  99,  '$99.00',  '', ''),
+    ('12', 132, '$132.00', '<i class="ck-save">SAVE 33%</i>', 'MOST POPULAR'),
+    ('18', 165, '$165.00', '<i class="ck-save">SAVE 44%</i>', 'BEST VALUE'),
+]
+# The tabs, in order: label, what it holds, its pack table. The first opens.
+VERSIONS = [
+    ('Version 1', '6 / 12', PACKS),
+    ('Version 2', '6 / 12 / 18', PACKS_V2),
+]
+
 # The Figma's "Most popular" opens selected, as the reference's does. The CTA
 # strip says "start at just", so it reads the cheapest pack rather than this one.
 LEAD_PACK = 1
@@ -97,6 +121,10 @@ PACK_IMAGES = {
            'A BRAEVON pouch with two 4-in-1 tablets'),
     '12': ('assets/images/product-12pack.png',
            'Two BRAEVON pouches with two 4-in-1 tablets'),
+    # Composed from the two renders above, not supplied: the 12-pack's pair
+    # with a third pouch set behind it.
+    '18': ('assets/images/product-18pack.png',
+           'Three BRAEVON pouches with two 4-in-1 tablets'),
 }
 
 
@@ -663,16 +691,23 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     # card is the one with the accent outline and the glow, the same way a
     # chosen option row is. `aria-pressed` carries the state that the ring used
     # to carry visually, so it is still announced.
+    def pack_row(table):
+        return ''.join(
+            '<button class="ck-pack%s" type="button" data-pack="%s" data-price="%s" '
+            'data-img="%s" data-img-alt="%s" aria-pressed="%s">%s'
+            '<b>%s PACK</b>%s</button>'
+            % (' selected' if i == LEAD_PACK else '', n, shown,
+               PACK_IMAGES[n][0], PACK_IMAGES[n][1],
+               'true' if i == LEAD_PACK else 'false',
+               ('<em%s>%s</em>' % (' class="hot"' if badge == 'MOST POPULAR' else '', badge))
+               if badge else '', n, ('<small>%s</small>' % sub) if sub else '')
+            for i, (n, price, shown, sub, badge) in enumerate(table))
+    # One row of cards per version; only the open tab's row is shown. The
+    # static frames run no script and so print the first.
     packs = ''.join(
-        '<button class="ck-pack%s" type="button" data-pack="%s" data-price="%s" '
-        'data-img="%s" data-img-alt="%s" aria-pressed="%s">%s'
-        '<b>%s PACK</b>%s</button>'
-        % (' selected' if i == LEAD_PACK else '', n, shown,
-           PACK_IMAGES[n][0], PACK_IMAGES[n][1],
-           'true' if i == LEAD_PACK else 'false',
-           ('<em%s>%s</em>' % (' class="hot"' if badge == 'MOST POPULAR' else '', badge))
-           if badge else '', n, ('<small>%s</small>' % sub) if sub else '')
-        for i, (n, price, shown, sub, badge) in enumerate(PACKS))
+        '<div class="ck-packs" data-packs data-version="%d"%s>%s</div>'
+        % (v + 1, '' if v == 0 else ' hidden', pack_row(table))
+        for v, (_, _, table) in enumerate(VERSIONS))
     card_lines = [
         ('Powerful 4-in-1 performance stack that targets desire (brain) and '
          'performance (body)'),
@@ -685,7 +720,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
     product = (
         '<div class="ck-sect">'
         '<h2 class="ck-h2 mid big">Choose your medication preference below:</h2>'
-        '<div class="ck-packs" data-packs>%s</div>'
+        '%s'
         '<div class="ck-prod">'
         '<div class="ck-prod-head">'
         '<div><span class="ck-tag" data-pack-tag>%s PACK</span>'
@@ -934,7 +969,18 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         % (q, ic('<path d="M6 9l6 6 6-6"/>'), a) for q, a in FAQ)
     faq = ('<div class="ck-faq"><h2>Frequently asked questions</h2>%s</div>' % faq)
 
-    return ('<div class="col ck">'
+    # The two versions' tabs. A review control for the client, not part of the
+    # page a patient would see - which is why it sits above the wordmark, in
+    # its own strip, and says what it is.
+    vers = ('<div class="ck-vers" role="tablist" aria-label="Checkout version">%s</div>'
+            % ''.join(
+                '<button type="button" role="tab" class="ck-ver%s" data-ck-version="%d" '
+                'aria-selected="%s"><b>%s</b><span>%s</span></button>'
+                % (' on' if v == 0 else '', v + 1, 'true' if v == 0 else 'false',
+                   name, what)
+                for v, (name, what, _) in enumerate(VERSIONS)))
+
+    return ('<div class="col ck">' + vers +
             '<header class="ck-mast"><div class="logo">%s</div></header>'
             '<div class="ck-clock"><span><span data-fname-echo>Your</span> approval is '
             'valid for</span><b data-countdown>10:00</b></div>'

@@ -797,8 +797,13 @@ def screen_birthdate(p):
     screen's remaining sub-heads, which the extraction already carries."""
     m = {f['name']: f for f in p['fields']}
     labels = (p['subs'][1:4] + ['Month', 'Day', 'Year'])[:3]
-    month = dict(m['birth_month'], options=MONTHS)
-    day = dict(m['birth_day'], options=['%02d' % i for i in range(1, 32)])
+    # A select's first option is its placeholder - it carries an empty value and
+    # the step will not validate on it. These two used to open on "January" and
+    # "01" as that placeholder, the way the reference shows them, which meant
+    # nobody born in January or on the 1st could get past this screen. They now
+    # open on a word instead, and all twelve months and 31 days are real.
+    month = dict(m['birth_month'], options=['Month'] + MONTHS)
+    day = dict(m['birth_day'], options=['Day'] + ['%02d' % i for i in range(1, 32)])
     year = dict(m['birth_year'], placeholder='1985', input_type='text',
                 birth_year=True)
     # The reference's LAST STEP pill came off here on 2026-09-08, when the
@@ -1323,7 +1328,7 @@ def page(title, body, body_class=''):
             % (title, CSS, cls, body))
 
 
-def emit_interactive():
+def _interactive_html(title):
     body = ('<div class="shell">' + MASTHEAD + PROGRESS
             + '<main class="stage" id="stage">%s</main>' % '\n'.join(sections())
             + DQ + DONE + '</div>'
@@ -1333,7 +1338,11 @@ def emit_interactive():
                                                      json.dumps(SEGMENT_STARTS))
                                             .replace('__STEP_AT__',
                                                      json.dumps(STEP_AT)))
-    html = page('Braevon &mdash; Intake Assessment v2', body)
+    return page(title, body)
+
+
+def emit_interactive():
+    html = _interactive_html('Braevon &mdash; Intake Assessment v2')
     for name in ('index.html', 'interactive.html'):
         open(os.path.join(OUT, name), 'w', encoding='utf-8').write(html)
 

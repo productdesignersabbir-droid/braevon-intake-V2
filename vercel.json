@@ -1,7 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/screens", "destination": "/all-screens.html" }
+    { "source": "/screens", "destination": "/all-screens.html" },
+    { "source": "/checkout", "destination": "/index.html" },
+    { "source": "/checkout-v2", "destination": "/index.html" }
   ],
   "headers": [
     {

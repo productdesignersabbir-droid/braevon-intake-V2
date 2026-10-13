@@ -181,10 +181,142 @@
     var d=f.value.replace(/\D/g,'').slice(0,4);
     if(d!==f.value) f.value=d;
   });
+  /* Eighteen on today's date, from all three boxes: the selects' option index
+     is the month and the day (index 0 is the placeholder). Until both are
+     picked the year alone is judged, as though born on 1 January, so the
+     message does not appear and then vanish as the other two are filled in
+     for someone who is comfortably of age. */
+  var MIN_AGE=18;
+  function adult(f){
+    var box=f.closest('.dob'), s=box?box.querySelectorAll('select'):[];
+    var m=s[0]&&s[0].selectedIndex>0 ? s[0].selectedIndex-1 : 0;
+    var d=s[1]&&s[1].selectedIndex>0 ? s[1].selectedIndex : 1;
+    var now=new Date(), y=parseInt(f.value,10);
+    var age=now.getFullYear()-y;
+    if(now.getMonth()<m || (now.getMonth()===m && now.getDate()<d)) age--;
+    return age>=MIN_AGE;
+  }
   function yearValid(v){
     var now=new Date().getFullYear(), y=parseInt(v,10);
     return /^\d{4}$/.test(v) && y>=YEAR_MIN && y<=now;
   }
+
+  /* ------------------------------------------------- email suggestions */
+  /* "Did you mean sam@gmail.com?" under any email box whose domain looks like
+     a slip - asked for on 2026-10-13, after the reference's own. It is advice,
+     not validation: the address as typed still goes through if it is a real
+     shape, and the patient can dismiss the hint. Every input[type=email] gets
+     it, on the intake and on the checkout alike, with no markup of its own -
+     the hint is built here and put straight after the box.
+
+     Three passes over the part after the @, cheapest first:
+       1. the name is a provider we know and only the ending is wrong
+          ("gmail.codsa", "yahoo.con") - give it that provider's ending;
+       2. the whole domain is a letter or two off a known one ("gmial.com",
+          "hotmal.com", "outlok.com");
+       3. the name is anyone's, but the ending is one slip from .com/.net/.org
+          and is not a real ending of its own ("acme.cmo"). */
+  var MAIL_DOMAINS=['gmail.com','yahoo.com','hotmail.com','outlook.com','icloud.com',
+    'aol.com','live.com','msn.com','me.com','mac.com','ymail.com','protonmail.com',
+    'proton.me','comcast.net','att.net','verizon.net','sbcglobal.net','bellsouth.net',
+    'cox.net','charter.net','mail.com','gmx.com','zoho.com'];
+  var MAIL_TLDS=['com','net','org'];
+  /* Endings that are one letter from the three above and are real anyway. */
+  var REAL_TLDS={co:1,cm:1,om:1,cc:1,ca:1,cn:1,ch:1,cz:1,de:1,dk:1,es:1,eu:1,fr:1,
+    ie:1,'in':1,io:1,it:1,jp:1,me:1,mx:1,ne:1,nl:1,no:1,nz:1,pl:1,pt:1,ru:1,se:1,
+    uk:1,us:1,za:1,ai:1,app:1,dev:1,edu:1,gov:1,mil:1,biz:1,info:1,pro:1,xyz:1,
+    one:1,nyc:1,bot:1,cat:1,ong:1,nrw:1,net:1,org:1,com:1};
+  function editDistance(a,b){
+    var prev=[], cur, i, j;
+    for(j=0;j<=b.length;j++) prev[j]=j;
+    for(i=1;i<=a.length;i++){
+      cur=[i];
+      for(j=1;j<=b.length;j++)
+        cur[j]=Math.min(prev[j]+1, cur[j-1]+1, prev[j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));
+      prev=cur;
+    }
+    return prev[b.length];
+  }
+  function suggestEmail(v){
+    v=(v||'').trim();
+    var at=v.lastIndexOf('@');
+    if(at<1 || /\s/.test(v)) return null;
+    var local=v.slice(0,at), dom=v.slice(at+1).toLowerCase().replace(/\.+$/,'');
+    if(dom.length<4 || MAIL_DOMAINS.indexOf(dom)>=0) return null;
+    var dot=dom.indexOf('.'), name=dot<0?dom:dom.slice(0,dot), tld=dot<0?'':dom.slice(dom.lastIndexOf('.')+1);
+    var i, best=null, bestD=9, d, fix=null;
+    /* A real ending that is simply not the provider's own - yahoo.de, mail.de,
+       yahoo.co.uk - is somebody's actual address, not a typo of .com. So when
+       the ending is real, only a one-letter slip counts (yahoo.co, icloud.cm),
+       and the "right name, wrong ending" pass is skipped altogether. */
+    var realEnd=!!REAL_TLDS[tld];
+    for(i=0;i<MAIL_DOMAINS.length && !fix && !realEnd;i++)
+      if(MAIL_DOMAINS[i].split('.')[0]===name) fix=MAIL_DOMAINS[i];
+    if(!fix){
+      for(i=0;i<MAIL_DOMAINS.length;i++){
+        d=editDistance(dom, MAIL_DOMAINS[i]);
+        if(realEnd && MAIL_DOMAINS[i].slice(-tld.length-1)!=='.'+tld && d>1) continue;
+        if(d<bestD){ bestD=d; best=MAIL_DOMAINS[i]; }
+      }
+      if(bestD<=2) fix=best;
+    }
+    if(!fix && dot>0 && tld && !realEnd){
+      var sorted=tld.split('').sort().join('');
+      for(i=0;i<MAIL_TLDS.length;i++)
+        /* One letter out, or the right letters in the wrong order (.cmo). */
+        if(editDistance(tld, MAIL_TLDS[i])<=1 || sorted===MAIL_TLDS[i].split('').sort().join('')){
+          fix=dom.slice(0,dom.lastIndexOf('.')+1)+MAIL_TLDS[i]; break; }
+    }
+    return fix && fix!==dom ? local+'@'+fix : null;
+  }
+  function mailHint(f){
+    var box=f.parentNode, hint=box.querySelector('.mailhint');
+    var s=suggestEmail(f.value);
+    /* Dismissed for this exact text: stay quiet until the text changes. */
+    if(s && f.dataset.hintOff===f.value) s=null;
+    if(!s){ if(hint) hint.remove(); return; }
+    if(!hint){
+      hint=document.createElement('div');
+      hint.className='mailhint'; hint.setAttribute('role','status');
+      hint.innerHTML='<span>Did you mean <b></b>?</span>'+
+        '<button type="button" class="mailhint-use">Use it</button>'+
+        '<button type="button" class="mailhint-x" aria-label="Dismiss suggestion">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '+
+        'stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+      f.insertAdjacentElement('afterend', hint);
+    }
+    hint.querySelector('b').textContent=s;
+    hint.dataset.value=s;
+  }
+  var mailTimer=null;
+  stage.addEventListener('input', function(e){
+    var f=e.target;
+    if(!f.matches || !f.matches('input[type=email]')) return;
+    clearTimeout(mailTimer);
+    /* A beat after the last keystroke, so it does not flicker through every
+       half-typed domain on the way to the right one. */
+    mailTimer=setTimeout(function(){ mailHint(f); }, 450);
+  });
+  stage.addEventListener('focusout', function(e){
+    var f=e.target;
+    if(f.matches && f.matches('input[type=email]')){ clearTimeout(mailTimer); mailHint(f); }
+  });
+  stage.addEventListener('click', function(e){
+    var use=e.target.closest('.mailhint-use'), x=e.target.closest('.mailhint-x');
+    if(!use && !x) return;
+    var hint=(use||x).closest('.mailhint'), f=hint.parentNode.querySelector('input[type=email]');
+    if(use){
+      f.value=hint.dataset.value;
+      hint.remove();
+      /* Tell everything else the value changed - the error line, the
+         checkout's "touched" mark - exactly as typing it would have. */
+      f.dispatchEvent(new Event('input',{bubbles:true}));
+      f.dispatchEvent(new Event('focusout',{bubbles:true}));
+    } else {
+      f.dataset.hintOff=f.value;
+      hint.remove();
+    }
+  });
 
   /* --------------------------------------------------------- validation */
   /* What is wrong with a field, in words, or null if nothing is. Shared by the
@@ -196,6 +328,8 @@
       return 'Enter a valid US phone number, e.g. (415) 555-1234.';
     if(f.hasAttribute('data-birth-year') && !yearValid(f.value.trim()))
       return 'Enter a year from '+YEAR_MIN+' to '+new Date().getFullYear()+'.';
+    if(f.hasAttribute('data-birth-year') && !adult(f))
+      return 'You must be '+MIN_AGE+' or older to continue.';
     if(f.type==='email' && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(f.value.trim()))
       return 'Enter a valid email address.';
     return null;
@@ -661,5 +795,37 @@
   function syncSkip(){}
 
   syncReveals();
-  show(0);
+  /* The checkout's two versions, behind the tabs at the top of that page. Each
+     has its own row of pack cards; a tab shows its row, hides the other, and
+     re-picks that row's selected card so the product card, the closing card
+     and the render all follow - the pack handler above does that part. */
+  function setVersion(v){
+    var page=stage.querySelector('[data-checkout]'); if(!page) return;
+    [].forEach.call(page.querySelectorAll('[data-ck-version]'), function(t){
+      var on=t.dataset.ckVersion===String(v);
+      t.classList.toggle('on', on); t.setAttribute('aria-selected', on?'true':'false');
+    });
+    [].forEach.call(page.querySelectorAll('.ck-packs[data-version]'), function(row){
+      var on=row.dataset.version===String(v);
+      row.hidden=!on;
+      if(on){ var p=row.querySelector('.ck-pack.selected')||row.querySelector('.ck-pack');
+              if(p) p.click(); }
+    });
+  }
+  stage.addEventListener('click', function(e){
+    var t=e.target.closest('[data-ck-version]');
+    if(t) setVersion(t.dataset.ckVersion);
+  });
+
+  /* A direct link to the checkout: /checkout opens it on Version 1 and
+     /checkout-v2 on Version 2 (vercel.json points both at index.html), as do
+     #checkout and #checkout-v2 on any address. It opens the checkout as the
+     first screen, the same jump the "Go to checkout" link makes, so the page
+     can be sent on its own for review. */
+  var m=/\/checkout(-v2)?\/?$/.exec(location.pathname) || /^#checkout(-v2)?$/.exec(location.hash);
+  if(m && checkoutIdx>=0){
+    show(0); history.push(0); show(checkoutIdx);
+    if(m[1]) setVersion(2);
+  }
+  else show(0);
 })();

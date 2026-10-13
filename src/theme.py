@@ -398,7 +398,27 @@ img{max-width:100%;display:block}
 .field input:focus,.field select:focus,.field textarea:focus,.reveal textarea:focus{
   border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)
 }
+/* The email suggestion: a quiet bar under the box, the address on the left and
+   the two ways out on the right. Built by engine.js under every email input,
+   here and on the checkout. */
+.mailhint{display:flex;align-items:center;gap:10px;margin-top:8px;
+  padding:10px 10px 10px 14px;border:1.5px solid var(--ink);border-radius:var(--radius);
+  background:var(--neutral-tint);font-size:15px;line-height:1.3;color:var(--ink)}
+.mailhint span{flex:1;min-width:0;overflow-wrap:anywhere}
+.mailhint b{font-weight:800}
+.mailhint-use{flex:none;border:none;background:none;padding:6px 4px;cursor:pointer;
+  font-family:inherit;font-size:15px;font-weight:800;color:var(--ink);
+  text-decoration:underline;text-underline-offset:3px}
+.mailhint-x{flex:none;border:none;background:none;padding:6px;cursor:pointer;
+  color:var(--muted);display:grid;place-items:center}
+.mailhint-x svg{width:16px;height:16px;display:block}
+.mailhint-use:hover{color:var(--accent)} .mailhint-x:hover{color:var(--ink)}
+
 /* Three boxes of equal width, as the reference sizes them. */
+/* The year box is a third of the row and its messages are sentences, so its
+   error line runs the whole row from the Month box's left edge instead of
+   wrapping to four lines under the year. 20px is the two 10px gaps. */
+.dob .field:last-child .err{width:calc(300% + 20px);margin-left:calc(-200% - 20px)}
 .dob{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
 /* -------------------------------------------------------------- reveals */
@@ -1311,7 +1331,30 @@ body:not(.frames){overflow-x:clip}
 .ck-pill b{font-weight:800;font-variant-numeric:tabular-nums}
 
 /* -- 8 the packs and the product card ------------------------------------ */
-.ck-packs{display:flex;gap:16px}
+/* Three across on Version 2 (2026-10-12): 12px between, and the title a step
+   down on a phone so "12 PACK" holds one line in a ~100px card. */
+.ck-packs{display:flex;gap:12px}
+/* `display:flex` beats the `hidden` attribute, so the closed version's row has
+   to be put away by name. */
+.ck-packs[hidden]{display:none}
+
+/* The version tabs: a review control above the wordmark, full-bleed like the
+   countdown bar under it, on the dark ink so it reads as chrome around the
+   page rather than part of it. */
+/* It is the first thing on the page now, so it takes the negative top margin
+   that cancels `.step`'s padding, and the wordmark under it gives its own up. */
+.ck-vers{margin:calc(var(--gap-block) * -1) calc(var(--pad) * -1) 0;background:var(--dark);
+  display:flex;justify-content:center;gap:6px;padding:8px}
+body:not(.frames) .ck-vers{margin-inline:calc(50% - 50vw)}
+.ck-vers + .ck-mast{margin-top:0}
+.ck-ver{flex:0 1 200px;border:none;border-radius:8px;background:transparent;
+  color:#B9C0CE;font-family:inherit;cursor:pointer;padding:9px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2;
+  transition:background-color .14s ease,color .14s ease}
+.ck-ver b{font-size:15px;font-weight:800}
+.ck-ver span{font-size:12px;font-weight:600;opacity:.85}
+.ck-ver:hover{color:#fff}
+.ck-ver.on{background:#fff;color:var(--ink)}
 /* Two cards, side by side, at every width - the reference never stacks them and
    208px each fits the 432px column with its 16px between. */
 /* The two cards centre their own content and share a height, so the titles and
@@ -1372,6 +1415,10 @@ body:not(.frames){overflow-x:clip}
 @media (max-width:420px){ .ck-prod-head b{font-size:21px;white-space:nowrap} }
 .ck-prod-rate{flex:none;text-align:right}
 .ck-prod-rate .stars{justify-content:flex-end}
+/* The masthead's stars grew on 2026-10-12; on the product card that pushed the
+   rating into the product name at phone width, so these keep the old size. */
+.ck-prod-rate .stars i{width:18px;height:18px}
+.ck-prod-rate .stars i svg{width:12px;height:12px}
 /* `:not(.stars)` is load-bearing. The rating mark is itself a `<span class=
    "stars">`, and a bare `.ck-prod-rate span` outranks `.stars`'s own
    `display:flex` on specificity - which turned the five tiles into a vertical
@@ -1735,6 +1782,8 @@ body:not(.frames){overflow-x:clip}
 /* ------------------------------------------------------------- narrow */
 @media (max-width:420px){ .hero-h1{font-size:40px}
   .ask{font-size:21px}
+  .ck-packs{gap:8px} .ck-pack{padding:40px 6px 15px}
+  .ck-pack b{font-size:19px} .ck-pack em{font-size:9px;padding:3px 4px}
   .qwho{font-size:14.5px;gap:8px} .qavatar{width:36px;height:36px}
   .qcard p{font-size:14.5px}
   .qshot blockquote{font-size:25px} .qshot blockquote.long{font-size:21px}
