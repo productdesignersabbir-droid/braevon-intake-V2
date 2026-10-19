@@ -585,14 +585,13 @@
   });
   /* ------------------------------------------------ the post-checkout upsell */
   /* One offer per pack, all in the step; show the one for the pack picked on
-     the checkout, in whichever version tab is open. `upsellPack` overrides it
+     the checkout. `upsellPack` overrides it
      for the direct links below. */
   var upsellPack=null;
   function pickUpsell(el){
     var pk=upsellPack;
     if(!pk){
-      var row=stage.querySelector('[data-checkout] .ck-packs:not([hidden])');
-      var sel=row && row.querySelector('.ck-pack.selected');
+      var sel=stage.querySelector('[data-checkout] .ck-pack.selected');
       pk=sel ? sel.dataset.pack : '12';
     }
     upsellPack=null;
@@ -823,37 +822,14 @@
   function syncSkip(){}
 
   syncReveals();
-  /* The checkout's two versions, behind the tabs at the top of that page. Each
-     has its own row of pack cards; a tab shows its row, hides the other, and
-     re-picks that row's selected card so the product card, the closing card
-     and the render all follow - the pack handler above does that part. */
-  function setVersion(v){
-    var page=stage.querySelector('[data-checkout]'); if(!page) return;
-    [].forEach.call(page.querySelectorAll('[data-ck-version]'), function(t){
-      var on=t.dataset.ckVersion===String(v);
-      t.classList.toggle('on', on); t.setAttribute('aria-selected', on?'true':'false');
-    });
-    [].forEach.call(page.querySelectorAll('.ck-packs[data-version]'), function(row){
-      var on=row.dataset.version===String(v);
-      row.hidden=!on;
-      if(on){ var p=row.querySelector('.ck-pack.selected')||row.querySelector('.ck-pack');
-              if(p) p.click(); }
-    });
-  }
-  stage.addEventListener('click', function(e){
-    var t=e.target.closest('[data-ck-version]');
-    if(t) setVersion(t.dataset.ckVersion);
-  });
-
-  /* A direct link to the checkout: /checkout opens it on Version 1 and
-     /checkout-v2 on Version 2 (vercel.json points both at index.html), as do
-     #checkout and #checkout-v2 on any address. It opens the checkout as the
-     first screen, the same jump the "Go to checkout" link makes, so the page
-     can be sent on its own for review. */
+  /* A direct link to the checkout: /checkout and #checkout on any address
+     open it as the first screen, the same jump the "Go to checkout" link
+     makes, so the page can be sent on its own for review. /checkout-v2 and
+     #checkout-v2 still work - they opened the old Version 2 tab, which is now
+     the only checkout. */
   var m=/\/checkout(-v2)?\/?$/.exec(location.pathname) || /^#checkout(-v2)?$/.exec(location.hash);
   if(m && checkoutIdx>=0){
     show(0); history.push(0); show(checkoutIdx);
-    if(m[1]) setVersion(2);
   }
   /* #upsell-6, #upsell-12 and #upsell-18 open that pack's offer directly,
      for review, the way /checkout opens the checkout. */

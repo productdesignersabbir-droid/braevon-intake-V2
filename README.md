@@ -708,8 +708,7 @@ the press marks 5.3, the footer greys 7.5.
 ## Screen 52 — the post-checkout upsell (2026-10-19)
 
 The checkout's closing **Checkout** button now walks onto an upsell, and the
-offer shown is set by **the pack selected on the checkout**, in whichever
-version tab is open. `src/upsell.py` builds it; the copy and every figure are
+offer shown is set by **the pack selected on the checkout**. `src/upsell.py` builds it; the copy and every figure are
 in `OFFERS` there.
 
 | pack bought | offer | price | source |
@@ -718,9 +717,10 @@ in `OFFERS` there.
 | 12 | quarterly, 36 tablets | $237 (retail $396, save $159) | Figma node 172:358 |
 | 18 | buy 1 more month, get 1 free: +36 (54 in all) | $144 (was $309.60, save $165, $4.00/dose) | client, 2026-10-19 |
 
-Version 1 sells 6 / 12 and so reaches the first two; Version 2 sells 6 / 12 / 18
-and reaches all three. The 18-pack checkout price became **$172** the same day
-(was a placeholder $165), so its badge is SAVE 42%.
+The checkout had two tabs until the same day, Version 1 (6 / 12) and Version 2
+(6 / 12 / 18); the client dropped Version 1, so the checkout now sells all three
+packs on one row, and the 18-pack is **$172** (was a placeholder $165), badge
+SAVE 42%. `/checkout-v2` still opens the checkout, for old links.
 
 The Figma frames are v1's screen 35 imported through html.to.design; sizes are
 v1's, set down to this 480px column. Accepting and declining both end on

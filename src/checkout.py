@@ -82,32 +82,20 @@ PACKS = [
     # BEST VALUE on the 12, and the 12's saving set as a green chip of its own.
     # No per-tablet price on the cards since 2026-09-17, at the client's word.
     # The 6 has no sub-line at all, so "6 PACK" centres in its card both ways.
-    ('6',  99,  '$99.00',  '', 'MOST POPULAR'),
-    ('12', 132, '$132.00', '<i class="ck-save">SAVE 33%</i>', 'BEST VALUE'),
-]
-
-# CHECKOUT VERSION 2, asked for on 2026-10-12: the same page with a third pack,
-# 18 tablets, for the client to compare against the two-pack version above.
-# Both live on the one checkout, behind two tabs at the top of the page (see
-# `VERSIONS` and the `ck-vers` bar in `screen`). Each version is its own row of
-# pack cards; the tab shows one row and hides the other, and nothing else on
-# the page differs between them.
-# With three on the row the badges move up one - none on the 6, MOST POPULAR
-# on the 12 (still the one that opens selected), BEST VALUE on the 18.
-# **$172.00 is the client's figure**, 2026-10-19 ("checkout page price for 18
-# tablets is $172"). It replaced a placeholder $165. $9.56 a tablet against the
-# 6's $16.50 is the 42% - derived here, not the client's.
-PACKS_V2 = [
+    #
+    # **The 18 joined on 2026-10-19**, when the client dropped the two-pack
+    # version: there had been two tabs, Version 1 (6 / 12) and Version 2
+    # (6 / 12 / 18), and Version 2 is now the only one. With three on the row
+    # the badges move up one - none on the 6, MOST POPULAR on the 12 (still the
+    # one that opens selected), BEST VALUE on the 18. **$172.00 is the client's
+    # figure** ("checkout page price for 18 tablets is $172"); it replaced a
+    # placeholder $165. $9.56 a tablet against the 6's $16.50 is the 42% -
+    # derived here, not the client's.
     ('6',  99,  '$99.00',  '', ''),
     ('12', 132, '$132.00', '<i class="ck-save">SAVE 33%</i>', 'MOST POPULAR'),
     ('18', 172, '$172.00', '<i class="ck-save">SAVE 42%</i>', 'BEST VALUE'),
 ]
 assert round((1 - 172 / 18 / (99 / 6)) * 100) == 42
-# The tabs, in order: label, what it holds, its pack table. The first opens.
-VERSIONS = [
-    ('Version 1', '6 / 12', PACKS),
-    ('Version 2', '6 / 12 / 18', PACKS_V2),
-]
 
 # The Figma's "Most popular" opens selected, as the reference's does. The CTA
 # strip says "start at just", so it reads the cheapest pack rather than this one.
@@ -702,12 +690,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
                ('<em%s>%s</em>' % (' class="hot"' if badge == 'MOST POPULAR' else '', badge))
                if badge else '', n, ('<small>%s</small>' % sub) if sub else '')
             for i, (n, price, shown, sub, badge) in enumerate(table))
-    # One row of cards per version; only the open tab's row is shown. The
-    # static frames run no script and so print the first.
-    packs = ''.join(
-        '<div class="ck-packs" data-packs data-version="%d"%s>%s</div>'
-        % (v + 1, '' if v == 0 else ' hidden', pack_row(table))
-        for v, (_, _, table) in enumerate(VERSIONS))
+    packs = '<div class="ck-packs" data-packs>%s</div>' % pack_row(PACKS)
     card_lines = [
         ('Powerful 4-in-1 performance stack that targets desire (brain) and '
          'performance (body)'),
@@ -969,18 +952,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         % (q, ic('<path d="M6 9l6 6 6-6"/>'), a) for q, a in FAQ)
     faq = ('<div class="ck-faq"><h2>Frequently asked questions</h2>%s</div>' % faq)
 
-    # The two versions' tabs. A review control for the client, not part of the
-    # page a patient would see - which is why it sits above the wordmark, in
-    # its own strip, and says what it is.
-    vers = ('<div class="ck-vers" role="tablist" aria-label="Checkout version">%s</div>'
-            % ''.join(
-                '<button type="button" role="tab" class="ck-ver%s" data-ck-version="%d" '
-                'aria-selected="%s"><b>%s</b><span>%s</span></button>'
-                % (' on' if v == 0 else '', v + 1, 'true' if v == 0 else 'false',
-                   name, what)
-                for v, (name, what, _) in enumerate(VERSIONS)))
-
-    return ('<div class="col ck">' + vers +
+    return ('<div class="col ck">'
             '<header class="ck-mast"><div class="logo">%s</div></header>'
             '<div class="ck-clock"><span><span data-fname-echo>Your</span> approval is '
             'valid for</span><b data-countdown>10:00</b></div>'

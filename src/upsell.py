@@ -9,17 +9,13 @@ the type sizes and colours here are v1's `.up` block, measured off the live v1
 page and set down to this build's 480px column.
 
 The checkout's last button walks onto this screen, and the screen shows the
-offer for **the pack that was selected on the checkout**, in whichever version
-tab was open:
+offer for **the pack that was selected on the checkout**:
 
     bought   offered                         source
     6        quarterly, 18 tablets, $169     Figma frame 172:617
     12       quarterly, 36 tablets, $237     Figma frame 172:358
     18       +1 month, +1 free: +36, $144    client, WhatsApp, 2026-10-19
 
-Version 1 sells 6 and 12, so it can only reach the first two; Version 2 sells
-6 / 12 / 18 and reaches all three. Nothing here needs to know which version it
-came from - the pack is the whole key.
 
 **The 18 is a different offer, not a third quarterly tier**, and it is worded
 the client's way: "BUY 1 MORE MONTH, GET 1 FREE - $309.60 (crossed out) $144 -
@@ -111,9 +107,8 @@ OFFERS = {
         cta='Add 36 Tablets ($144 extra)',
         bar='Upgrade &amp; Save $165'),
 }
-assert set(OFFERS) == {p[0] for p in checkout.PACKS_V2}, \
+assert set(OFFERS) == {p[0] for p in checkout.PACKS}, \
     'every pack the checkout sells needs an upsell offer'
-assert {p[0] for p in checkout.PACKS} <= set(OFFERS)
 # The client's 18-pack figures, held to their own arithmetic: $144 over 36
 # doses is the $4.00/dose they quote, and $309.60 - $144 is the saving.
 assert 144 / 36 == 4.0
