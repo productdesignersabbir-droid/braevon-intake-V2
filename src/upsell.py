@@ -90,7 +90,7 @@ OFFERS = {
         cta='Upgrade to 36-Tablet Supply Now',
         bar='Upgrade &amp; Save $159'),
     '18': dict(
-        save='165', save2='165.60', retail='$309.60', price='$144.00',
+        save='165', save2='165.60', retail='$309.60', price='+$144.00',
         was='$309.60', now_save=None, n='54',
         h1='Don&rsquo;t run out. Buy 1 more month, get 1&nbsp;free',
         sub=('Your 18-tablet plan is secure! But monthly refills kill the momentum. '
@@ -101,11 +101,14 @@ OFFERS = {
         blurb='Two more months of coverage for the price of&nbsp;one.',
         hero='on 36 more tablets',
         retail_label='36 more tablets (retail)',
-        price_label='Buy 1, get 1 free',
-        price_note='+36 doses &middot; $4.00/dose',
+        # +$144 is charged ON TOP of today's 18-pack, not instead of it. Shown
+        # bare it read as the whole price (client, 2026-10-19), so it carries
+        # a plus, says "extra" and says what it is on top of.
+        price_label='For just an extra',
+        price_note='on top of today&rsquo;s order &middot; +36 doses at $4.00/dose',
         includes='2 more months of BRAEVON 4-in-1 (36 tablets)',
         close='Buy 1 more month, get 1 free.',
-        cta='Add 36 Tablets &mdash; 1 Month Free',
+        cta='Add 36 Tablets ($144 extra)',
         bar='Upgrade &amp; Save $165'),
 }
 assert set(OFFERS) == {p[0] for p in checkout.PACKS_V2}, \
