@@ -478,6 +478,7 @@
     if(el.querySelector('[data-loader]')) runLoader(el);
     if(el.querySelector('[data-name-echo],[data-echo],[data-fname-echo]')) fillSummary(el);
     if(el.hasAttribute('data-checkout')){ startClock(el); prefillCheckout(el); }
+    if(el.hasAttribute('data-upsell')){ pickUpsell(el); startClock(el); }
     echoState();
   }
 
@@ -535,10 +536,13 @@
      than restarting it, because a deadline that resets on every visit reads as
      a trick. At zero it holds at 00:00 - nothing on this page is withdrawn. */
   var CLOCK_SECS=600, clockLeft=CLOCK_SECS, clockTimer=null;
-  function paintClock(el){
+  /* Painted across the whole stage, not just the screen that started it: the
+     upsell's "order is pending" pill is the same deadline carried on, and a
+     second clock starting fresh there would reset it. */
+  function paintClock(){
     var m=Math.floor(clockLeft/60), s=clockLeft%60;
     var t=m+':'+(s<10?'0':'')+s;
-    [].forEach.call(el.querySelectorAll('[data-countdown]'), function(b){
+    [].forEach.call(stage.querySelectorAll('[data-countdown]'), function(b){
       b.textContent=t;
     });
   }
@@ -579,6 +583,23 @@
       if(pack.dataset.img){ i.src=pack.dataset.img; i.alt=pack.dataset.imgAlt||i.alt; }
     });
   });
+  /* ------------------------------------------------ the post-checkout upsell */
+  /* One offer per pack, all in the step; show the one for the pack picked on
+     the checkout, in whichever version tab is open. `upsellPack` overrides it
+     for the direct links below. */
+  var upsellPack=null;
+  function pickUpsell(el){
+    var pk=upsellPack;
+    if(!pk){
+      var row=stage.querySelector('[data-checkout] .ck-packs:not([hidden])');
+      var sel=row && row.querySelector('.ck-pack.selected');
+      pk=sel ? sel.dataset.pack : '12';
+    }
+    upsellPack=null;
+    [].forEach.call(el.querySelectorAll('[data-up-for]'), function(o){
+      o.hidden = o.dataset.upFor!==pk;
+    });
+  }
   function advance(){
     var el=steps[idx];
     if(!stepValid(el)){ showError(el); return; }
@@ -826,6 +847,13 @@
   if(m && checkoutIdx>=0){
     show(0); history.push(0); show(checkoutIdx);
     if(m[1]) setVersion(2);
+  }
+  /* #upsell-6, #upsell-12 and #upsell-18 open that pack's offer directly,
+     for review, the way /checkout opens the checkout. */
+  else if(/^#upsell-(6|12|18)$/.test(location.hash)){
+    var ui=-1; steps.forEach(function(s,i){ if(s.hasAttribute('data-upsell')) ui=i; });
+    upsellPack=location.hash.slice(8);
+    show(0); history.push(0); show(ui);
   }
   else show(0);
 })();

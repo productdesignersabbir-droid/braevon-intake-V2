@@ -705,6 +705,33 @@ Checked after the change — every text/ground pair on this screen is at or abov
 AA: the bar and pills 6.1:1, the pack badges 6.1 and 5.2, the green price 5.0,
 the press marks 5.3, the footer greys 7.5.
 
+## Screen 52 — the post-checkout upsell (2026-10-19)
+
+The checkout's closing **Checkout** button now walks onto an upsell, and the
+offer shown is set by **the pack selected on the checkout**, in whichever
+version tab is open. `src/upsell.py` builds it; the copy and every figure are
+in `OFFERS` there.
+
+| pack bought | offer | price | source |
+|---|---|---|---|
+| 6 | quarterly, 18 tablets | $169 (retail $297, save $128) | Figma node 172:617 |
+| 12 | quarterly, 36 tablets | $237 (retail $396, save $159) | Figma node 172:358 |
+| 18 | buy 1 more month, get 1 free: +36 (54 in all) | $144 (was $309.60, save $165, $4.00/dose) | client, 2026-10-19 |
+
+Version 1 sells 6 / 12 and so reaches the first two; Version 2 sells 6 / 12 / 18
+and reaches all three. The 18-pack checkout price became **$172** the same day
+(was a placeholder $165), so its badge is SAVE 42%.
+
+The Figma frames are v1's screen 35 imported through html.to.design; sizes are
+v1's, set down to this 480px column. Accepting and declining both end on
+"Assessment received". Two figures to know about: the 6 / 12 offers keep the
+Figma's "You're currently only saving $24.75 / $33" (in v1 that was the 25%
+code, which this checkout does not have), and the 18 shows **$165.60** in its
+"Total savings" row, the exact difference, while headlines say the client's $165.
+
+For review, `#upsell-6`, `#upsell-12` and `#upsell-18` on any address open that
+offer directly. `all-screens.html` carries one frame per pack.
+
 ## Behaviour
 
 Carried from v1: "None of these" is exclusive in both directions; Yes and Other

@@ -94,15 +94,15 @@ PACKS = [
 # the page differs between them.
 # With three on the row the badges move up one - none on the 6, MOST POPULAR
 # on the 12 (still the one that opens selected), BEST VALUE on the 18.
-# **$165.00 is not the client's figure.** It is the 6-to-12 step ($33) taken
-# once more, confirmed by the designer as the number to show; the client has
-# not supplied a price for this pack. $9.17 a tablet against the 6's $16.50 is
-# the 44%.
+# **$172.00 is the client's figure**, 2026-10-19 ("checkout page price for 18
+# tablets is $172"). It replaced a placeholder $165. $9.56 a tablet against the
+# 6's $16.50 is the 42% - derived here, not the client's.
 PACKS_V2 = [
     ('6',  99,  '$99.00',  '', ''),
     ('12', 132, '$132.00', '<i class="ck-save">SAVE 33%</i>', 'MOST POPULAR'),
-    ('18', 165, '$165.00', '<i class="ck-save">SAVE 44%</i>', 'BEST VALUE'),
+    ('18', 172, '$172.00', '<i class="ck-save">SAVE 42%</i>', 'BEST VALUE'),
 ]
+assert round((1 - 172 / 18 / (99 / 6)) * 100) == 42
 # The tabs, in order: label, what it holds, its pack table. The first opens.
 VERSIONS = [
     ('Version 1', '6 / 12', PACKS),

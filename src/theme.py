@@ -1828,4 +1828,133 @@ body.frames .dq{position:static;display:block}
    bars would all play at once and an import taken inside that 1.6s would carry
    half-drawn bars into Figma. The frames print them finished. */
 body.frames .track i{animation:none}
+
+/* ------------------------------------------- 52, the post-checkout upsell */
+/* The client's Figma "when select 6 / 12 tablet plan" frames, which are v1's
+   screen 35. Sizes are v1's `.up` block as measured off the live v1 page,
+   taken down a step where v1's 620px column became this build's 480px one.
+   Green is money as a figure and the two buttons; orange stays the brand's.
+   upsell.py has the copy and the figures. */
+.step[data-upsell]{padding-bottom:110px;
+  /* `both` would keep the last keyframe filled, and a filled transform makes
+     the step the containing block for the fixed bar - it would land at the
+     foot of the step instead of the window's. v1 hit exactly this. */
+  animation-fill-mode:backwards}
+.up{--up-green:#15803D;--up-green-ink:#14532D;--up-wash:#E9F6EC;
+  --up-ink:#1A1A1C;--up-body:#3D3D42;--up-mute:#5B5B60;--up-faint:#767680}
+.up-pending{display:flex;align-items:center;justify-content:center;gap:8px;
+  width:max-content;max-width:100%;margin:0 auto 18px;padding:8px 16px;
+  border-radius:999px;background:#FCF3B5;color:#C23604;font-size:13px;font-weight:600}
+.up-pending svg{width:16px;height:16px;flex:none}
+.up-pending b{font-variant-numeric:tabular-nums;margin-left:4px}
+.up-head{text-align:center;margin-bottom:22px}
+.up-eyebrow{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--up-mute)}
+.up-head h1{margin:0 0 14px;font-size:29px;line-height:1.16;font-weight:800;
+  letter-spacing:-.025em;color:var(--up-ink)}
+.up-head h1 b,.up-testhead h2 b{color:var(--up-green)}
+.up-sub{margin:0;font-size:15px;line-height:1.55;color:var(--up-body)}
+.up-offer{background:#fff;border:1px solid var(--hairline);border-radius:16px;
+  padding:18px 18px 22px;
+  box-shadow:0 1px 2px rgba(16,20,34,.035),0 6px 16px rgba(16,20,34,.043)}
+.up-tagrow{display:flex;justify-content:flex-end;margin-bottom:4px}
+.up-tag{padding:0 12px;line-height:28px;border-radius:999px;background:var(--up-wash);
+  color:var(--up-green-ink);font-size:13px;font-weight:700}
+.up-prod{display:flex;align-items:center;gap:14px;padding-bottom:22px;
+  border-bottom:1px solid var(--hairline)}
+.up-shot{flex:none;width:104px}
+.up-shot img{width:100%;height:auto;display:block}
+.up-brand{margin:0;font-size:19px;font-weight:500;color:var(--up-body)}
+.up-brand b{font-weight:800;color:var(--up-ink)}
+.up-prod-info h2{margin:2px 0 0;font-size:21px;line-height:1.2;font-weight:800;
+  letter-spacing:-.02em;color:var(--up-ink)}
+.up-prod-sub{margin:8px 0 0;font-size:14.5px;line-height:1.45;font-weight:500;color:var(--up-mute)}
+.up-why{margin-top:22px}
+.up-why-h{margin:0 0 14px;font-size:15px;font-weight:800;color:var(--up-ink)}
+.up-why ul{list-style:none;margin:0;padding:0}
+.up-why li{display:flex;gap:10px;margin-bottom:12px;font-size:14.5px;line-height:1.45;
+  color:var(--up-body)}
+.up-why li b{color:var(--up-ink)}
+.up-why li svg{flex:none;width:19px;height:19px;margin-top:1px;color:var(--up-green)}
+.up-bill{margin-top:20px;padding:16px 14px 18px;border:1px solid #E4E4E7;border-radius:12px}
+.up-warn{display:flex;align-items:center;justify-content:center;gap:7px;margin:4px 0 16px;
+  font-size:14.5px;font-weight:700;color:#CE8A33;text-align:center}
+.up-warn svg{width:17px;height:17px;flex:none}
+.up-hero-save{margin:0;padding:12px 14px;border-radius:12px;background:var(--up-wash);
+  color:var(--up-green-ink);font-size:14.5px;font-weight:600;text-align:center}
+.up-hero-save b{font-size:25px;font-weight:800;letter-spacing:-.02em;margin:0 2px}
+.up-rows{margin-top:12px}
+.up-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;
+  font-size:15px;font-weight:500;color:var(--up-body)}
+.up-amt{font-weight:700;color:var(--up-ink)}
+.up-amt.muted{font-weight:500;color:var(--up-mute)}
+.up-amt.green{font-size:16px;color:var(--up-green)}
+.up-price{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-top:12px;padding:14px;border-radius:12px;background:#F2F3F5}
+.up-price-l b{display:block;font-size:16px;font-weight:800;color:var(--up-ink)}
+.up-price-l span{display:block;margin-top:6px;font-size:14px;font-weight:600;color:var(--up-green)}
+.up-price-r{text-align:right;flex:none}
+.up-price-r b{display:block;font-size:29px;line-height:1;font-weight:800;
+  letter-spacing:-.03em;color:var(--up-ink)}
+.up-price-r s{display:block;margin-top:6px;font-size:13px;font-weight:500;color:var(--up-mute)}
+.up-includes{margin:12px 0 0;font-size:13px;line-height:1.55;font-weight:500;color:var(--up-mute)}
+.up-includes b{font-weight:800;color:var(--up-ink);text-transform:uppercase;font-size:12px}
+.up-close{margin-top:26px;text-align:center}
+.up-close h3{margin:0;font-size:19px;font-weight:800;color:var(--up-ink)}
+.up-close p{margin:6px 0 0;font-size:16px;color:var(--up-body)}
+.up-close .up-lock{margin-top:12px;font-size:15px;font-weight:600;color:var(--up-faint)}
+.up-terms{margin:16px 0 0;font-size:14px;line-height:1.6;font-weight:500;
+  color:var(--up-faint);text-align:center}
+.up-bypass{margin:18px 0 0;font-size:17px;font-weight:700;color:var(--up-mute);text-align:center}
+.up .cta.up-cta{margin-top:12px;background:var(--up-green);font-size:16px;font-weight:700;
+  min-height:56px;padding:16px 18px;border-radius:12px;
+  box-shadow:0 4px 16px rgba(16,20,34,.1)}
+.up .cta.up-cta svg{width:18px;height:18px}
+.up-decline{display:block;width:100%;margin-top:16px;padding:6px;border:none;
+  background:none;cursor:pointer;font-size:14.5px;color:var(--up-mute)}
+.up-decline u{font-weight:700;color:var(--up-body)}
+.up-testhead{margin:42px 0 22px;text-align:center}
+.up-testhead h2{margin:0 0 12px;font-size:30px;line-height:1.14;font-weight:800;
+  letter-spacing:-.03em;color:var(--up-ink)}
+.up-testhead p{margin:0;font-size:15px;color:var(--up-body)}
+/* The rail bleeds to the column's edges so the next card peeks in. */
+.up-rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  margin:0 calc(var(--pad) * -1);padding:4px var(--pad) 14px;scrollbar-width:none}
+.up-rail::-webkit-scrollbar{display:none}
+.up-tcard{flex:0 0 78%;scroll-snap-align:start;display:flex;flex-direction:column;
+  padding:18px;border:1px solid var(--border);border-radius:10px;background:#F8F9FA;
+  box-shadow:0 1px 2px rgba(16,20,34,.035),0 6px 16px rgba(16,20,34,.043)}
+.up-tcard .stars{color:var(--green);margin-bottom:10px}
+.up-tcard h3{margin:0 0 8px;font-size:16px;font-weight:800;color:var(--ink)}
+.up-tcard p{margin:0 0 14px;flex:1;font-size:14px;line-height:1.6;color:var(--muted)}
+.up-who{font-size:12.5px;font-weight:700;color:var(--faint)}
+.up-railnote{margin:4px 0 0;text-align:center;font-size:15px;font-weight:600;color:var(--muted)}
+.up-guar{margin-top:40px;padding:30px 22px;border-radius:24px;background:var(--up-wash);
+  text-align:center}
+.up-guar-mark{display:block;width:80px;height:80px;margin:0 auto 14px;color:var(--up-green-ink)}
+.up-guar-mark svg{width:100%;height:100%}
+.up-guar-eyebrow{margin:0 0 8px;font-size:13px;font-weight:800;color:var(--up-green-ink)}
+.up-guar h2{margin:0 0 12px;font-size:24px;line-height:1.2;font-weight:800;
+  letter-spacing:-.02em;color:var(--up-ink)}
+.up-guar p:last-child{margin:0;font-size:14px;line-height:1.55;color:var(--up-body)}
+@media (max-width:360px){ .up-guar h2{font-size:21px} .up-head h1{font-size:26px} }
+.up-bar{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:20;
+  width:100%;max-width:var(--col);display:flex;gap:10px;padding:12px var(--pad);
+  background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
+  border-top:1px solid var(--hairline)}
+.up .up-bar .cta.up-cta{margin-top:0;flex:1;min-height:52px;padding:14px}
+.up-bar-no{flex:none;padding:0 18px;border:1px solid var(--border);border-radius:12px;
+  background:#F8F9FA;cursor:pointer;font-size:12.5px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--up-body)}
+/* At a phone's width "Upgrade & Save $165" ran to two lines beside the
+   decline; less padding on both keeps it on one. */
+@media (max-width:420px){
+  .up-bar{gap:8px;padding:10px 16px}
+  .up .up-bar .cta.up-cta{padding:12px 10px;font-size:15px}
+  .up-bar-no{padding:0 12px;font-size:11.5px;letter-spacing:.06em}
+}
+/* In the static frames the bar sits at the foot of its own screen. */
+body.frames .up-bar{position:static;transform:none;margin-top:28px;border:1px solid var(--hairline);
+  border-radius:16px}
+body.frames .step[data-upsell]{padding-bottom:32px}
 """

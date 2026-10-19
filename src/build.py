@@ -31,6 +31,7 @@ import re
 import braevon_q
 import checkout
 import consent
+import upsell
 from logo import LOGO
 from theme import CSS
 
@@ -1222,6 +1223,7 @@ def sections():
                   % (attr('|'.join(stop)), attr(dq_reason(p))))
         out.append('<section class="step"%s>%s</section>' % (a, render(p)))
     out.append(checkout_section())
+    out.append(upsell_section())
     return out
 
 
@@ -1246,6 +1248,14 @@ def checkout_section():
             % (CHECKOUT_SCREEN,
                checkout.screen(LOGO, ICON, _ic, STARS, MOLECULES,
                                GOAL_STYLE, attr, _state_options())))
+
+
+def upsell_section():
+    """The post-checkout upsell (upsell.py), straight after the checkout, so
+    its Checkout button walks onto it. All three offers ship in the one step;
+    the engine shows the one for the pack picked on the checkout."""
+    return ('<section class="step" data-step="%d" data-bare data-upsell>%s</section>'
+            % (upsell.UPSELL_SCREEN, upsell.screen(STARS)))
 
 
 STARS = ('<span class="stars">%s</span>'
@@ -1361,7 +1371,7 @@ def static_progress(q, screen):
 def emit_frames():
     frames, q = [], 0
     built = sections()
-    checkout_html = built[-1]
+    checkout_html = built[-2]
     for p, html in zip(STEPS, built):
         counted = p in QUESTIONS
         if counted:
@@ -1385,6 +1395,13 @@ def emit_frames():
                   % (CHECKOUT_SCREEN,
                      checkout_html.replace('<section class="step"',
                                            '<section class="step on"', 1)))
+    # The upsell once per pack bought: the step ships all three and shows
+    # one by script, which a still cannot do.
+    for pk in ('6', '12', '18'):
+        frames.append('<div class="frame-label">Screen %02d &mdash; Upsell after the '
+                      '%s pack</div><div class="frame"><div class="shell"><main class="stage">'
+                      '<section class="step on" data-upsell>%s</section></main></div></div>'
+                      % (upsell.UPSELL_SCREEN, pk, upsell.frame(pk, STARS)))
     # Numbered after the checkout, not off the step count: those two collided
     # on 48 while the flow happened to be 46 steps long.
     frames.append('<div class="frame-label">Screen %02d &mdash; Assessment received</div>'
