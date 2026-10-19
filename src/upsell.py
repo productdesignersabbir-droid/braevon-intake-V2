@@ -130,6 +130,12 @@ WARN = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
          '<path d="M5 12h14M13 6l6 6-6 6"/></svg>')
+# A back arrow to the checkout, for the team testing the flow (2026-10-19):
+# the screen is `data-bare`, so the shell's own back button is hidden here.
+BACK = ('<button class="up-back" type="button" data-up-back aria-label="Back to checkout">'
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        '<path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>')
 RING = ('<svg viewBox="0 0 96 96" fill="none" aria-hidden="true">'
         '<circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="5"/>'
         '<path d="M29 49l13 13 26-27" stroke="currentColor" stroke-width="6" '
@@ -153,7 +159,7 @@ def offer(pack, stars):
         '</article>' % (stars, title.replace('&ldquo;', '').replace('&rdquo;', ''), body, who)
         for title, body, who in checkout.TESTIMONIALS)
     return (
-        '<div class="up" data-up-for="%(pack)s"%(hidden)s>'
+        '<div class="up" data-up-for="%(pack)s"%(hidden)s>%(back)s'
         '<p class="up-pending">%(warn_icon)s<span>Wait! Your order is pending '
         '<b data-countdown>10:00</b></span></p>'
         '<div class="up-head"><p class="up-eyebrow">One-time upgrade offer</p>'
@@ -202,7 +208,7 @@ def offer(pack, stars):
         '<button class="up-bar-no cta-next" type="button">No thanks</button></div>'
         '</div>'
         % dict(o, pack=pack, hidden='' if pack == '12' else ' hidden',
-               warn_icon=WARN, img=SHOT[0], alt=SHOT[1], why=why, warn=warn,
+               warn_icon=WARN, back=BACK, img=SHOT[0], alt=SHOT[1], why=why, warn=warn,
                arrow=ARROW, rail=rail, ring=RING, customers=checkout.CUSTOMERS))
 
 

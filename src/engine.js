@@ -600,6 +600,13 @@
       o.hidden = o.dataset.upFor!==pk;
     });
   }
+  /* The upsell's back arrow always lands on the checkout, even when the
+     upsell was opened straight from an #upsell-N link. */
+  stage.addEventListener('click', function(e){
+    if(!e.target.closest('[data-up-back]') || checkoutIdx<0) return;
+    if(history.length && history[history.length-1]===checkoutIdx) history.pop();
+    show(checkoutIdx);
+  });
   function advance(){
     var el=steps[idx];
     if(!stepValid(el)){ showError(el); return; }

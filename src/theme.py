@@ -1842,6 +1842,12 @@ body.frames .track i{animation:none}
   animation-fill-mode:backwards}
 .up{--up-green:#15803D;--up-green-ink:#14532D;--up-wash:#E9F6EC;
   --up-ink:#1A1A1C;--up-body:#3D3D42;--up-mute:#5B5B60;--up-faint:#767680}
+.up{position:relative}
+.up-back{position:absolute;left:0;top:4px;width:32px;height:32px;display:grid;
+  place-items:center;padding:0;border:none;background:none;cursor:pointer;
+  color:var(--muted);border-radius:var(--radius)}
+.up-back::after{content:"";position:absolute;inset:-6px}
+.up-back svg{width:22px;height:22px}
 .up-pending{display:flex;align-items:center;justify-content:center;gap:8px;
   width:max-content;max-width:100%;margin:0 auto 18px;padding:8px 16px;
   border-radius:999px;background:#FCF3B5;color:#C23604;font-size:13px;font-weight:600}
