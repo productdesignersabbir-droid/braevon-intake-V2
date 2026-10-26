@@ -14,20 +14,16 @@ offer for **the pack that was selected on the checkout**:
     bought   offered                         source
     6        quarterly, 18 tablets, $169     Figma frame 172:617
     12       quarterly, 36 tablets, $237     Figma frame 172:358
-    18       +1 month, +1 free: +36, $144    client, WhatsApp, 2026-10-19
+    18       3-month supply, 54 tablets, $299   v3 screen 35 (V5), 2026-10-26
 
 
-**The 18 is a different offer, not a third quarterly tier**, and it is worded
-the client's way: "BUY 1 MORE MONTH, GET 1 FREE - $309.60 (crossed out) $144 -
-+36 doses - $4.00/dose - Save $165". Eighteen bought plus 36 more is 54 tablets,
-three months, but the client asked for it in buy-one-get-one language rather
-than as a "3-month supply", so this offer never says quarterly.
+**The 18 is a 3-month supply for $299** (2026-10-26, from v3's screen 35 "V5"
+offer). It replaced a "buy 1 more month, get 1 free, +$144" offer. $299 is the
+whole price, not the difference, and the struck-through comparison is three
+months at the 18 pack's own $172 ($516), so the saving is $217.
 
-Every figure is the client's, typed as given. Two that are worth knowing:
+Worth knowing:
 
-* "Save $165" is the client's rounding. $309.60 - $144 is $165.60, which is
-  what the "Total savings" row prints, the same way the 6 and 12 frames print
-  "$128.00" there. The headline, tag and buttons say $165 as the client wrote.
 * "You're currently only saving $24.75 / $33" on the 6 and 12 offers is the
   Figma's own line, copied unchanged. In v1 it was the 25% code's monthly
   saving; this checkout has no code. The 18 has no such figure from the
@@ -86,33 +82,30 @@ OFFERS = {
         cta='Upgrade to 36-Tablet Supply Now',
         bar='Upgrade &amp; Save $159'),
     '18': dict(
-        save='165', save2='165.60', retail='$309.60', price='+$144.00',
-        was='$309.60', now_save=None, n='54',
-        h1='Don&rsquo;t run out. Buy 1 more month, get 1&nbsp;free',
+        save='217', save2='217.00', retail='$516.00', price='$299.00',
+        was='$516.00', now_save=None, n='54',
+        h1='Don&rsquo;t run out. Get a 3&#8209;month&nbsp;supply',
         sub=('Your 18-tablet plan is secure! But monthly refills kill the momentum. '
-             'Add one more month now and the month after it is on us &mdash; '
-             '36 more tablets, 54 in all, so you don&rsquo;t run empty.'),
-        tag='Buy 1 month, get 1 free',
-        name='Buy 1 More Month, Get&nbsp;1&nbsp;Free',
-        blurb='Two more months of coverage for the price of&nbsp;one.',
-        hero='on 36 more tablets',
-        retail_label='36 more tablets (retail)',
-        # +$144 is charged ON TOP of today's 18-pack, not instead of it. Shown
-        # bare it read as the whole price (client, 2026-10-19), so it carries
-        # a plus, says "extra" and says what it is on top of.
-        price_label='For just an extra',
-        price_note='on top of today&rsquo;s order &middot; +36 doses at $4.00/dose',
-        includes='2 more months of BRAEVON 4-in-1 (36 tablets)',
-        close='Buy 1 more month, get 1 free.',
-        cta='Add 36 Tablets ($144 extra)',
-        bar='Upgrade &amp; Save $165'),
+             'Upgrade to a full 3&#8209;month supply now &mdash; 36 more tablets, '
+             '54 in all, for $299 in total.'),
+        tag='3-month supply',
+        name='3-Month Supply &middot; 54&nbsp;Tablets',
+        blurb='Three months of coverage for $299 in&nbsp;total.',
+        hero='on your 3-month supply',
+        retail_label='3 months at the monthly price (3 &times; $172)',
+        price_label='3-Month Supply',
+        price_note='54 tablets &middot; $5.54 per tablet',
+        includes='3 months of BRAEVON 4-in-1 (54 tablets in all)',
+        close='Get your 3-month supply for $299.',
+        cta='Get 3-Month Supply &ndash; $299',
+        bar='Upgrade &amp; Save $217'),
 }
 assert set(OFFERS) == {p[0] for p in checkout.PACKS}, \
     'every pack the checkout sells needs an upsell offer'
-# The client's 18-pack figures, held to their own arithmetic: $144 over 36
-# doses is the $4.00/dose they quote, and $309.60 - $144 is the saving.
-assert 144 / 36 == 4.0
-assert round(309.60 - 144, 2) == float(OFFERS['18']['save2'])
+# The 18-pack figures, held to their own arithmetic: three months at $172 less
+# $299 is the saving, and $299 over 54 tablets is the per-tablet line.
+assert 3 * 172 - 299 == float(OFFERS['18']['save2'])
+assert round(299 / 54, 2) == 5.54
 
 TICK = ('<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">'
         '<circle cx="12" cy="12" r="10" fill="currentColor"/>'

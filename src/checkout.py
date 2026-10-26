@@ -131,9 +131,9 @@ def _price(i):
     return PACKS[i][2]
 
 
-def _from_price():
-    """The lowest price on the page - what "prescriptions start at" means."""
-    return min(PACKS, key=lambda p: p[1])[2]
+# The closing strip used to read the lowest price ("start at just $99.00").
+# Since 2026-10-26 it follows the pick: it opens on the lead pack's price and
+# engine.js swaps it along with the other `data-pack-price` hooks.
 
 
 # ---------------------------------------------------------------- the chart
@@ -930,7 +930,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         '<div class="ck-ready-rail">'
         '<div class="ck-ready-clock"><span>You&rsquo;re approved for</span>'
         '<b data-countdown>10:00</b></div>'
-        '<div class="ck-ready-strip">Prescriptions start at just <b>%s</b> '
+        '<div class="ck-ready-strip">Your plan is just <b data-pack-price>%s</b> '
         '&mdash; no insurance needed</div>'
         '<p class="ck-ready-line">The most effective ED programme is right here</p>'
         '<svg class="ck-ready-arrow" viewBox="0 0 40 24" fill="none" aria-hidden="true">'
@@ -944,7 +944,7 @@ def screen(logo, icon, ic, stars, molecules, goal_style, attr, states=()):
         'anytime. <b>Medication is included.</b></p>'
         '<button class="cta cta-next" type="button">Checkout%s</button>'
         '</div></div>'
-        % (_from_price(), ready_rows, stack_rows, icon['arrow']))
+        % (_price(LEAD_PACK), ready_rows, stack_rows, icon['arrow']))
 
     # -- 15 ----------------------------------------------------------------
     faq = ''.join(

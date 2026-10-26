@@ -1093,12 +1093,11 @@ img{max-width:100%;display:block}
    `body.frames` keeps the column-width bar. Those frames are 480px boxes on a
    grey page for the Figma import, and a viewport-wide band there would run
    across the whole document once per frame. */
-/* Mint, not the accent: the client asked on 2026-09-07 for v1's own treatment
-   of this same clock. v1 runs a mint pill with dark-green type; the bar here
-   is full-bleed rather than a pill, but the pair is v1's, unchanged. */
+/* Dark ground, white type: asked for on 2026-10-26, replacing v1's mint pair
+   (2026-09-07). The mint stays on the chips and tags that still use it. */
 .ck-clock{margin:0 calc(var(--pad) * -1);
-  background:var(--mint);
-  color:var(--mint-ink);display:flex;align-items:center;justify-content:center;
+  background:var(--dark);
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
   gap:6px;padding:15px 16px;font-size:14px;font-weight:600;text-align:center}
 body:not(.frames) .ck-clock{margin-inline:calc(50% - 50vw)}
 /* `clip` rather than `hidden`: it does not make body a scroll container, so
@@ -1107,7 +1106,7 @@ body:not(.frames) .ck-clock{margin-inline:calc(50% - 50vw)}
 body:not(.frames){overflow-x:clip}
 /* Underlined, which is v1's settled treatment for the same clock - it is the
    one part of the sentence that changes, and weight alone did not carry it. */
-.ck-clock b{font-weight:800;color:var(--mint-ink);text-decoration:underline;
+.ck-clock b{font-weight:800;color:#FFFFFF;text-decoration:underline;
   text-underline-offset:3px;font-variant-numeric:tabular-nums}
 
 /* The top margin is stated here rather than left to `.ck > * + *`. That rule
@@ -1381,6 +1380,11 @@ body:not(.frames){overflow-x:clip}
 .ck-pack em.hot{background:var(--accent);color:#fff}
 /* The 12-pack's saving, pulled out of the sub-line so it reads first. */
 .ck-save.ghost{visibility:hidden}
+/* A card with no badge centres its title in the whole card rather than in the
+   space below a badge, and drops its invisible saving line (2026-10-26). The
+   cards share a height, so the 6 PACK sits in the middle of its card. */
+.ck-pack:not(:has(em)){padding-top:17px}
+.ck-pack:not(:has(em)) .ck-save.ghost{display:none}
 .ck-save{display:inline-block;padding:2px 6px;border-radius:4px;
   font-style:normal;font-size:12px;font-weight:800;letter-spacing:.02em;
   background:#DCF5E6;color:var(--green-ink);vertical-align:1px}
